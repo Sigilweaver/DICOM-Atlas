@@ -45,3 +45,7 @@ scripts/ia_upload.py
 # without needing the full PDF corpus.
 !data/resolved_pydicom_backfilled.jsonl
 !data/standard/
+
+# maturin develop installs the compiled extension into the source tree
+dicom-map-py/python/dicom_map/_dicom_map*.so
+dicom-map-py/python/dicom_map/__pycache__/

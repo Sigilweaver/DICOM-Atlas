@@ -24,7 +24,7 @@ use pyo3::types::PyDict;
 use ::dicom_map::{DmapDict, DmapError, TagView};
 
 /// Opaque handle holding an mmap'd dictionary.
-#[pyclass(module = "dicom_map", name = "Dict")]
+#[pyclass(module = "dicom_map._dicom_map", name = "Dict")]
 struct PyDmapDict {
     inner: Arc<DmapDict>,
 }
@@ -104,7 +104,7 @@ fn py_open(path: PathBuf) -> PyResult<PyDmapDict> {
 }
 
 #[pymodule]
-fn dicom_map(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _dicom_map(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyDmapDict>()?;
     m.add_function(wrap_pyfunction!(py_open, m)?)?;
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;

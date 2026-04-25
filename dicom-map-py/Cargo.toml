@@ -6,7 +6,7 @@ license.workspace = true
 description = "Python bindings for dicom-map"
 
 [lib]
-name = "dicom_map"
+name = "_dicom_map"
 crate-type = ["cdylib"]
 
 [dependencies]

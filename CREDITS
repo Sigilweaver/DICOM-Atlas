@@ -24,11 +24,26 @@ standards. Each is listed with its license and the role it plays here.
 
 ### pydicom — `_private_dict.py`
 - **URL:** https://github.com/pydicom/pydicom
-- **License:** MIT
-- **Role:** Used as a cross-reference during the resolve step to validate VR
-  assignments and backfill entries not found in the vendor PDFs. No pydicom
-  source code is included in this repository; it is used only as a runtime
-  validation tool during the build pipeline.
+- **License:** MIT (see `THIRD_PARTY_LICENSES.md`)
+- **Role:** Two distinct uses:
+  1. **Build-time validation:** during the resolve step we cross-reference
+     PDF-extracted tags against pydicom's bundled private dictionary to
+     validate VR assignments and backfill missing names/VMs.
+  2. **Data ingest:** for private creators that pydicom covers but our PDF
+     corpus does not (primarily older / smaller-vendor creators such as
+     `ELSCINT1`, `ACUSON`, `SPI-P`, `PMTF`), we import pydicom's entries
+     into our dictionary and tag them with `sources=["pydicom"]` and a
+     `community` provenance flag so consumers can distinguish PDF-derived
+     data from community-derived data.
+
+### GDCM — Grassroots DICOM library
+- **URL:** https://gdcm.sourceforge.net / https://github.com/malaterre/GDCM
+- **License:** BSD-3-Clause (see `THIRD_PARTY_LICENSES.md`)
+- **Role:** Original upstream of pydicom's `_private_dict.py`. pydicom's
+  module header explicitly states "Data generated from GDCM project's
+  private dictionary." Any tag entry with `sources=["pydicom"]` therefore
+  ultimately traces back to GDCM's curated dictionary. Citing pydicom as
+  the proximate source is correct, but GDCM deserves the original credit.
 
 ---
 

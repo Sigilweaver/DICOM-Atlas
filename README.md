@@ -56,8 +56,30 @@ cd dicom-map-py && maturin develop --release
 import dicom_map
 d = dicom_map.open("tags.dmap")
 t = d.lookup(0x0021, 0x0008, "Siemens: Thorax/Multix FD Lab Settings")
-# {'vr': 'US', 'name': 'Auto Window Flag', 'block_offset': True, ...}
+# {'vr': 'US', 'name': 'Auto Window Flag', 'block_offset': True,
+#  'sources': ['siemens_xr_c2-064.pdf#p41', ...], ...}
 ```
+
+#### pydicom adapter
+
+If you already use pydicom, register dicom-map's private dictionary into
+pydicom so private tags resolve automatically with no other code changes:
+
+```python
+import dicom_map
+import pydicom
+
+dicom_map.patch_pydicom("tags.dmap")  # one-time at startup
+
+ds = pydicom.dcmread("scan.dcm")
+elem = ds[0x0021, 0x1008]
+print(elem.name, elem.VR)             # resolved via dicom-map
+```
+
+By default `patch_pydicom` runs in `mode="fill"` — it only adds entries
+pydicom doesn't already have, so existing pydicom data is never clobbered.
+Pass `mode="override"` to make dicom-map take precedence on conflicts, or
+call `dicom_map.unpatch_pydicom()` to revert.
 
 ### Rust
 

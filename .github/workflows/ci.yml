@@ -55,6 +55,10 @@ jobs:
       - name: Rust tests
         run: cargo test --release --workspace
 
+      - name: Install dicom_map Python extension (editable)
+        working-directory: dicom-map-py
+        run: python -m maturin develop --release
+
       - name: Python unit tests
         run: pytest tests/ -v
 
@@ -68,7 +72,6 @@ jobs:
       - name: Python smoke test
         working-directory: dicom-map-py
         run: |
-          python -m maturin develop --release
           python -c "
           import dicom_map
           d = dicom_map.open('../tags.dmap')

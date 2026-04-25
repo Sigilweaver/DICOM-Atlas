@@ -17,5 +17,6 @@ classifiers = [
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "dicom_map"
+module-name = "dicom_map._dicom_map"
 manifest-path = "Cargo.toml"
+python-source = "python"
