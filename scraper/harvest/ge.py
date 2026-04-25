@@ -1,17 +1,25 @@
 """GE DICOM conformance statement harvester.
 
 GE conformance PDFs (e.g. Brightspeed, Optima, Discovery, Senographe…) document
-private tags in a 4-column table:
+private tags in several formats:
 
+Variant A — 4-column table:
     Description | Type | Tag | Value
-
 where ``Type == 'P'`` flags a private row. Creator strings are declared in rows
 whose tag looks like ``GGGG,00xx`` and whose Value cell holds the creator
-string (e.g. ``GEMS_IDEN_01``). Subsequent rows ``GGGG,xxEE`` inherit that
-creator for their group.
+string (e.g. ``GEMS_IDEN_01``). VR is absent; we leave it ``None``.
 
-VR is not printed in these tables; we leave it ``None`` so the normalizer
-defaults to ``UN`` with ``vr_inferred=True``.
+Variant B — name-first text (DL / Discovery / Innova xr-mammo families):
+    <attribute name>   (GGGG,xxEE)   VR   VM   <description>
+Creator declared in a preceding section heading such as
+"5.5.3 Private Group GEMS_XR3DCAL_01".
+
+Variant C — 6-column table (Senographe mammography families, rev 40+):
+    Attribute name | Tag | Type | Attribute description | VR | VM
+Creator is declared in a "Private Creator" row within the same table whose tag
+is (GGGG,00BB) (DICOM block-reservation range) and whose description cell holds
+the creator string (e.g. ``GEMS_GDXE_FALCON_04``). Variant-C creator state
+persists across page boundaries within one PDF.
 """
 
 from __future__ import annotations
@@ -62,6 +70,14 @@ _CREATOR_SECTION_RE = re.compile(
 
 _HEADER_MUST = {"description", "type", "tag", "value"}
 
+# Variant C: 6-column table header detection.
+_HEADER_MUST_C = {"attribute name", "tag", "type", "attribute description", "vr", "vm"}
+
+# Matches a concrete DICOM tag like "(0011,1003)" or "(7FDF,0010)".
+_TAG_CONCRETE_RE = re.compile(
+    r"^\(\s*([0-9A-Fa-f]{4})\s*,\s*([0-9A-Fa-f]{4})\s*\)$"
+)
+
 
 def _col(header: list[str], name: str) -> int | None:
     for i, c in enumerate(header):
@@ -82,6 +98,10 @@ class GEHarvester(Harvester):
             section_creator: str | None = None
             seen_keys: set[tuple[str, str]] = set()
 
+            # Variant-C creator map: persists across pages within one PDF.
+            # Keyed (group_hex_upper, block_byte_int) -> creator_str.
+            c_creator_map: dict[tuple[str, int], str] = {}
+
             for page_num, page in enumerate(pdf.pages, start=1):
                 try:
                     tables = page.extract_tables() or []
@@ -92,6 +112,16 @@ class GEHarvester(Harvester):
                 for tbl_idx, table in enumerate(tables):
                     for tag in self._parse_table(table, page_num, tbl_idx):
                         seen_keys.add((tag.tag_str, tag.private_creator or ""))
+                        emitted = True
+                        yield tag
+
+                    for tag in self._parse_table_variant_c(
+                        table, page_num, tbl_idx, c_creator_map
+                    ):
+                        key = (tag.tag_str, tag.private_creator or "")
+                        if key in seen_keys:
+                            continue
+                        seen_keys.add(key)
                         emitted = True
                         yield tag
 
@@ -192,6 +222,109 @@ class GEHarvester(Harvester):
                 vr=None,
                 vm=None,
                 description=value,
+            )
+
+    def _parse_table_variant_c(
+        self,
+        table: list[list[str | None]],
+        page: int,
+        tbl_idx: int,
+        creator_map: dict[tuple[str, int], str],
+    ) -> Iterator[RawTag]:
+        """Six-column private-tag table: Attribute name|Tag|Type|Attribute description|VR|VM.
+
+        Seen in Senographe mammography conformance PDFs (rev 40+). The creator
+        map is shared across all calls within one PDF harvest so that creator
+        declarations from earlier pages are visible to later continuation tables.
+
+        Creator rows are identified by Name == 'Private Creator' with a
+        concrete tag (GGGG,00BB) in the DICOM block-reservation range
+        (element high byte == 0x00, low byte in 0x10..0xFF). The creator
+        string lives in the Attribute description cell.
+
+        Private data rows have a concrete tag (GGGG,BBEE) where BB != 0x00;
+        we map them to the synthetic (GGGG,xxEE) form using the block-number
+        (BB) to look up the creator declared for that group+block.
+        """
+        if not table or len(table) < 2:
+            return
+        header = [c.lower().strip() if c else "" for c in squeeze_row(table[0])]
+        if not _HEADER_MUST_C.issubset(set(header)):
+            return
+
+        try:
+            idx_name = header.index("attribute name")
+            idx_tag  = header.index("tag")
+            idx_desc = header.index("attribute description")
+            idx_vr   = header.index("vr")
+            idx_vm   = header.index("vm")
+        except ValueError:
+            return
+
+        for row in table[1:]:
+            cells = squeeze_row(row)
+            if not cells:
+                continue
+            if idx_tag >= len(cells):
+                continue
+
+            tag_cell = (cells[idx_tag] or "").strip()
+            m = _TAG_CONCRETE_RE.match(tag_cell)
+            if not m:
+                continue
+
+            group_int = int(m.group(1), 16)
+            elem_int  = int(m.group(2), 16)
+
+            # Only process private (odd) groups.
+            if group_int % 2 == 0:
+                continue
+
+            group_hex = f"{group_int:04X}"
+            elem_high = (elem_int >> 8) & 0xFF
+            elem_low  = elem_int & 0xFF
+
+            # Creator-declaration row: element is in DICOM block-reservation
+            # range (high byte == 0x00, low byte 0x10-0xFF).
+            if elem_high == 0x00 and 0x10 <= elem_low <= 0xFF:
+                name_cell = (cells[idx_name] if idx_name < len(cells) else "").strip()
+                if name_cell.lower() == "private creator":
+                    desc_cell = (cells[idx_desc] if idx_desc < len(cells) else "").strip()
+                    if desc_cell:
+                        creator_map[(group_hex, elem_low)] = desc_cell
+                # Whether or not it's a recognized creator row, skip emitting.
+                continue
+
+            # Skip elements still in the creator-reservation range (non-standard
+            # vendor usage; we can't reliably assign a block).
+            if elem_high == 0x00:
+                continue
+
+            # Look up creator for this group+block.
+            creator = creator_map.get((group_hex, elem_high))
+            if not creator:
+                continue
+
+            name_cell = (cells[idx_name] if idx_name < len(cells) else "").strip()
+            if not name_cell:
+                continue
+
+            vr_cell  = (cells[idx_vr]  if idx_vr  < len(cells) else "").strip().upper()
+            vm_cell  = (cells[idx_vm]  if idx_vm  < len(cells) else "").strip()
+            desc_cell = (cells[idx_desc] if idx_desc < len(cells) else "").strip()
+
+            synthetic = f"({group_hex},xx{elem_low:02X})"
+
+            yield RawTag(
+                source_pdf=self.pdf_path.name,
+                source_page=page,
+                source_table=tbl_idx,
+                tag_str=synthetic,
+                private_creator=creator,
+                name=name_cell,
+                vr=vr_cell or None,
+                vm=vm_cell or None,
+                description=desc_cell or None,
             )
 
     def _parse_text_variant_b(
