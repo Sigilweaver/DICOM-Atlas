@@ -75,7 +75,7 @@ jobs:
           python -c "
           import dicom_map
           d = dicom_map.open('../tags.dmap')
-          assert len(d) > 9000, f'dict too small: {len(d)}'
+          assert len(d) > 19000, f'dict too small: {len(d)}'
           t = d.lookup(0x0008, 0x0005)
           assert t and t['keyword'] == 'SpecificCharacterSet', t
           t = d.lookup(0x0021, 0x0008, 'Siemens: Thorax/Multix FD Lab Settings')

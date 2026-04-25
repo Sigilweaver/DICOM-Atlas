@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-title: "DicomAtlas: A comprehensive open registry of public and private DICOM tags"
+title: "DICOM-Atlas: An open registry of public and private DICOM tags"
 message: >
-  If you use DicomAtlas in your research, please cite it using the metadata
+  If you use DICOM-Atlas in your research, please cite it using the metadata
   below. Citation is encouraged and appreciated but not legally required.
 type: dataset
 authors:
@@ -10,7 +10,7 @@ authors:
 repository-code: "https://github.com/Sigilweaver/DicomAtlas"
 url: "https://github.com/Sigilweaver/DicomAtlas"
 abstract: >
-  DicomAtlas is an open registry of public and private DICOM tags compiled
+  DICOM-Atlas is an open registry of public and private DICOM tags compiled
   from vendor conformance statements (GE HealthCare, Siemens Healthineers,
   Philips Healthcare) and the DICOM PS3.6 standard. Each tag record includes
   the value representation (VR), value multiplicity (VM), human-readable name,
@@ -18,10 +18,10 @@ abstract: >
   conformance document page. The registry is distributed as a human-editable
   CSV (tags.csv), a memory-mapped binary (tags.dmap), and queryable via
   a Rust library, Python bindings, and C FFI.
-license: "Apache-2.0"
-license-url: "https://www.apache.org/licenses/LICENSE-2.0"
+license: "Apache-2.0 AND CC0-1.0"
+license-url: "https://github.com/Sigilweaver/DicomAtlas/blob/main/LICENSE-DATA"
 date-released: "2026-04-24"
-version: "0.1.0"
+version: "0.2.0"
 keywords:
   - DICOM
   - medical imaging

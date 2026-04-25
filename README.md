@@ -1,40 +1,15 @@
-# DICOM-Map
+# DICOM-Atlas
 
-A single memory-mapped binary dictionary of **public and private DICOM
-tags** compiled from vendor conformance statements (GE, Siemens, Philips, ...)
-plus the PS3.6 standard. Query it from Rust, C, or Python in O(log n)
-without pydicom or any other Python dependency.
+An open registry of **public and private DICOM tags** compiled from vendor
+conformance statements (GE, Siemens, Philips, ...) plus the PS3.6 standard,
+with additional entries contributed by [pydicom](https://github.com/pydicom/pydicom)
+and [GDCM](https://gdcm.sourceforge.net). Queryable from Rust, C, or Python
+in O(log n) with no runtime dependencies.
 
-Current shipped size: **9,610 tags** (4,316 private + 5,294 public) in a
-**1 MB** `tags.dmap` file.
+Current shipped size: **19,213 tags** (13,919 private + 5,294 public) in a
+**3.5 MB** `tags.dmap` file.
 
-## Layout
-
-```
-scraper/            Python — PDF → JSON-L pipeline
-  harvest/            per-vendor extractors (ge, siemens, philips)
-  resolve.py          merges interim JSON-L → ResolvedTag (majority VR vote)
-  pydicom_compare.py  cross-references + backfills from pydicom
-
-compiler/           Rust: JSON-L → .dmap frozen archive
-  src/main.rs            `dmap-compile` binary
-  src/bin/lookup.rs      `dicom-lookup` CLI binary
-
-dicom-map/          Rust library: mmap-backed O(log n) lookup
-  FORMAT.md              binary format & versioning policy
-  src/lookup.rs          DmapDict::open / from_static
-  tests/integration.rs   per-family smoke tests
-
-dicom-map-py/       PyO3 Python bindings → `import dicom_map`
-dicom-map-ffi/      C ABI → libdicom_map_ffi.{so,a} + dicom_map.h
-
-data/
-  standard/           PS3.6 public tags (checked in, 1.3 MB)
-  resolved_pydicom_backfilled.jsonl  resolved + cross-referenced (checked in)
-  pdfs/ raw/ interim/                gitignored
-```
-
-## Quick start — consume the dictionary
+## Quick start — use the dictionary
 
 ### CLI
 
@@ -62,7 +37,7 @@ t = d.lookup(0x0021, 0x0008, "Siemens: Thorax/Multix FD Lab Settings")
 
 #### pydicom adapter
 
-If you already use pydicom, register dicom-map's private dictionary into
+If you already use pydicom, register DICOM-Atlas's private dictionary into
 pydicom so private tags resolve automatically with no other code changes:
 
 ```python
@@ -78,7 +53,7 @@ print(elem.name, elem.VR)             # resolved via dicom-map
 
 By default `patch_pydicom` runs in `mode="fill"` — it only adds entries
 pydicom doesn't already have, so existing pydicom data is never clobbered.
-Pass `mode="override"` to make dicom-map take precedence on conflicts, or
+Pass `mode="override"` to make DICOM-Atlas take precedence on conflicts, or
 call `dicom_map.unpatch_pydicom()` to revert.
 
 ### Rust
@@ -107,39 +82,8 @@ See `dicom-map-ffi/include/dicom_map.h`.
 
 ## Quick start — rebuild from source
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -e . maturin pydicom
-
-# Recompile tags.dmap from the checked-in resolved JSON-L:
-cargo run --release --bin dmap-compile -- \
-  --standard data/standard/attributes.json \
-  --resolved data/resolved_pydicom_backfilled.jsonl \
-  --out tags.dmap
-
-# Run the full test suite:
-cargo test --release --workspace
-python tests/roundtrip_fuzz.py
-```
-
-## Re-scrape from PDFs (optional)
-
-The PDF corpus is not checked in. Download from archive.org using `sources.json`:
-
-```bash
-pip install -e ".[ops]"                      # installs requests (already present) + internetarchive
-python scripts/fetch_from_archive.py         # downloads all vendor PDFs from archive.org
-```
-
-Then re-harvest and re-resolve:
-
-```bash
-python -m scraper.harvest_batch --vendor ge --jobs 4
-python -m scraper.harvest_batch --vendor siemens --jobs 6
-python -m scraper.harvest_batch --vendor philips --jobs 4
-python -m scraper.resolve -o data/resolved.jsonl data/interim/*.jsonl
-python -m scraper.pydicom_compare   # writes resolved_pydicom_backfilled.jsonl
-```
+See [DEVELOPMENT.md](DEVELOPMENT.md) for the full repository layout, rebuild
+instructions, re-scrape pipeline, and test suite guide.
 
 ## Data provenance and limitations
 
@@ -196,10 +140,16 @@ document it came from.
 
 ## Status and roadmap
 
-See [ROADMAP.md](ROADMAP.md) for current state and prioritised future work,
-and [dicom-map/FORMAT.md](dicom-map/FORMAT.md) for the binary format and
-versioning policy.
+See [ROADMAP.md](ROADMAP.md) for current state and planned work, and
+[DEVELOPMENT.md](DEVELOPMENT.md) for the binary format spec and contributor
+guide.
 
 ## License
 
-Apache-2.0.
+| What | License |
+|------|---------|
+| Source code (`compiler/`, `dicom-map/`, `dicom-map-py/`, `dicom-map-ffi/`, `scraper/`) | Apache-2.0 |
+| Original compiled data (entries in `tags.csv` / `tags.dmap` whose `sources` field references a PDF) | CC0 1.0 (public domain) |
+| pydicom / GDCM-derived entries (`sources = ["pydicom"]`) | MIT (pydicom) + BSD-3-Clause (GDCM) — see `THIRD_PARTY_LICENSES.md` |
+
+Full texts: [LICENSE](LICENSE) (Apache-2.0), [LICENSE-DATA](LICENSE-DATA) (CC0 1.0), [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).

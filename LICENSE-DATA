@@ -1,23 +1,17 @@
 The data files in this repository (tags.csv, tags.dmap, and the contents of
-data/standard/) are licensed under the Creative Commons Attribution 4.0
-International License (CC BY 4.0).
+data/standard/) are dedicated to the public domain under the Creative Commons
+CC0 1.0 Universal Public Domain Dedication, subject to the third-party
+exceptions described at the bottom of this file.
 
-    https://creativecommons.org/licenses/by/4.0/
+    https://creativecommons.org/publicdomain/zero/1.0/
 
-You are free to:
-  Share — copy and redistribute the material in any medium or format
-  Adapt — remix, transform, and build upon the material for any purpose,
-          even commercially
+To the extent possible under law, the author(s) have waived all copyright and
+related or neighbouring rights to this data. You can copy, modify, distribute
+and use the data, even for commercial purposes, all without asking permission.
 
-Under the following terms:
-  Attribution — You must give appropriate credit, provide a link to the
-                license, and indicate if changes were made. You may do so
-                in any reasonable manner, but not in any way that suggests
-                the licensor endorses you or your use.
-
-  No additional restrictions — You may not apply legal terms or
-                               technological measures that legally restrict
-                               others from doing anything the license permits.
+Attribution is not required by the CC0 dedication. If you use this dataset in
+publications or software and would like to credit the work, you are warmly
+welcomed (but not obligated) to cite it — see the Attribution notice below.
 
 -------------------------------------------------------------------------------
 
@@ -47,3 +41,50 @@ source documents.
 The DICOM standard data (data/standard/) is derived from DICOM PS3.6 as
 published by the National Electrical Manufacturers Association (NEMA) under
 their open publication policy.
+
+-------------------------------------------------------------------------------
+
+Third-party exceptions
+
+A subset of the entries in tags.csv and tags.dmap were derived from
+third-party sources with their own licenses. These entries are identified
+by their `sources` field and are NOT covered by the CC0 dedication — they
+retain their original upstream terms:
+
+  pydicom / GDCM-derived entries  (sources = ["pydicom"])
+  -------------------------------------------------------
+  Entries bearing sources=["pydicom"] were imported from pydicom's bundled
+  private dictionary (pydicom/_private_dict.py). The module header states:
+  "Data generated from GDCM project's private dictionary." A review of
+  pydicom's git history confirms the vast majority of entries are GDCM-derived;
+  a small number of corrections and additions were made directly by pydicom
+  contributors (e.g. TOSHIBA_MEC_MR3^10, several MITRA family corrections in
+  2021–2022). No per-entry provenance flag exists in pydicom's source — a
+  finer-grained split between GDCM-origin and pydicom-origin is not possible
+  from the published data alone.
+
+  Note on the license type: MIT and BSD-3-Clause are software licenses, not
+  dedicated data licenses. pydicom applies them to _private_dict.py as a source
+  file. The underlying tag records (element numbers, VR codes, names) are
+  factual in nature and likely non-copyrightable in most jurisdictions under
+  the "facts are free" doctrine (e.g. Feist v. Rural Telephone in the US).
+  We respect the upstream licenses regardless, and reproduce their full texts
+  in THIRD_PARTY_LICENSES.md. In practice, both MIT and BSD-3 require only
+  that you retain the copyright notice and license text — no additional
+  attribution burden, though technically more than what CC0 asks (which is nothing).
+
+  These entries are subject to:
+
+    pydicom  — MIT License
+               Copyright (c) 2008-2020 Darcy Mason and pydicom contributors
+
+    GDCM     — BSD 3-Clause License
+               Copyright (c) 2006-2016 Mathieu Malaterre
+               Copyright (c) 1993-2005 CREATIS (also: Leo Joskowicz,
+               Jean-Pierre Roux, Françoise Gourdon, Alain Guibert)
+
+  The full license texts for both are reproduced in THIRD_PARTY_LICENSES.md.
+
+All other entries (sources referencing PDF filenames) represent our own
+compilation and curation work and are dedicated to the public domain under
+CC0 1.0 as stated above.

@@ -4,10 +4,10 @@ build-backend = "maturin"
 
 [project]
 name = "dicom-map"
-version = "0.1.0"
-description = "Memory-mapped O(1) DICOM tag dictionary (private + public tags)"
+version = "0.2.0"
+description = "Memory-mapped O(log n) DICOM tag dictionary (private + public tags)"
 readme = "README.md"
-license = { text = "MIT OR Apache-2.0" }
+license = { text = "Apache-2.0" }
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Rust",
