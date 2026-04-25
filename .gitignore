@@ -22,6 +22,9 @@ data/interim_resolved_old.jsonl
 data/resolved.jsonl
 *.dmap
 
+# Private planning notes — kept local only
+ROADMAP.md
+
 # Internal scraping tools (crawlers, downloaders) — not shipped publicly.
 # Use scripts/fetch_from_archive.py to reproduce the PDF corpus instead.
 scraper/internal/
