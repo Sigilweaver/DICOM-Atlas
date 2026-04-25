@@ -95,7 +95,16 @@ def resolve(
                     f"VR conflict at {key}: votes={dict(vr_votes)} chose={vr}"
                 )
         else:
+            # No real VR votes — every PDF entry was inferred or UN. Try
+            # pydicom as a last resort before falling back to UN.
             vr = "UN"
+            if _pydicom_lookup is not None:
+                creator = members[0].private_creator
+                hit = _pydicom_lookup(
+                    creator, members[0].group, members[0].element
+                )
+                if hit and hit[0] and hit[0] != "UN":
+                    vr = hit[0]
 
         # prefer longest description, longest name
         best_desc = max((m.description for m in members), key=len, default="")
