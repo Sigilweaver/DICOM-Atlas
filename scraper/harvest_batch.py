@@ -122,7 +122,18 @@ def run(
     skipped_size = 0
     skipped_filter = 0
     for pdf in pdfs:
-        vendor = vmap.get(pdf.name, "siemens")
+        # Prefer the catalog lookup; fall back to filename prefix; never default to siemens.
+        vendor = vmap.get(pdf.name)
+        if vendor is None:
+            name_lower = pdf.name.lower()
+            if name_lower.startswith(("ge_", "gehc", "gems_")) or "gehc" in name_lower or "gems_" in name_lower:
+                vendor = "ge"
+            elif name_lower.startswith("philips_") or "philips" in name_lower:
+                vendor = "philips"
+            elif name_lower.startswith("siemens_") or "siemens" in name_lower or name_lower.startswith("syngo"):
+                vendor = "siemens"
+            else:
+                vendor = "unknown"
         if vendor_filter and vendor != vendor_filter:
             skipped_filter += 1
             continue

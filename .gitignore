@@ -1,4 +1,6 @@
-__pycache__/
+# Rust build artifacts
+target/
+
 *.py[cod]
 *.egg-info/
 .venv/
@@ -17,6 +19,7 @@ data/interim/
 data/html/
 data/catalog.json
 data/interim_resolved_old.jsonl
+data/resolved.jsonl
 *.dmap
 
 # Internal scraping tools (crawlers, downloaders) — not shipped publicly.
@@ -29,6 +32,9 @@ scripts/ia_upload.py
 # Allow small curated samples
 !data/pdfs/.gitkeep
 
+# tags.dmap is the compiled binary artifact — checked in for user convenience
+!tags.dmap
+
 # tags.csv is the canonical human-editable source of truth — check it in
 !tags.csv
 
@@ -37,6 +43,5 @@ scripts/ia_upload.py
 
 # Check in the compact resolved tables so CI can rebuild tags.dmap
 # without needing the full PDF corpus.
-!data/resolved.jsonl
 !data/resolved_pydicom_backfilled.jsonl
 !data/standard/

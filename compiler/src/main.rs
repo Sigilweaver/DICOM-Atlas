@@ -353,6 +353,7 @@ fn compile(rows: &[Row], out: &PathBuf) -> Result<()> {
             None => (0, 0),
         };
         let (d_off, d_len) = pool.intern(&r.description);
+        let (s_off, s_len) = pool.intern(&r.sources.join("|"));
         records.push(TagRecord {
             group: r.group,
             element: r.element,
@@ -369,6 +370,8 @@ fn compile(rows: &[Row], out: &PathBuf) -> Result<()> {
             creator_len: c_len as u16,
             description_off: d_off,
             description_len: d_len,
+            sources_off: s_off,
+            sources_len: s_len,
         });
         entries.push(IndexEntry {
             group: r.group,

@@ -29,7 +29,7 @@ jobs:
       - name: Install Python test deps
         run: |
           python -m pip install --upgrade pip
-          python -m pip install maturin pydicom
+          python -m pip install -e ".[dev]" maturin pydicom
 
       - name: Build Rust workspace
         run: cargo build --release --workspace
@@ -39,11 +39,24 @@ jobs:
           cargo run --release --bin dmap-compile -- \
             --standard data/standard/attributes.json \
             --resolved data/resolved_pydicom_backfilled.jsonl \
-            --out tags.dmap
-          ls -la tags.dmap
+            --out tags.dmap.ci
+          ls -la tags.dmap.ci
+
+      - name: Verify tags.dmap is not stale
+        run: |
+          sha_committed=$(sha256sum tags.dmap | awk '{print $1}')
+          sha_rebuilt=$(sha256sum tags.dmap.ci | awk '{print $1}')
+          if [ "$sha_committed" != "$sha_rebuilt" ]; then
+            echo "::error::tags.dmap is out of date — re-run dmap-compile and commit the result"
+            exit 1
+          fi
+          echo "tags.dmap is up to date"
 
       - name: Rust tests
         run: cargo test --release --workspace
+
+      - name: Python unit tests
+        run: pytest tests/ -v
 
       - name: Python round-trip fuzz
         run: python tests/roundtrip_fuzz.py
@@ -83,3 +96,33 @@ jobs:
           name: tags-dmap
           path: tags.dmap
           retention-days: 30
+
+  release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    needs: test
+    # Trigger by pushing a tag like v0.2.0
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release artifacts
+        run: |
+          cargo build --release --workspace
+          sha256sum tags.dmap tags.csv > SHA256SUMS.txt
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "DICOM-Map ${{ github.ref_name }}" \
+            --generate-notes \
+            tags.dmap tags.csv SHA256SUMS.txt

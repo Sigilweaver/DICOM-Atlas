@@ -12,7 +12,7 @@
 //!
 //! `lookup` returns a dict (or `None`) with stable keys:
 //! `group`, `element`, `creator`, `keyword`, `name`, `vr`, `description`,
-//! `retired`, `block_offset`.
+//! `retired`, `block_offset`, `sources`.
 
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -40,6 +40,7 @@ fn tag_view_to_pydict<'py>(py: Python<'py>, v: &TagView<'_>) -> PyResult<Bound<'
     d.set_item("description", v.description())?;
     d.set_item("retired", v.retired())?;
     d.set_item("block_offset", v.is_block_offset())?;
+    d.set_item("sources", v.sources().collect::<Vec<_>>())?;
     Ok(d)
 }
 

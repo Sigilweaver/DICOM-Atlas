@@ -20,7 +20,7 @@
 use rkyv::{Archive, Deserialize, Serialize};
 
 pub const MAGIC: &[u8; 4] = b"DMAP";
-pub const VERSION: u16 = 1;
+pub const VERSION: u16 = 2;
 
 /// 32-byte file prefix. Kept outside rkyv so we can sanity-check before
 /// attempting to deserialize the body.
@@ -110,6 +110,10 @@ pub struct TagRecord {
     pub creator_len: u16,
     pub description_off: u32,
     pub description_len: u32,
+    /// Pipe-delimited list of source PDF filenames (with `#pN` page anchors).
+    /// Points into the shared string pool. Empty for public (PS3.6) tags.
+    pub sources_off: u32,
+    pub sources_len: u32,
 }
 
 /// DICOM value representation, 2-byte ASCII packed into one byte via a

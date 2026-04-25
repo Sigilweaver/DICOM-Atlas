@@ -70,7 +70,7 @@ When `VERSION` bumps:
 Readers MUST:
 
 - Validate `magic == b"DMAP"`.
-- Validate `version == VERSION` (currently `1`).
+- Validate `version == VERSION` (currently `2`).
 - Fail loudly (don't silently continue) if either check fails.
 
 The provided `DmapDict::open` and `DmapDict::from_static` functions already
@@ -81,3 +81,4 @@ enforce this and return `DmapError::UnsupportedVersion { got }` on mismatch.
 | Version | Date       | Notes                                                       |
 |---------|------------|-------------------------------------------------------------|
 | 1       | 2026-04    | Initial format. 32-byte header, rkyv-archived Dictionary.   |
+| 2       | 2026-04    | Added `sources_off: u32` and `sources_len: u32` to `TagRecord`. Stores pipe-delimited source PDF filenames (with `#pN` page anchors) in the shared string pool. Empty for public PS3.6 tags. |

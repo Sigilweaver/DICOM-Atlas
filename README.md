@@ -102,7 +102,14 @@ python tests/roundtrip_fuzz.py
 
 ## Re-scrape from PDFs (optional)
 
-The PDF corpus is not checked in. If you have it in `data/pdfs/`:
+The PDF corpus is not checked in. Download from archive.org using `sources.json`:
+
+```bash
+pip install -e ".[ops]"                      # installs requests (already present) + internetarchive
+python scripts/fetch_from_archive.py         # downloads all vendor PDFs from archive.org
+```
+
+Then re-harvest and re-resolve:
 
 ```bash
 python -m scraper.harvest_batch --vendor ge --jobs 4
@@ -112,6 +119,59 @@ python -m scraper.resolve -o data/resolved.jsonl data/interim/*.jsonl
 python -m scraper.pydicom_compare   # writes resolved_pydicom_backfilled.jsonl
 ```
 
+## Data provenance and limitations
+
+Private DICOM tags are **inherently undocumented by design** — the standard
+deliberately leaves the `(gggg, xxxx, creator)` space to vendors, who are under
+no obligation to publish or stabilise their tag definitions. Even official
+conformance statements vary across product versions, may contradict each other,
+and sometimes document tags that were quietly dropped or repurposed in later
+firmware. This registry is a **best-effort compilation for non-critical
+use cases** — it can help you understand what you're looking at in a DICOM file,
+but it should **not** be the basis for clinical decisions, automated
+de-identification, or any application where a wrong VR or stale name would cause
+harm.
+
+> **Notice:** The private tag data in this repository is extracted by automated
+> parsing of vendor-published conformance statement PDFs. It is **not** an
+> authoritative standard and comes with no warranty of completeness or accuracy.
+
+**Sources:**
+- Public tags: DICOM Standard Part 6 (PS3.6) via the
+  [Innolitics JSON export](https://github.com/innolitics/dicom-standard).
+- Private tags: 1,633 conformance statement PDFs from GE HealthCare, Siemens
+  Healthineers, and Philips Healthcare, archived at
+  [archive.org/details/dicom-conformance-ge](https://archive.org/details/dicom-conformance-ge),
+  [archive.org/details/dicom-conformance-siemens](https://archive.org/details/dicom-conformance-siemens), and
+  [archive.org/details/dicom-conformance-philips](https://archive.org/details/dicom-conformance-philips).
+  Original vendor source URLs are in `data/sources.json`.
+
+Each private tag record carries a `sources` field listing the specific PDF
+file(s) (with page number anchors) that the definition was scraped from. This
+is exposed at runtime via the lookup API — `TagView::sources()` in Rust and the
+`"sources"` key in the Python dict — so you can always trace a tag back to the
+document it came from.
+
+**Known limitations:**
+- Only PDFs in which the vendor explicitly tabulates private tag dictionaries
+  are harvested (~21% of the corpus). Many conformance statements describe
+  service classes but do not enumerate private tags — these are not gaps in our
+  extraction, they simply contain nothing to extract.
+- Some widely-used private tags (e.g. `(0019,100a)` `NumberOfImagesInMosaic`
+  for Siemens MRI mosaics) were established by community reverse-engineering
+  and do not appear in official conformance PDFs. They are absent from this
+  registry.
+- Where the same (group, element, creator) appears in multiple PDFs with
+  conflicting VR types, the majority vote wins; the `vr_inferred` flag marks
+  the small number of cases where no majority existed.
+- Cross-referenced against [pydicom](https://github.com/pydicom/pydicom)'s
+  private dictionary for validation; some VR values were backfilled or corrected
+  where pydicom had higher-confidence data.
+- Multi-vendor products (e.g. the Siemens/GE joint AdvantageSim RT planning
+  system) can cause the same tag to appear in conformance PDFs from more than
+  one vendor. The `vendors` field reflects all vendors whose documents reference
+  a tag, not necessarily the vendor that originally defined it.
+
 ## Status and roadmap
 
 See [ROADMAP.md](ROADMAP.md) for current state and prioritised future work,
@@ -120,44 +180,4 @@ versioning policy.
 
 ## License
 
-MIT OR Apache-2.0.
-# DICOM-Map
-
-Build a single memory-mapped binary dictionary of **private DICOM tags** scraped
-from vendor conformance statements (Siemens, GE, Philips, ...).
-
-## Layout
-
-```
-scraper/            Python — PDF → JSON-L pipeline
-  models.py           canonical data models (Pydantic)
-  inspect_pdf.py      probe: classify a PDF before harvesting
-  harvest/            per-vendor extractors
-  standard.py         loads public PS3.6 tags (for validation)
-
-data/
-  standard/           public DICOM tag dictionary (PS3.6, one-time fetch)
-  pdfs/               downloaded conformance PDFs  (gitignored)
-  raw/                per-PDF raw extraction output (gitignored)
-  interim/            normalized JSON-L              (gitignored)
-
-compiler/           (future) Rust: JSON-L → .dmap frozen archive
-dicom-map/          (future) Rust library: mmap-backed O(1) lookup
-```
-
-## Phases
-
-| # | Phase                 | Status     |
-|---|-----------------------|------------|
-| 0 | Standard tag baseline | bootstrap  |
-| 1 | PDF scraper (Python)  | in progress|
-| 2 | Binary freeze (Rust)  | not started|
-
-## Quick start
-
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
-python -m scraper.bootstrap          # fetches PS3.6 standard tags
-python -m scraper.inspect_pdf <file> # probe an unknown PDF
-```
+Apache-2.0.

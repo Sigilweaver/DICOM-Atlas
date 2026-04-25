@@ -13,9 +13,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # ops tools used only during corpus maintenance
-ops = [
-    "internetarchive>=5.8.0",
-]
+ops = ["internetarchive>=5.8.0"]
 dev = ["ruff>=0.4", "pytest>=8", "mypy>=1.10"]
 
 [tool.ruff]

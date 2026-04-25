@@ -85,6 +85,10 @@ fn render_human(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Op
     if !v.description().is_empty() {
         println!("description: {}", v.description());
     }
+    let srcs = v.sources_raw();
+    if !srcs.is_empty() {
+        println!("sources    : {}", srcs.replace('|', "\n             "));
+    }
     if v.retired() {
         println!("retired    : yes");
     }
@@ -111,7 +115,7 @@ fn render_json(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Opt
     };
     let creator_out = creator.unwrap_or(v.creator());
     println!(
-        "{{\"group\":\"{:04X}\",\"element\":\"{:04X}\",\"creator\":{},\"keyword\":{},\"name\":{},\"vr\":{},\"description\":{},\"retired\":{},\"block_offset\":{}}}",
+        "{{\"group\":\"{:04X}\",\"element\":\"{:04X}\",\"creator\":{},\"keyword\":{},\"name\":{},\"vr\":{},\"description\":{},\"retired\":{},\"block_offset\":{},\"sources\":[{}]}}",
         group,
         element,
         esc(creator_out),
@@ -121,6 +125,7 @@ fn render_json(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Opt
         esc(v.description()),
         v.retired(),
         v.is_block_offset(),
+        v.sources().map(|s| esc(s)).collect::<Vec<_>>().join(","),
     );
 }
 

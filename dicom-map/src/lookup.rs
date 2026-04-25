@@ -168,6 +168,18 @@ impl<'a> TagView<'a> {
         self.slice(self.rec.description_off, self.rec.description_len)
     }
 
+    /// Pipe-delimited list of source PDF filenames that document this tag.
+    /// Each entry is a filename (optionally with a `#pN` page anchor) from
+    /// `data/sources.json`. Empty for public PS3.6 tags.
+    pub fn sources_raw(&self) -> &'a str {
+        self.slice(self.rec.sources_off, self.rec.sources_len)
+    }
+
+    /// Source PDF filenames split on `|`. Empty iterator for public PS3.6 tags.
+    pub fn sources(&self) -> impl Iterator<Item = &'a str> {
+        self.sources_raw().split('|').filter(|s| !s.is_empty())
+    }
+
     pub fn vr(&self) -> &'static str {
         archived_vr_as_str(&self.rec.vr)
     }
