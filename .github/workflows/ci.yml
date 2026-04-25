@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python test deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install maturin pydicom
+
+      - name: Build Rust workspace
+        run: cargo build --release --workspace
+
+      - name: Compile tags.dmap
+        run: |
+          cargo run --release --bin dmap-compile -- \
+            --standard data/standard/attributes.json \
+            --resolved data/resolved_pydicom_backfilled.jsonl \
+            --out tags.dmap
+          ls -la tags.dmap
+
+      - name: Rust tests
+        run: cargo test --release --workspace
+
+      - name: Python round-trip fuzz
+        run: python tests/roundtrip_fuzz.py
+
+      - name: Build Python wheel
+        working-directory: dicom-map-py
+        run: maturin build --release
+
+      - name: Python smoke test
+        working-directory: dicom-map-py
+        run: |
+          python -m maturin develop --release
+          python -c "
+          import dicom_map
+          d = dicom_map.open('../tags.dmap')
+          assert len(d) > 9000, f'dict too small: {len(d)}'
+          t = d.lookup(0x0008, 0x0005)
+          assert t and t['keyword'] == 'SpecificCharacterSet', t
+          t = d.lookup(0x0021, 0x0008, 'Siemens: Thorax/Multix FD Lab Settings')
+          assert t and t['vr'] == 'US', t
+          print('python smoke OK')
+          "
+
+      - name: C FFI smoke test
+        run: |
+          gcc -Wall -Wextra -O2 \
+            -I dicom-map-ffi/include \
+            dicom-map-ffi/tests/smoke.c \
+            -L target/release -ldicom_map_ffi \
+            -o /tmp/dmap_smoke
+          LD_LIBRARY_PATH=target/release /tmp/dmap_smoke
+
+      - name: Upload tags.dmap
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tags-dmap
+          path: tags.dmap
+          retention-days: 30

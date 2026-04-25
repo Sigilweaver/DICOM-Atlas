@@ -1,0 +1,25 @@
+# Ensure consistent line endings for text files across platforms
+* text=auto eol=lf
+
+# Rust source
+*.rs text eol=lf
+*.toml text eol=lf
+*.lock text eol=lf
+
+# Python source
+*.py text eol=lf
+
+# Data files — mark as text so diffs work
+*.csv text eol=lf
+*.jsonl text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.cff text eol=lf
+
+# Binary files — do not diff or convert
+*.dmap binary
+*.pdf binary
+*.so binary
+*.a binary
+*.dll binary
+*.pyd binary

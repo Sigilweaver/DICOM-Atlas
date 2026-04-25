@@ -1,0 +1,20 @@
+[package]
+name = "dicom-map"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Memory-mapped O(1) DICOM tag dictionary"
+
+[dependencies]
+rkyv = { workspace = true }
+memmap2 = { workspace = true }
+thiserror = { workspace = true }
+
+[features]
+# Embed a compiled `tags.dmap` into the binary. The caller provides the
+# absolute path via DMAP_EMBED_PATH at build time, or defaults to the
+# workspace-root `tags.dmap`.
+embedded = []
+
+[dev-dependencies]
+anyhow = { workspace = true }

@@ -1,0 +1,42 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+
+# Large / binary / vendor-owned artifacts
+data/pdfs/
+data/raw/
+data/interim/
+data/html/
+data/catalog.json
+data/interim_resolved_old.jsonl
+*.dmap
+
+# Internal scraping tools (crawlers, downloaders) — not shipped publicly.
+# Use scripts/fetch_from_archive.py to reproduce the PDF corpus instead.
+scraper/internal/
+
+# Upload helper requires IA credentials — kept local only
+scripts/ia_upload.py
+
+# Allow small curated samples
+!data/pdfs/.gitkeep
+
+# tags.csv is the canonical human-editable source of truth — check it in
+!tags.csv
+
+# PDF source manifest (SHA256 hashes + metadata, no PDF content)
+!data/sources.json
+
+# Check in the compact resolved tables so CI can rebuild tags.dmap
+# without needing the full PDF corpus.
+!data/resolved.jsonl
+!data/resolved_pydicom_backfilled.jsonl
+!data/standard/

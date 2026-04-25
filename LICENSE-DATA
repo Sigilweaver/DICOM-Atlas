@@ -1,0 +1,49 @@
+The data files in this repository (tags.csv, tags.dmap, and the contents of
+data/standard/) are licensed under the Creative Commons Attribution 4.0
+International License (CC BY 4.0).
+
+    https://creativecommons.org/licenses/by/4.0/
+
+You are free to:
+  Share — copy and redistribute the material in any medium or format
+  Adapt — remix, transform, and build upon the material for any purpose,
+          even commercially
+
+Under the following terms:
+  Attribution — You must give appropriate credit, provide a link to the
+                license, and indicate if changes were made. You may do so
+                in any reasonable manner, but not in any way that suggests
+                the licensor endorses you or your use.
+
+  No additional restrictions — You may not apply legal terms or
+                               technological measures that legally restrict
+                               others from doing anything the license permits.
+
+-------------------------------------------------------------------------------
+
+Attribution notice
+
+If you use this dataset in a publication, presentation, or software product,
+we encourage (but do not require) a citation in the following form:
+
+  Sigilweaver. DicomAtlas: A comprehensive open registry of public and
+  private DICOM tags. https://github.com/Sigilweaver/DicomAtlas, 2026.
+
+A machine-readable citation is also available in CITATION.cff at the root
+of this repository.
+
+-------------------------------------------------------------------------------
+
+Notes on provenance
+
+The private tag data in this repository was compiled by automated extraction
+from vendor DICOM conformance statements. Those documents remain the property
+of their respective vendors (GE HealthCare, Siemens Healthineers, Philips
+Healthcare, and others). The compiled tag records (names, VR codes, element
+numbers) represent factual technical information that has been extracted,
+structured, and curated; they do not reproduce substantial portions of the
+source documents.
+
+The DICOM standard data (data/standard/) is derived from DICOM PS3.6 as
+published by the National Electrical Manufacturers Association (NEMA) under
+their open publication policy.

@@ -1,0 +1,96 @@
+# Credits
+
+DicomAtlas builds on the work of the following open-source projects and
+standards. Each is listed with its license and the role it plays here.
+
+---
+
+## Data sources
+
+### DICOM Standard (PS3.6)
+- **Publisher:** National Electrical Manufacturers Association (NEMA)
+- **URL:** https://www.dicomstandard.org/current
+- **Role:** Canonical source for all public tag definitions. The file
+  `data/standard/attributes.json` is derived from the PS3.6 XML release.
+- **License:** Open publication; see https://www.dicomstandard.org/about-dicom
+
+### Vendor conformance statements
+- **Publishers:** GE HealthCare, Siemens Healthineers, Philips Healthcare
+- **Role:** Source documents for all private tag definitions. PDF manifests
+  (with original and Archive.org URLs) are in `data/sources.json`.
+- **Note:** Tag metadata (names, VR codes, element numbers) is factual
+  technical information extracted and curated from these documents. The
+  source PDFs themselves are not redistributed.
+
+### pydicom — `_private_dict.py`
+- **URL:** https://github.com/pydicom/pydicom
+- **License:** MIT
+- **Role:** Used as a cross-reference during the resolve step to validate VR
+  assignments and backfill entries not found in the vendor PDFs. No pydicom
+  source code is included in this repository; it is used only as a runtime
+  validation tool during the build pipeline.
+
+---
+
+## Rust libraries
+
+### rkyv
+- **URL:** https://github.com/rkyv/rkyv
+- **License:** MIT
+- **Role:** Zero-copy serialization format for the `.dmap` binary archive.
+
+### memmap2
+- **URL:** https://github.com/RazrFalcon/memmap2-rs
+- **License:** MIT / Apache-2.0
+- **Role:** Memory-mapped file access in the `dicom-map` library.
+
+### PyO3
+- **URL:** https://github.com/PyO3/pyo3
+- **License:** MIT / Apache-2.0
+- **Role:** Rust–Python bindings in `dicom-map-py`.
+
+### maturin
+- **URL:** https://github.com/PyO3/maturin
+- **License:** MIT / Apache-2.0
+- **Role:** Build system for building and publishing Python wheels from the
+  PyO3 crate.
+
+### clap
+- **URL:** https://github.com/clap-rs/clap
+- **License:** MIT / Apache-2.0
+- **Role:** CLI argument parsing in `dmap-compile` and `dicom-lookup`.
+
+### serde / serde_json
+- **URL:** https://github.com/serde-rs/serde
+- **License:** MIT / Apache-2.0
+- **Role:** JSON deserialization in the compiler pipeline.
+
+### anyhow / thiserror
+- **URL:** https://github.com/dtolnay/anyhow, https://github.com/dtolnay/thiserror
+- **License:** MIT / Apache-2.0
+- **Role:** Error handling throughout the Rust codebase.
+
+### csv
+- **URL:** https://github.com/BurntSushi/rust-csv
+- **License:** MIT / Unlicense
+- **Role:** CSV reading and writing in the compiler.
+
+---
+
+## Python libraries (build pipeline)
+
+### pdfplumber
+- **URL:** https://github.com/jsvine/pdfplumber
+- **License:** MIT
+- **Role:** PDF table extraction in the scraper pipeline.
+
+### pdfminer.six
+- **URL:** https://github.com/pdfminer/pdfminer.six
+- **License:** MIT
+- **Role:** Underlying PDF parsing used by pdfplumber.
+
+### internetarchive (for PDF archiving)
+- **URL:** https://github.com/jjjake/internetarchive
+- **License:** AGPL-3.0
+- **Role:** Used standalone to upload source PDFs to archive.org. Not
+  imported by any library code or included in published packages.

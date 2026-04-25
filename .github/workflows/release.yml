@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v0.2.0)"
+        required: true
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build tags.dmap
+        run: |
+          cargo run --release --bin dmap-compile -- \
+            --standard data/standard/attributes.json \
+            --resolved data/resolved_pydicom_backfilled.jsonl \
+            --out tags.dmap
+
+      - name: Build CLI + FFI
+        run: |
+          cargo build --release --bin dicom-lookup -p dmap-compiler
+          cargo build --release -p dicom-map-ffi
+
+      - name: Package release artifacts
+        run: |
+          mkdir -p release
+          cp tags.dmap release/
+          cp target/release/dicom-lookup release/
+          cp target/release/libdicom_map_ffi.so release/ || true
+          cp target/release/libdicom_map_ffi.a release/ || true
+          cp dicom-map-ffi/include/dicom_map.h release/
+          cd release
+          sha256sum * > SHA256SUMS
+          tar czf ../dicom-map-linux-x86_64.tar.gz *
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          files: |
+            tags.dmap
+            dicom-map-linux-x86_64.tar.gz
+            release/SHA256SUMS
+          generate_release_notes: true

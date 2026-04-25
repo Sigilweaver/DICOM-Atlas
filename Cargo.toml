@@ -1,0 +1,22 @@
+[workspace]
+members = ["dicom-map", "compiler", "dicom-map-py", "dicom-map-ffi"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+rkyv = { version = "0.7.45", default-features = false, features = [
+    "validation",
+    "size_32",
+    "alloc",
+] }
+memmap2 = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+csv = "1"

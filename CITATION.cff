@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "DicomAtlas: A comprehensive open registry of public and private DICOM tags"
+message: >
+  If you use DicomAtlas in your research, please cite it using the metadata
+  below. Citation is encouraged and appreciated but not legally required.
+type: dataset
+authors:
+  - alias: Sigilweaver
+    website: "https://github.com/Sigilweaver"
+repository-code: "https://github.com/Sigilweaver/DicomAtlas"
+url: "https://github.com/Sigilweaver/DicomAtlas"
+abstract: >
+  DicomAtlas is an open registry of public and private DICOM tags compiled
+  from vendor conformance statements (GE HealthCare, Siemens Healthineers,
+  Philips Healthcare) and the DICOM PS3.6 standard. Each tag record includes
+  the value representation (VR), value multiplicity (VM), human-readable name,
+  private creator string, and source citations back to the originating
+  conformance document page. The registry is distributed as a human-editable
+  CSV (tags.csv), a memory-mapped binary (tags.dmap), and queryable via
+  a Rust library, Python bindings, and C FFI.
+license: "Apache-2.0"
+license-url: "https://www.apache.org/licenses/LICENSE-2.0"
+date-released: "2026-04-24"
+version: "0.1.0"
+keywords:
+  - DICOM
+  - medical imaging
+  - private tags
+  - radiology
+  - data dictionary
+  - interoperability
+  - conformance statements
+  - GE HealthCare
+  - Siemens Healthineers
+  - Philips Healthcare

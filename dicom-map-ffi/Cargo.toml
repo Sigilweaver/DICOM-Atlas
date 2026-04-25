@@ -1,0 +1,13 @@
+[package]
+name = "dicom-map-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "C FFI for dicom-map"
+
+[lib]
+name = "dicom_map_ffi"
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+dicom-map = { path = "../dicom-map" }
