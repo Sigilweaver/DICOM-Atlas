@@ -14,6 +14,7 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 
+from scraper.harvest.acuson import AcusonHarvester
 from scraper.harvest.ge import GEHarvester
 from scraper.harvest.philips import PhilipsHarvester
 from scraper.harvest.siemens import SiemensHarvester
@@ -26,6 +27,7 @@ HARVESTERS = {
     "siemens": SiemensHarvester,
     "ge": GEHarvester,
     "philips": PhilipsHarvester,
+    "acuson": AcusonHarvester,
 }
 
 INTERIM_DIR = Path(__file__).resolve().parent.parent / "data" / "interim"

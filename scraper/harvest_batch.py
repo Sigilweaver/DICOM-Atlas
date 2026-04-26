@@ -126,7 +126,12 @@ def run(
         vendor = vmap.get(pdf.name)
         if vendor is None:
             name_lower = pdf.name.lower()
-            if name_lower.startswith(("ge_", "gehc", "gems_")) or "gehc" in name_lower or "gems_" in name_lower:
+            if (
+                name_lower.startswith(("acuson_", "acuson ", "acuson-", "cuson_"))
+                or name_lower.startswith(("sequoia_", "sequoia "))
+            ):
+                vendor = "acuson"
+            elif name_lower.startswith(("ge_", "gehc", "gems_")) or "gehc" in name_lower or "gems_" in name_lower:
                 vendor = "ge"
             elif name_lower.startswith("philips_") or "philips" in name_lower:
                 vendor = "philips"
