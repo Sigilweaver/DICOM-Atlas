@@ -14697,6 +14697,2562 @@
       "sha256": "722d1c5cbd81668ffe59f4a4fe972c21ab587517b1028df697dec4d35a2d013a",
       "original_url": "https://marketing.webassets.siemens-healthineers.com/1800000000074294/6389b34fde18/x_leonardo_dcs_va70a-00074294_1800000000074294.pdf",
       "archive_url": "https://archive.org/download/dicom-conformance-siemens/x_leonardo_dcs_va70a-00074294_1800000000074294.pdf"
+    },
+    {
+      "filename": "2G985-047EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 845855,
+      "sha256": "9d773bc22fa63a141a541fdafb537ad9535ac974be605b505648a03276b5c34a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-047EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-047EN.pdf"
+    },
+    {
+      "filename": "2G985-047ENA.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1208807,
+      "sha256": "7a2da2d4fdb6c09ba325dd0a2abcc11d5bd822dfd1fac4856114011dbc0f892c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-047ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-047ENA.pdf"
+    },
+    {
+      "filename": "2G985-058EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1666667,
+      "sha256": "c939be3de7fcef219a9afdbc355e537c3c263470a7af3b22343e1ab1e5599386",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-058EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-058EN.pdf"
+    },
+    {
+      "filename": "2G985-108EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1513717,
+      "sha256": "2b25d39170200df1d58b803b860c854ac865b9b08d67c0accd843c1c5f9d5f9a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-108EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-108EN.pdf"
+    },
+    {
+      "filename": "2G985-043EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 474696,
+      "sha256": "4e43aae818c5cf643975bbba1181eff0f200d5255fa317c5d7397462abb94dbb",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-043EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-043EN.pdf"
+    },
+    {
+      "filename": "2G985-043ENA.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 561199,
+      "sha256": "109cedf525c53076496a3cd02280a8a811e4bf8eb92fc6ec451b67d2dbd861df",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-043ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-043ENA.pdf"
+    },
+    {
+      "filename": "2G985-043ENB.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 761127,
+      "sha256": "deab2ec4a2d4cb02e86f1f3877b9f687e0a0820722984354740541c911da9a4f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-043ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-043ENB.pdf"
+    },
+    {
+      "filename": "DICOM Conformance Statement CAAS Workstation.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 293009,
+      "sha256": "fc7eae26eca7173c3d4db021c7f96ea80910a24f548e94716e486fdef40f15d7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/DICOM%20Conformance%20Statement%20CAAS%20Workstation.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/DICOM Conformance Statement CAAS Workstation.pdf"
+    },
+    {
+      "filename": "DICOM Conformance Statement CAAS A-Valve.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 212639,
+      "sha256": "2d74ac49e8742b3db52506e50f08986d61499db0d2b3eadc2c640f2706b3e13e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/DICOM%20Conformance%20Statement%20CAAS%20A-Valve.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/DICOM Conformance Statement CAAS A-Valve.pdf"
+    },
+    {
+      "filename": "DICOM Conformance Statement 3mensio 9.2.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 377660,
+      "sha256": "0cb82b905470e8f729d1de858a520d19d9af2b6150d35f2dc24dcfa34a338c77",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/DICOM%20Conformance%20Statement%203mensio%209.2.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/DICOM Conformance Statement 3mensio 9.2.pdf"
+    },
+    {
+      "filename": "MIIXR0019EAC.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 445182,
+      "sha256": "c1f98359280a72743a944b84a0022650ab7f91a1d05296d982f8c00e253683d0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0019EAC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0019EAC.pdf"
+    },
+    {
+      "filename": "MIIXR0019EAD.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 445933,
+      "sha256": "cd904ce3f7ee398322c2c3eb9da43a36c597b7687abe51aee3a99f09f5eeb529",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0019EAD.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0019EAD.pdf"
+    },
+    {
+      "filename": "MIIXR0019EAE.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 621728,
+      "sha256": "0b8098816320a904ab9d308d8f217fee138ec47c4ef7d32e9d5e85ef4d56e24b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0019EAE.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0019EAE.pdf"
+    },
+    {
+      "filename": "2G985-056END.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1157641,
+      "sha256": "1cfff5c7becc4447d9f4debc59bcc6704eb073d6e1352a9fffbd8409e834eff2",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-056END.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-056END.pdf"
+    },
+    {
+      "filename": "2G985-095EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1242400,
+      "sha256": "5239822258a4d27aff15037590d27f354ba2944a3650a29a9048f7c90a665f50",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-095EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-095EN.pdf"
+    },
+    {
+      "filename": "2G985-005ENB.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 987207,
+      "sha256": "facc634b20e813ecb28542e43d556e09c709b787f80c16416c2c87f96ac2826c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-005ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-005ENB.pdf"
+    },
+    {
+      "filename": "MIIXR0015EAA.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 328232,
+      "sha256": "3cafa3b80b421254df9fcf2ea6729769f53c088a269a77c7974811450fabc33a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0015EAA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0015EAA.pdf"
+    },
+    {
+      "filename": "BT8-1617-NE_V2.19_DICOM_Conformance_Statement.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 650121,
+      "sha256": "4879b4b7722ac4e1a56cbf912df6f8d47569bbd3505b1a03b54b1668c1f8a121",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/BT8-1617-NE_V2.19_DICOM_Conformance_Statement.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/BT8-1617-NE_V2.19_DICOM_Conformance_Statement.pdf"
+    },
+    {
+      "filename": "BT8-1824-E02_NE V3.10 DICOM Conformance Statement (E).pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1961411,
+      "sha256": "27f863131926c0f9fec57c2398140a60d66d2bf05ecbe35d9d8109981ce4b8c4",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/BT8-1824-E02_NE%20V3.10%20DICOM%20Conformance%20Statement%20(E).pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/BT8-1824-E02_NE V3.10 DICOM Conformance Statement (E).pdf"
+    },
+    {
+      "filename": "BT8-2085-E01_NE V3.11 DICOM Conformance Statement (E).pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1993702,
+      "sha256": "f63a7ca464af3a802616bf42259604d2f5931e49ea6ee7279ea1c9677cb98110",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/BT8-2085-E01_NE%20V3.11%20DICOM%20Conformance%20Statement%20(E).pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/BT8-2085-E01_NE V3.11 DICOM Conformance Statement (E).pdf"
+    },
+    {
+      "filename": "BT8-2261-000F101001.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1999343,
+      "sha256": "fadd7e60a4ea64fdf002f9bd12cbc080501cfead6911966b823da34b3f8dfa9a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/BT8-2261-000F101001.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/BT8-2261-000F101001.pdf"
+    },
+    {
+      "filename": "BT8-2461-000F101001.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 2462817,
+      "sha256": "2795387b68f825c4716ed24660a821db0dfe41b10a45c77712eabc611e149b00",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/BT8-2461-000F101001.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/BT8-2461-000F101001.pdf"
+    },
+    {
+      "filename": "2G985-044EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 946286,
+      "sha256": "a8a4f3af99269bf97d4048033fb12bc250fc6859d61003990eaa455c199b217e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-044EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-044EN.pdf"
+    },
+    {
+      "filename": "MIIXR0014EAH.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 616408,
+      "sha256": "b278cc6a85973ba6de4d836570d344354f8b00183aeb69da74dee02307ffe42b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0014EAH.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0014EAH.pdf"
+    },
+    {
+      "filename": "2G985-104EN.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 994809,
+      "sha256": "f294b26250608525dda2fc7a1f74292a82a36380cbe959e9f542b0f1793ed649",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-104EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-104EN.pdf"
+    },
+    {
+      "filename": "2G985-030ENA.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 580762,
+      "sha256": "a0a4c4d45959ce85e1a697cd924952c86c7f6ff7256323726f408119524f5551",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-030ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-030ENA.pdf"
+    },
+    {
+      "filename": "2G985-052ENA.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 1031214,
+      "sha256": "84426d05d8448fe5382fcd55873554d5e794b9bda50d0368eed49cd1123ff014",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-052ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-052ENA.pdf"
+    },
+    {
+      "filename": "2G985-019ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1221816,
+      "sha256": "058761b4f2adaee109dfdc92c86fc2c3df21e0dcb7cd23c6190a5f9d7fc11f5b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-019ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-019ENA.pdf"
+    },
+    {
+      "filename": "2G985-079EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1308503,
+      "sha256": "ebde855e1783c07588e20d1091bf2b20613793a8c3556886cc91b446e8fffc9d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-079EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-079EN.pdf"
+    },
+    {
+      "filename": "2G985-094ENB.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1445185,
+      "sha256": "f2c7a58328316f0569d2ee28ed05135f2d4ae4cd061ff1fd5cac27d38c7885f5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-094ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-094ENB.pdf"
+    },
+    {
+      "filename": "2G985-033ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1093527,
+      "sha256": "a3195e463dfa39b955e7a77c45011f5c1fdedd257807ef9426483bc7620842ca",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-033ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-033ENA.pdf"
+    },
+    {
+      "filename": "2G985-074ENB.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1330083,
+      "sha256": "70a3fbcfed75cb38e5c8792a57ab889eb3fcbb0c26b1fd73ef3a8e2c42288213",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-074ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-074ENB.pdf"
+    },
+    {
+      "filename": "2G985-080EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1277254,
+      "sha256": "8fb5a77a13dafc7d76fbf7733627d1fddedee53733af670e975a4457a18cd5cb",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-080EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-080EN.pdf"
+    },
+    {
+      "filename": "MIICT0058EAC.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 906396,
+      "sha256": "63627026b4d5d0bdd43561766e4bd292f75855d576a5b197a808f9499e6622ee",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIICT0058EAC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIICT0058EAC.pdf"
+    },
+    {
+      "filename": "2G985-075ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1324837,
+      "sha256": "5c7f0ffb193782cd644ce9b5730832e0749361729a092ea051f586c5eda04e9c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-075ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-075ENA.pdf"
+    },
+    {
+      "filename": "2G985-051EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 4091181,
+      "sha256": "f8fb3246b776df0fe0cc6b22e27178fa16aee23c74738f120a0d00e68aac75b1",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-051EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-051EN.pdf"
+    },
+    {
+      "filename": "2G985-090EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1316044,
+      "sha256": "e4bc4e6217d5349c6b3ebe3827cd0588e668a561454987079101cddf201b757c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-090EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-090EN.pdf"
+    },
+    {
+      "filename": "2G985-101EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1473830,
+      "sha256": "0d4aa02784e95a9c01d3e0602aed1bc09b48e8f2ad7a4936f0502e3ad9aeae9f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-101EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-101EN.pdf"
+    },
+    {
+      "filename": "2G985-088ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1417278,
+      "sha256": "096def26f0aa2fc612253783ce7370666798f9b14fe1ec4a0388ac41e2f0177b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-088ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-088ENA.pdf"
+    },
+    {
+      "filename": "2G985-097EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1475220,
+      "sha256": "f55bc0fe7e06cb331ecd52d0c87782c8b55d52ec9285a4a49d896643e3ed1e75",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-097EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-097EN.pdf"
+    },
+    {
+      "filename": "2G985-002ENB.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 877387,
+      "sha256": "2ef3dd7d357611303b21d0b81c591bf8a9a1c3a2e6f5b8b068dbb0337a92914d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-002ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-002ENB.pdf"
+    },
+    {
+      "filename": "2G985-003ENC.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 881203,
+      "sha256": "cd9e9b4cc2499b6657e8707fb152d45a4d5ac7bcdc446b2df4d5f06c3b909ffe",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-003ENC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-003ENC.pdf"
+    },
+    {
+      "filename": "2G985-021ENB.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1001610,
+      "sha256": "9c831ccced8e9206b4f692df76d8fc34a4db89445ae28ddd3578a5d10ebb6b59",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-021ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-021ENB.pdf"
+    },
+    {
+      "filename": "2G985-038ENB.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1249880,
+      "sha256": "340c2fa9a79d96a1fa057a3c4862d435a622578900a6df1ca8588f41b7e7ee9b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-038ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-038ENB.pdf"
+    },
+    {
+      "filename": "2G985-060EN.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 990434,
+      "sha256": "3de2d2b9b5ab0952c312e08c964071f5aae24196a65ab2ba26f5d5fe7af17f84",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-060EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-060EN.pdf"
+    },
+    {
+      "filename": "2G985-070ENA.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1225514,
+      "sha256": "5cef6da794326ea0bfa607ab0bb2cd95603b8227db1005f37db772a1a7205c3d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-070ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-070ENA.pdf"
+    },
+    {
+      "filename": "2G985-085EN.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1764570,
+      "sha256": "194e00d1da0f63644419c5dfad625add622d9052066817a3c3947d061e06ddbf",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-085EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-085EN.pdf"
+    },
+    {
+      "filename": "2G985-091ENA.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1473324,
+      "sha256": "6cacd36481c30e7261084178869a7fc4ffa9f06cbb2e15a398c0d643eeca80da",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-091ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-091ENA.pdf"
+    },
+    {
+      "filename": "2G985-103ENA.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1548219,
+      "sha256": "12aace8292192fa349b01062292fc1c6c1e1ffd73c7c39f448119cf1762ac946",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-103ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-103ENA.pdf"
+    },
+    {
+      "filename": "2G985-016ENI.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8680765,
+      "sha256": "da85ba6b7885cb48b4c8752cc92b32d6825482922999f8bd0d55979346cf978c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENI.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENI.pdf"
+    },
+    {
+      "filename": "2G985-016ENJ.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 13647742,
+      "sha256": "f0712e5dd7b5158f4181d860cc7adf5729628e252dce29de9d24b69da3790605",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENJ.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENJ.pdf"
+    },
+    {
+      "filename": "2G985-016ENM.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 16895719,
+      "sha256": "e4f0dbbd90d20d917f2a10ac2f73f2042e15bb5c7e7bc4ebd44a5c02f9cef5cd",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENM.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENM.pdf"
+    },
+    {
+      "filename": "2G985-016ENN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 15485643,
+      "sha256": "30deff014e1aeb7422d2ad0050676ed612f5a1b9a0b5e59e8d464abad5154264",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENN.pdf"
+    },
+    {
+      "filename": "2G985-016ENP.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 9584279,
+      "sha256": "2382c1b13dd2d3d064101c02ba3c927be11a73751eacc7666f7d0fd6a8d540cf",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENP.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENP.pdf"
+    },
+    {
+      "filename": "2G985-016ENQ.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 9686624,
+      "sha256": "6d824c1c9fdcaf7308598fc8fca9d3effe1c7b9d61c9e9d880ec3c3365b1b430",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENQ.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENQ.pdf"
+    },
+    {
+      "filename": "2G985-016ENR.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 9346576,
+      "sha256": "1a960fb96bee01088c332053568eb9c629a137c82a6addeef506a8d65487ad3c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENR.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENR.pdf"
+    },
+    {
+      "filename": "2G985-096EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 9182267,
+      "sha256": "042a66bc53c645169171ea56dcd138df27ad25e332abd3318da9ba80c580a40c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-096EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-096EN.pdf"
+    },
+    {
+      "filename": "2G985-096ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 9627075,
+      "sha256": "cc33e2d9d8fd548b4646748aa5e9c16471de4fe2889ac4f514d934d17069aa1e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-096ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-096ENA.pdf"
+    },
+    {
+      "filename": "2G985-093EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8970125,
+      "sha256": "1b4db12641c4abb967b2e05688a54162c3e67f5a4bc73decc5ae87e02c985609",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-093EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-093EN.pdf"
+    },
+    {
+      "filename": "2G985-039ENC.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7495454,
+      "sha256": "8db18011ab994e35581c61aaf08c6a4fe9f2a7726fc8252140366cd94317b529",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039ENC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039ENC.pdf"
+    },
+    {
+      "filename": "2G985-039END.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 16842416,
+      "sha256": "c8fd9b1b148da3236b9a3e099d800521cd625f8a9638f0c89f523ba31e24fa02",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039END.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039END.pdf"
+    },
+    {
+      "filename": "2G985-039ENE.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 9766625,
+      "sha256": "0ccbc068d1c6eb690b647a3ebb8f6fd4f94dab28d0d24b4283bbe04e3a7f9756",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039ENE.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039ENE.pdf"
+    },
+    {
+      "filename": "2G985-039ENF.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 10230185,
+      "sha256": "26f8b775cb4a4c165fafbd042a43c3b0c9e056789bac145c6c948b3bb42e1ec7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039ENF.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039ENF.pdf"
+    },
+    {
+      "filename": "2G985-039ENG.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 10332539,
+      "sha256": "475371456753672a53dcf839a8d29a32f603be0ef383b724544fcc8d5d1cf2e1",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039ENG.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039ENG.pdf"
+    },
+    {
+      "filename": "2G985-086EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 13095309,
+      "sha256": "ec83208bb9303f720334140b669b74cd263ca32e39d24ca5cff52c738799c1e2",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-086EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-086EN.pdf"
+    },
+    {
+      "filename": "2G985-086ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7951656,
+      "sha256": "997e5eb8be5efe243bc18c1166e83a57e778b5552900ac338832a84c3eb7acd6",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-086ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-086ENA.pdf"
+    },
+    {
+      "filename": "2G985-040ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 951760,
+      "sha256": "e3302b0c0e8fa5582bc7aa1483a3e9d3bb526c0881b4eff1604bd54d2d5f0c9f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-040ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-040ENA.pdf"
+    },
+    {
+      "filename": "2G985-040ENB.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 982830,
+      "sha256": "1c8da5589ff59197f414fc807e6bee842522cd35f31eb3534e0c13111b99ad59",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-040ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-040ENB.pdf"
+    },
+    {
+      "filename": "2G985-105ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 497734,
+      "sha256": "fcc4a693011630d598f821c1bcd6e3512194c22598ea84e7cbe3dbbda44e49ab",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-105ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-105ENA.pdf"
+    },
+    {
+      "filename": "2G985-084EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 2576765,
+      "sha256": "88f55b17ce3d77a48bfd5a8c101b9dd118ff02feb12c4d626d856cba58cfbc43",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-084EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-084EN.pdf"
+    },
+    {
+      "filename": "2G985-084ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3185566,
+      "sha256": "1b5ae2dfbdad62741efd35639af34939c36cd8c278b2c28fe1667fb57d027cc0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-084ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-084ENA.pdf"
+    },
+    {
+      "filename": "2G985-084ENB.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3394417,
+      "sha256": "f50c0bfe45852ec3c512d9d057f79b1ffc5b88be01ae1494c3d2141258ca0513",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-084ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-084ENB.pdf"
+    },
+    {
+      "filename": "2G985-057EN.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 1181575,
+      "sha256": "9c018781e7cf90f048ffca6ff47bc3b9fe9a8ea20a4e581c944ab5c1ca3aaaa9",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-057EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-057EN.pdf"
+    },
+    {
+      "filename": "MIICT0059EAA.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 1116004,
+      "sha256": "e592214e91687d267429bdc9091e613561e57684a2369d304b9e8a72bcc4d5e3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIICT0059EAA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIICT0059EAA.pdf"
+    },
+    {
+      "filename": "2G985-031ENA.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 1279623,
+      "sha256": "a79eb02bc737063cf18989cabef17136d791a09bb7a2bbcc26f9a3761cabaf52",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-031ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-031ENA.pdf"
+    },
+    {
+      "filename": "2G985-046ENA.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 1299720,
+      "sha256": "c60a8331ba9d1b8d8ecf5d0e38e5cfd2be0018eeed273439e7b3853e92611b91",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-046ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-046ENA.pdf"
+    },
+    {
+      "filename": "2G985-073EN.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 1415752,
+      "sha256": "9315be9235b0641f60303c400db67d1675bdebfd579879559e56b7eb93e6376a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-073EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-073EN.pdf"
+    },
+    {
+      "filename": "2G985-114EN.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 1466623,
+      "sha256": "e894a3f48b223e0e7ceb1f90e568c9854aec9a64bb36e05e52dacfdd85ee866b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-114EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-114EN.pdf"
+    },
+    {
+      "filename": "MIIMS0015EAC.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 357105,
+      "sha256": "d9db25d2f41a4d0c2698b480268ffd9f0a16395e3ff2ba64eb3f2df5f237fb0f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIMS0015EAC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIMS0015EAC.pdf"
+    },
+    {
+      "filename": "MIIMS0015EAD.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 446787,
+      "sha256": "7e9634900c740664e1ec5e3edc0e0ab5b472db52357a84f572e753af305f0ec2",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIMS0015EAD.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIMS0015EAD.pdf"
+    },
+    {
+      "filename": "MIIMS0015EAE.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 475725,
+      "sha256": "286d75f5a1dfb97f81944d24236d3bcf81fa1628aa7c1edae8d4454c8ff87196",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIMS0015EAE.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIMS0015EAE.pdf"
+    },
+    {
+      "filename": "2G985-028ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 463658,
+      "sha256": "38b8f65b574187f0a30031ac759c397376a4784eb80801327d9daa0cbba69704",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-028ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-028ENA.pdf"
+    },
+    {
+      "filename": "2G985-028ENB.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 462715,
+      "sha256": "6346f40cc8d2d1a4d93f4f952a59adc4c304b2f3ed147cbd3c35866b4a9346c1",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-028ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-028ENB.pdf"
+    },
+    {
+      "filename": "2G985-028ENC.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 743165,
+      "sha256": "d0b8361b7f9d50c50c0d7d312aa60ef27a9e825d8cc3bd4c46bb63ceb897a465",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-028ENC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-028ENC.pdf"
+    },
+    {
+      "filename": "2G985-028END.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 744676,
+      "sha256": "601c5aa89c2fbb4e0b0cb76d931dc24ab4b385251998ccd0c6b48bc7e95ce0f7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-028END.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-028END.pdf"
+    },
+    {
+      "filename": "MIIMS0020EAB.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 423674,
+      "sha256": "76db7d858482e0eb6792e43bfe5d0300e82718fcbbccb45273552c8d15134108",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIMS0020EAB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIMS0020EAB.pdf"
+    },
+    {
+      "filename": "MIIMS0020EAC.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 477478,
+      "sha256": "088ed49acb8cb44ca18bc74fffe792cd621756ad235295129e052db09fc9e42b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIMS0020EAC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIMS0020EAC.pdf"
+    },
+    {
+      "filename": "2G985-011ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 383309,
+      "sha256": "baae7bae1711c2007d14029eb8ebc47a281157c1a4c3ca2539ce13fa9d16e583",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-011ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-011ENA.pdf"
+    },
+    {
+      "filename": "2G985-011ENB.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 406341,
+      "sha256": "17c8361fb441de09a74a4ff1e68a80b9cc91ec1985fab6701d3e13e0fc2c58ec",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-011ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-011ENB.pdf"
+    },
+    {
+      "filename": "2G985-048EN.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 411075,
+      "sha256": "9cdee89b21a695e1def232c1adaa8fcd5b58413ae7d64990686fef3151fa8240",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-048EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-048EN.pdf"
+    },
+    {
+      "filename": "2G985-029ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 576977,
+      "sha256": "e9ee3accded5d7167f496821954817ca6ff652fdd0a4fe116be791472b14048b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-029ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-029ENA.pdf"
+    },
+    {
+      "filename": "2G985-035ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 338608,
+      "sha256": "852bffe231df7f8ffb5f485dbdd15be2e523c46ac1ba28677770852d809d9f34",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-035ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-035ENA.pdf"
+    },
+    {
+      "filename": "2G985-035ENB.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 671313,
+      "sha256": "6d9315a02bfb97beaab89b9bb232e2754374db511bee7ba3dd16ad63cfd8563a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-035ENB.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-035ENB.pdf"
+    },
+    {
+      "filename": "2G985-035ENC.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 447438,
+      "sha256": "d77ecb311b477225e1c89683eabbef8e689e1e22777f10e8137ddfaa1f08ee1e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-035ENC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-035ENC.pdf"
+    },
+    {
+      "filename": "2G985-062EN.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 468298,
+      "sha256": "e08f0cafb7a31910dbd8a96e07f7366c464fa606cc84a9bb63aeca854e8f5275",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-062EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-062EN.pdf"
+    },
+    {
+      "filename": "2G985-062ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 634963,
+      "sha256": "dd71a1eb89aa4a9a5dc7e11f5ac83e96940cbeacd371b83dbc7a9d959a9612be",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-062ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-062ENA.pdf"
+    },
+    {
+      "filename": "2G985-061EN.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 513402,
+      "sha256": "6513e5f7e7fa6cd070e2d66926157994870999d2762360a9116b3d263ec4dba1",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-061EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-061EN.pdf"
+    },
+    {
+      "filename": "2G985-061ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 563317,
+      "sha256": "5f352c9d77ac45af82a63c0c73da7089f0571c5db9711f079c65f7b3b7961710",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-061ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-061ENA.pdf"
+    },
+    {
+      "filename": "2G985-061ENC.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 642593,
+      "sha256": "d0604aacfd9a88e98e3e2374104f559c03aef27b5847a752a926c2f5f5c22275",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-061ENC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-061ENC.pdf"
+    },
+    {
+      "filename": "2G985-061END.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 726224,
+      "sha256": "ebc390d66efc707ec47a8d2aca807f0d7e86a080a57d31241cdc32ab66ce3bbb",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-061END.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-061END.pdf"
+    },
+    {
+      "filename": "2G985-100EN.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 577160,
+      "sha256": "491844e332809af08b2206b0a625da80999419d596489f279028a8307469c845",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-100EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-100EN.pdf"
+    },
+    {
+      "filename": "2G985-067EN.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 612575,
+      "sha256": "8381ae88544c4f63daa0cd2f415e2e9a69490bc8fc56feedfac1571cac7dd35d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-067EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-067EN.pdf"
+    },
+    {
+      "filename": "2G985-092EN.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 293849,
+      "sha256": "f51206abbd6c123887a018f7e70089cef870041d6ee499ba0c33bf8a7e1d33d5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-092EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-092EN.pdf"
+    },
+    {
+      "filename": "2G985-092ENA.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 339489,
+      "sha256": "95118bf99ff7a1510e2e62da99d05b55d8be6c09b6a323c9758154421324f043",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-092ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-092ENA.pdf"
+    },
+    {
+      "filename": "miixr0001eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 68929,
+      "sha256": "b428b0d300c4d34fa2a40ce900f9d4e7e60587df3fa6b47d0a78f2012e10c79e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0001eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0001eaa.pdf"
+    },
+    {
+      "filename": "miixr0002eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 66537,
+      "sha256": "cdcea70d2b45282420cc0e583c8ab94e7cb05f61b208752b6fdd3624bb8ca925",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0002eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0002eaa.pdf"
+    },
+    {
+      "filename": "miixr0002eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 80762,
+      "sha256": "b4781fdbe5ec425871f47b126fe8f99dda4438bbd04d6af85cb8b454629ab774",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0002eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0002eab.pdf"
+    },
+    {
+      "filename": "miixr0001eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 78887,
+      "sha256": "99925535b452bed6401bf6e8139cf3f57c59b04d5f29c2614ff978950c503a1f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0001eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0001eab.pdf"
+    },
+    {
+      "filename": "miixr0009eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 91547,
+      "sha256": "69793db2e0bc34fc99e5de4118e7dbe74e851bf71f76ccd110b156576af327a6",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0009eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0009eaa.pdf"
+    },
+    {
+      "filename": "miixr0002eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 660309,
+      "sha256": "24407ae82b200b8f965bee471369c9726d41cf5a347de6b06eeaea69da889431",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0002eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0002eac.pdf"
+    },
+    {
+      "filename": "miixr0001eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 94627,
+      "sha256": "bd99289bc51ea0975fe961a97b03de5a40aae287aff928a1786c0c873c878154",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0001eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0001eac.pdf"
+    },
+    {
+      "filename": "miixr0010eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 286482,
+      "sha256": "edcda06b504f3237fd851b14f1df5607f476adfb81106bad9367cea8976a3ec5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eaa.pdf"
+    },
+    {
+      "filename": "miixr0010eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 317060,
+      "sha256": "463915bd2c52d910506f80c36355c8272659c4aecbe7815ba29477579339df90",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eab.pdf"
+    },
+    {
+      "filename": "miixr0010eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 566662,
+      "sha256": "498aa86c49e000e6969f02ce1ca2562e89a1c43d7e6daad865270f7c1d302ff8",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eac.pdf"
+    },
+    {
+      "filename": "miixr0010eaj.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 644613,
+      "sha256": "9ca646b789b7ff0da7be25744e50f00a369052af8f7e260205d3d81976ccbad5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eaj.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eaj.pdf"
+    },
+    {
+      "filename": "miixr0010eak.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 754285,
+      "sha256": "93b996e38c71f87fe98fcf42e8d852cfc3a3ac99d6aeab9df7d7de1c7554ca7e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eak.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eak.pdf"
+    },
+    {
+      "filename": "miixr0010eal.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 757227,
+      "sha256": "a3f1f3a9cacd2ea4aa99fe2727d9d57c79406f83bb09157b22f3c4f2ddc2173d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eal.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eal.pdf"
+    },
+    {
+      "filename": "miixr0010eam.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 737438,
+      "sha256": "dd82886d33136d6a1a6086ae25131fdfde5a919adc42f009a35e797cf07c5750",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eam.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eam.pdf"
+    },
+    {
+      "filename": "miixr0010ean.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 746315,
+      "sha256": "5592ca7ebcbe6ace099df466260c1aa4d7b12d583a0c2ee7092bbd845ea2f264",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010ean.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010ean.pdf"
+    },
+    {
+      "filename": "miixr0010eao.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 690489,
+      "sha256": "670cb49f4320448e20e87464dbf45bf6caf711b91be2acb58adddf0b8d9b38a2",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0010eao.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0010eao.pdf"
+    },
+    {
+      "filename": "MIIXR0010EAU.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 860655,
+      "sha256": "af57b46c385031c63c6cfe77a2882d7876c8766c643912f96d9671171865be35",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0010EAU.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0010EAU.pdf"
+    },
+    {
+      "filename": "miixr0024eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 266796,
+      "sha256": "878378b87eaafde268937829c95ea5dc3307bc9e5e8869de8261c51340e59480",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0024eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0024eac.pdf"
+    },
+    {
+      "filename": "MIIXR0024EAC.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 266796,
+      "sha256": "878378b87eaafde268937829c95ea5dc3307bc9e5e8869de8261c51340e59480",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0024EAC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0024EAC.pdf"
+    },
+    {
+      "filename": "miixr0007ea.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 88657,
+      "sha256": "82c5b5f11b71c7b38bf8def2ddb75930364f1a61ce085cd925b34fac14ecd9c9",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0007ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0007ea.pdf"
+    },
+    {
+      "filename": "miixr0007eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 153592,
+      "sha256": "b10bd7a8d20eac64965d433e6e6cee7180822bbee16b566307860d3c01acd8e5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0007eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0007eab.pdf"
+    },
+    {
+      "filename": "miixr0007eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 361390,
+      "sha256": "609180ef399cd3112677381a990d143f981a0348746a594b5d1d38adcd25ec95",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0007eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0007eac.pdf"
+    },
+    {
+      "filename": "miixr0003eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 107682,
+      "sha256": "0ae5f2516086c2b670566b3787d15bc14a6f9ff1c6b7c348e5e765cca3657b3b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0003eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0003eaa.pdf"
+    },
+    {
+      "filename": "miixr0003eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 153834,
+      "sha256": "2ea68949602c7acec66202758c49ed85888254e95a048d6eea4dc03fae0b2a3d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0003eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0003eab.pdf"
+    },
+    {
+      "filename": "miixr0003eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 167690,
+      "sha256": "463f340279bdac920c00d734c89e3a2e62137d40845a2ff261e73fa5ac0819ef",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0003eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0003eac.pdf"
+    },
+    {
+      "filename": "miixr0003ead.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 170447,
+      "sha256": "058acd9bbc53385ce22383023a167f9dc65b13a7703683d795e6d8de1b577c29",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0003ead.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0003ead.pdf"
+    },
+    {
+      "filename": "miixr0003eae.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 177518,
+      "sha256": "b7ee7e56918a6f88fe3e8b0bb5ef05afb7757ae542b5ab6a7c771dfe280b7107",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0003eae.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0003eae.pdf"
+    },
+    {
+      "filename": "miixr0003eaf.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 361736,
+      "sha256": "7702bdccc292811b700035ddc39c6028d2441bea2562b3cb2749df04948c64bc",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0003eaf.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0003eaf.pdf"
+    },
+    {
+      "filename": "miixr0004eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 108365,
+      "sha256": "b3fa2471dd66fc304cffdee180009d5df8df3e630ee5543b69028828fe3a149b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0004eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0004eaa.pdf"
+    },
+    {
+      "filename": "miixr0004eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 154075,
+      "sha256": "e92e47394bb2ce77e4a45365881f67cf7ad822a573bb10982546de627538c51d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0004eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0004eab.pdf"
+    },
+    {
+      "filename": "miixr0004eac.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 170081,
+      "sha256": "b205496edb813ba0629f44d43d2611f825633c1bf50baea65053e98927be84f0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0004eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0004eac.pdf"
+    },
+    {
+      "filename": "miixr0004ead.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 170762,
+      "sha256": "5f0220b8840403c911778271746ded12a3a26276175834c9e0626f59c076bb79",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0004ead.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0004ead.pdf"
+    },
+    {
+      "filename": "miixr0004eae.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 177926,
+      "sha256": "d53f1e3ebcb07ceeff2b6f4aad51fd09523c6be95d889601c76a75b034932f71",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0004eae.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0004eae.pdf"
+    },
+    {
+      "filename": "miixr0004eaf.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 360638,
+      "sha256": "34f88f668b5d6d0d1cb9e60784c978c5c9ad7cc17493dde11236b03dac169ca3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0004eaf.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0004eaf.pdf"
+    },
+    {
+      "filename": "miixr0014eae.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 545621,
+      "sha256": "eb50afd4c944bdeed8c31bb93e11125f35cc4e4e0a15f372d96d2e8c9656041b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0014eae.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0014eae.pdf"
+    },
+    {
+      "filename": "miixr0014eaf.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 559221,
+      "sha256": "8812002319f57cdf8f85fb3ff023126f39a9e128ef7c1798beb80968b30f37a7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0014eaf.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0014eaf.pdf"
+    },
+    {
+      "filename": "miixr0018ea.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 241854,
+      "sha256": "b47129f5d8e04fc49dbde1779e8810d6f3bbccf9d4df0ced2e1d444708371ac4",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0018ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0018ea.pdf"
+    },
+    {
+      "filename": "miixr0017ea.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 321625,
+      "sha256": "8a18b7f3ce7dbb26cbd1e949e2d99a45d076d2bb679ab73cb7523542106ed3c5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0017ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0017ea.pdf"
+    },
+    {
+      "filename": "miixr0017eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 466873,
+      "sha256": "9c65862425476796dcb45f1e6f61d1393e8e4fe1ef8700292ef7a85b18254290",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0017eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0017eab.pdf"
+    },
+    {
+      "filename": "MIIXR0017EAC.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 521661,
+      "sha256": "8dcb1b3415243880b5f057d5f62834dffaa2ccbaa0da26698b8802e155dc1baf",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0017EAC.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0017EAC.pdf"
+    },
+    {
+      "filename": "miixr0023ea.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 434839,
+      "sha256": "0406d8c36b95e7fca05342ff5e875ddcb81a2beb8c80f92b2cc623c181eef362",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0023ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0023ea.pdf"
+    },
+    {
+      "filename": "miixr0023eaa.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 490093,
+      "sha256": "21de57a5f8650f6a2245556df361af08b33ecdc5f107487f3fbe9be1788b056a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0023eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0023eaa.pdf"
+    },
+    {
+      "filename": "miixr0023eab.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 492357,
+      "sha256": "d9f9a69e41773e5b8884a806b541e7b35012c2d527b6749e69114af5a9f4ae0b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miixr0023eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miixr0023eab.pdf"
+    },
+    {
+      "filename": "MIIXR0020EAA.pdf",
+      "vendor": "canon",
+      "modality": "X-Ray",
+      "size_bytes": 392199,
+      "sha256": "389e798207d9ba1afd0ff5257a77b842748662c1033c58c3d14475e0084bd9f6",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIXR0020EAA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIXR0020EAA.pdf"
+    },
+    {
+      "filename": "miict0001ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 75444,
+      "sha256": "cd764c3c88a61832f638c3d1640e46ad49f026e59e50267fe9b70e8499bdd556",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0001ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0001ea.pdf"
+    },
+    {
+      "filename": "miict0002ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 72397,
+      "sha256": "bfe170c2f1c4d625b07f4286c77fdf662ecf2889791c04b2e97dd11340565f38",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0002ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0002ea.pdf"
+    },
+    {
+      "filename": "miict0003ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 56001,
+      "sha256": "58a9f2f63da489a08be3a8f8846f29122de20c6a27f7d4753f6873d3fde10e2a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0003ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0003ea.pdf"
+    },
+    {
+      "filename": "miict0009ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 57872,
+      "sha256": "1aed4d072457d59d30d836a129f3e0eb14f34598c9e11ac420e3aa08d287e0ce",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0009ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0009ea.pdf"
+    },
+    {
+      "filename": "miict0007eaa.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 142256,
+      "sha256": "1c814569b4af3bbe1ef44946f09ea2064bca9ceda7bdaeb017f6799d7babb729",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0007eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0007eaa.pdf"
+    },
+    {
+      "filename": "miict0011ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 78348,
+      "sha256": "a4de7dcb8c4a85b10dd7ca92d7545d1104ed59f5f5dc522310d3a691a021a58e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0011ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0011ea.pdf"
+    },
+    {
+      "filename": "miict0010eaa.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 85562,
+      "sha256": "32496e79ed8ba9de2599e173c8a53f6c24c26844959bd7ec81a41c605fd24dd1",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0010eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0010eaa.pdf"
+    },
+    {
+      "filename": "miict0031eab.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1127630,
+      "sha256": "5f5d66781f0d922bc05bc0915fb15c32dfa1644f8d45f496f14b5fd50476e872",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0031eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0031eab.pdf"
+    },
+    {
+      "filename": "miict0004ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 69993,
+      "sha256": "4d726484772cc0a569828dd4e5b6bd2aa320bf9fe8eee8a52fa2e492993884ea",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0004ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0004ea.pdf"
+    },
+    {
+      "filename": "miict0030ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 70466,
+      "sha256": "f7633926bb5884f8b551ea403e2b8a7063f0030909396ba93e57291030ec34f3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0030ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0030ea.pdf"
+    },
+    {
+      "filename": "miict0019ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 117203,
+      "sha256": "e95aa0f7a4181f2ce905e8a48cdd719cc27214b07139b448c417b8c2b06830ee",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0019ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0019ea.pdf"
+    },
+    {
+      "filename": "miict0020ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 55724,
+      "sha256": "0b73241d04b43dffeb1e5ab1ce522f43660c32b1d0e928b9c18f80c67372a001",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0020ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0020ea.pdf"
+    },
+    {
+      "filename": "miict0021ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 56418,
+      "sha256": "08dec00d52ff4508ed59fcea82a1b01bb87326d1cf00fd78aa36777cd6b65436",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0021ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0021ea.pdf"
+    },
+    {
+      "filename": "miict0035ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 520988,
+      "sha256": "497bba9eae4d27e5bcbe577b5dc333ab6d8f7492cf5df8b1314a1e8f334a6a2d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0035ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0035ea.pdf"
+    },
+    {
+      "filename": "miict0040ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 516233,
+      "sha256": "5b15fd0a42f7a724cd62b6bf9e87066823fd2edc31e6a5df3371443c7a5d27c5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0040ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0040ea.pdf"
+    },
+    {
+      "filename": "miict0044ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 545917,
+      "sha256": "84244aa1f34c6511d7b9498dea4b383c0b858b82aed7204e8785d12eaf3b7394",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0044ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0044ea.pdf"
+    },
+    {
+      "filename": "miict0046ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 544924,
+      "sha256": "c58976a1a4090f25e8050b163d9e3cd14cd9be0a6ddd1f0efe9a4ba4741619a0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0046ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0046ea.pdf"
+    },
+    {
+      "filename": "miict0038ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 590018,
+      "sha256": "61c07e4a6e0820e86048e23a69d0143b07a0a2a3485d4a18a9bfd8728b80d670",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0038ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0038ea.pdf"
+    },
+    {
+      "filename": "miict0041ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 588922,
+      "sha256": "266f646a249590727c32e023fb132398870f0370c651ce79d8997d09f1ef410d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0041ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0041ea.pdf"
+    },
+    {
+      "filename": "miict0042ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 592209,
+      "sha256": "86b02817b14d22fc2a54d3f1f42b70ffe560841fe606cc468c96faa89566b0a3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0042ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0042ea.pdf"
+    },
+    {
+      "filename": "miict0045ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 682752,
+      "sha256": "4f775904696e3606819c7f3091453dd560510d93faf02ce4b521bf0d7eea1441",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0045ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0045ea.pdf"
+    },
+    {
+      "filename": "miict0047ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 695206,
+      "sha256": "66a9710ccffd25958469869fdca9ceabe81422d3faa58370153699d1836f3f2f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0047ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0047ea.pdf"
+    },
+    {
+      "filename": "miict0047eaa.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 695399,
+      "sha256": "51bca6c740a782e099963e717e706a63bed4221dd6d20b263052f263fff6c5a0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0047eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0047eaa.pdf"
+    },
+    {
+      "filename": "miict0048ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 695986,
+      "sha256": "2ce78692630d610253cd920bdaf41d0d2bd3e4db36fa72e7f6c2e92fdcc8e825",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0048ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0048ea.pdf"
+    },
+    {
+      "filename": "miict0051ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 674236,
+      "sha256": "31ed180e095fb37ee50965a8a69f52bc6452730b9c16270328be0106686bdab9",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0051ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0051ea.pdf"
+    },
+    {
+      "filename": "miict0050ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 626435,
+      "sha256": "2ab127b2c54f6fdba67b0dc2d9c3d42ba5beb1f6cb0373737a9ae0a98671501c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0050ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0050ea.pdf"
+    },
+    {
+      "filename": "miict0050eaa.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 626887,
+      "sha256": "762e50649ab7fbb693d44e2818981a72424b5cff28d2749ad52b5caeb3a739f8",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0050eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0050eaa.pdf"
+    },
+    {
+      "filename": "miict0053ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 934932,
+      "sha256": "6b0ee112e96fcb941e78c3138f15eeb3a0faecc0061f548d23ef7852ed1cb568",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0053ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0053ea.pdf"
+    },
+    {
+      "filename": "miict0055eaa.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 887506,
+      "sha256": "65d81d24d9eb493aee3b4ab2a4e428617bcde018065cad0fd3e9f0f7455587e4",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0055eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0055eaa.pdf"
+    },
+    {
+      "filename": "miict0054eac.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 769945,
+      "sha256": "6eaa9f3a3f69e392745c05eac20fe6bfa78b0d5e803bf349943346d0803d6bbc",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0054eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0054eac.pdf"
+    },
+    {
+      "filename": "miict0056eaa.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 812963,
+      "sha256": "5acab5b1fb95bf78c0adcbde757419c14028a45e39a7b809cd0ccf6dbeffdd54",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0056eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0056eaa.pdf"
+    },
+    {
+      "filename": "miict0057ea.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 811031,
+      "sha256": "f138610a42af661723c78047c3bb135e1c4166af3bacf525823d37d02a2bb53a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miict0057ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miict0057ea.pdf"
+    },
+    {
+      "filename": "2G985-014ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1094857,
+      "sha256": "af624dc366ed6511cb19cf4742c5780beea704ee3c11d0ec1d8b8e07b4d9bce3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-014ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-014ENA.pdf"
+    },
+    {
+      "filename": "2g985-024en.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1036929,
+      "sha256": "b6317bb52d1c2eb77a6f6fc003bdd6c2d76449b244cfba5077bee1d4b461f679",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-024en.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-024en.pdf"
+    },
+    {
+      "filename": "2G985-026ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1100349,
+      "sha256": "ae501db25812244e51c57824214f760bead84b06f60d38640aa6143bca392dd9",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-026ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-026ENA.pdf"
+    },
+    {
+      "filename": "2G985-050EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 3898093,
+      "sha256": "357b85ab7d708c59c2524aae0a43964cc4b1ec2fcaf45c4970580ec88fa5d6d3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-050EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-050EN.pdf"
+    },
+    {
+      "filename": "2G985-053EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 3754980,
+      "sha256": "ec1df93230f49b0d731407b0d31de6b595d8a0b5981ad14e188fefb210b9df67",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-053EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-053EN.pdf"
+    },
+    {
+      "filename": "2G985-076EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1218101,
+      "sha256": "ad2e15f85c427b7484d540c5c8e6500f00a34ee8727b9cbbc2ae747eac9de5a3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-076EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-076EN.pdf"
+    },
+    {
+      "filename": "2G985-055EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1571833,
+      "sha256": "f9a16956e45e587b620e70d32040ab92c83783ae680201a98498810c81c5e5cc",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-055EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-055EN.pdf"
+    },
+    {
+      "filename": "2G985-064EN.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1123056,
+      "sha256": "6cbaf767b6cf7da254f7e3798a1395039e28670e6f751c2b3c10af4b11681b75",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-064EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-064EN.pdf"
+    },
+    {
+      "filename": "2G985-089ENA.pdf",
+      "vendor": "canon",
+      "modality": "Computed Tomography",
+      "size_bytes": 1231283,
+      "sha256": "ff84e962ae95a1a7dab9d74bde70375891d466fb5fc9c0b2eb34d5ad43c36774",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-089ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-089ENA.pdf"
+    },
+    {
+      "filename": "miimr0001ea.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 130498,
+      "sha256": "4f8b587782f453056bff1329bc5511403e25295c581efa2761e21b2e30683d7e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0001ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0001ea.pdf"
+    },
+    {
+      "filename": "miimr0001eaa.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 112507,
+      "sha256": "7184c36390a369750d58f0b75245053551db2d3ac1c3e6abf7dfd360aa290ed5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0001eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0001eaa.pdf"
+    },
+    {
+      "filename": "miimr0001eab.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 136181,
+      "sha256": "2370b587d9f6b0da8821e2a475d682667dd8dc2ef668ff2be92f32c47a600d7f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0001eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0001eab.pdf"
+    },
+    {
+      "filename": "miimr0001eac.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 161304,
+      "sha256": "ade94b89425f926cb88e192889ac3cc8eb26a04c45e4d18f4c2e3a04396f6296",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0001eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0001eac.pdf"
+    },
+    {
+      "filename": "miimr0001ead.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 191583,
+      "sha256": "10b1325aac155c9f6125b2053355c315dd62bc9299a52f6ed9c21c5461cf162a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0001ead.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0001ead.pdf"
+    },
+    {
+      "filename": "miimr0004ea.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 82667,
+      "sha256": "c1eca5bf47b572e535161e04117f2995993c1c6545bb42b2dc8d791176d5b722",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0004ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0004ea.pdf"
+    },
+    {
+      "filename": "miimr0004eaa.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 82694,
+      "sha256": "deb1a2ca0c48ec688dd5599c16730a609092d30cfffb89895ebfecfb2c113843",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0004eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0004eaa.pdf"
+    },
+    {
+      "filename": "miimr0005ea.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 492228,
+      "sha256": "d1bda035132b7afbb3bef35c582e18e78c7fd6a4c7b8547ae143aa03600ccae4",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0005ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0005ea.pdf"
+    },
+    {
+      "filename": "opart.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 106191,
+      "sha256": "3181b79cc8e754c157fc9d7d7677337b37b9604a28b084a48f23d27183f73763",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/opart.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/opart.pdf"
+    },
+    {
+      "filename": "miimr0006eaa.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 743227,
+      "sha256": "f3d6a4cd06b9091034b25ca63ec1249903a5a805316935e8f370da2c6dc8b3ec",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0006eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0006eaa.pdf"
+    },
+    {
+      "filename": "miimr0006eab.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 1594923,
+      "sha256": "080c723d685f97b7e8ac6c5e7b67ef6f4ef839d6c9197b03b6be3e3bd4b4b3d1",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0006eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0006eab.pdf"
+    },
+    {
+      "filename": "miimr0006eac.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 666711,
+      "sha256": "a3504c98e91be5d7455907c76e62159197b23821d9addaee4fb33ea8977ee744",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0006eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0006eac.pdf"
+    },
+    {
+      "filename": "miimr0007eaa.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 686973,
+      "sha256": "d163cf56cbac0585060d4ffe25df8912c3e557dbaca86b35f09fab7fedf178a5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miimr0007eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miimr0007eaa.pdf"
+    },
+    {
+      "filename": "2g985-003ena.pdf",
+      "vendor": "canon",
+      "modality": "Magnetic Resonance Imaging",
+      "size_bytes": 752440,
+      "sha256": "ad95ae38cd380835e124cade8b60ec587fe352d128685310492945d5f4517398",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-003ena.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-003ena.pdf"
+    },
+    {
+      "filename": "2G985-016ENF.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8557038,
+      "sha256": "2a3a8a67ca072af63d650f53266f06ccceb748878d97dd2e6f044e763c1a9c05",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENF.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENF.pdf"
+    },
+    {
+      "filename": "2G985-016ENG.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8816862,
+      "sha256": "eb9b47c654507e9c4c82ee95e8a2778424d7c96b790f7c5d4152c7017045e2ef",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENG.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENG.pdf"
+    },
+    {
+      "filename": "2G985-016ENH.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8968110,
+      "sha256": "cba980f419264ac9f5495cef69a33945579c7f1de481f386e0f69157784c7116",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENH.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENH.pdf"
+    },
+    {
+      "filename": "2g985-016ena.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3923083,
+      "sha256": "4998a05f7b0766cbf2e277615e38cbd4419afe7c4ae29b8b8ee8cda6c41918f7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-016ena.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-016ena.pdf"
+    },
+    {
+      "filename": "2G985-016ENL.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8499716,
+      "sha256": "2f5a8cb09305fce32217f7f7c8922a5d5b23cf52a797fddfcae6ae6de4618b44",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-016ENL.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-016ENL.pdf"
+    },
+    {
+      "filename": "2G985-039EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 8933977,
+      "sha256": "03552765abe6b7df5f0cfdac439aa31f5335cbfee983c6b03f544a7503e7b80c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039EN.pdf"
+    },
+    {
+      "filename": "2G985-039ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 13616572,
+      "sha256": "580e9e5245eb197eb28111cc49352bb9e12124f00ed7a056b36438c097211576",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-039ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-039ENA.pdf"
+    },
+    {
+      "filename": "miius0053ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3304393,
+      "sha256": "48f69e8658e37ec8daa16116cad43f1aab41389454497bba17b540afdc310f44",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0053ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0053ea.pdf"
+    },
+    {
+      "filename": "miius0053eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3273907,
+      "sha256": "51e54241efcff761014b4c60f8f3a7d6ce9dfc8507d898145af7863e1cc4d2a0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0053eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0053eaa.pdf"
+    },
+    {
+      "filename": "miius0053eab.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3298074,
+      "sha256": "464d570d5a5b585091a5e01addbca8283f6f799c4cb355912349fc18b1c9a3df",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0053eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0053eab.pdf"
+    },
+    {
+      "filename": "miius0053eac.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3294796,
+      "sha256": "25bcda05b2016a221556a70dc03da55b2c28b952881e2d7319bf39c1a2544854",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0053eac.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0053eac.pdf"
+    },
+    {
+      "filename": "miius0053ead.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3355523,
+      "sha256": "cd4df47ae417225e4916cb70c44b4b9272074c013cfdef5562526d0279664601",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0053ead.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0053ead.pdf"
+    },
+    {
+      "filename": "2g985-007en.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3560204,
+      "sha256": "03449e59ef7e93274ce611dab2cb8b3c19e6d831e82064a27608acec8085efe2",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-007en.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-007en.pdf"
+    },
+    {
+      "filename": "2g985-007ena.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3720611,
+      "sha256": "f8663bd6e974868dcb2bdfc779f69868ce2dfc00382561764c409dd0e10d7148",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-007ena.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-007ena.pdf"
+    },
+    {
+      "filename": "2G985-007END.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7648542,
+      "sha256": "33c9a3dffedf395581673207e355420846fc95d93751ac82a64fb3b07a448278",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-007END.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-007END.pdf"
+    },
+    {
+      "filename": "2G985-007ENE.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7647244,
+      "sha256": "cd9325470312f763fb80ab0b9fb70d5ddc524c07ca6ffb4406d53b3def14a85e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-007ENE.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-007ENE.pdf"
+    },
+    {
+      "filename": "2G985-041EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7505948,
+      "sha256": "dda38c7bcfff7f564fb9a2765e0ccd7b8a407e8fb18643d435872bebef218681",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-041EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-041EN.pdf"
+    },
+    {
+      "filename": "2G985-008END.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7644896,
+      "sha256": "6184b2a86b892cd13f5a46881778a590ffdca799c0d4555e02696f6cca8eb9e0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-008END.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-008END.pdf"
+    },
+    {
+      "filename": "2G985-008ENE.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 7581788,
+      "sha256": "7adc9bacabe05fce0418b0b5b9a4d5a1c91ddd8ed11ac65b300353b871b16458",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-008ENE.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-008ENE.pdf"
+    },
+    {
+      "filename": "2G985-017ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3643958,
+      "sha256": "c67b7c411ad13eafd667893f50dd944033912f73b70ba2ea7f8d173bf80cbf36",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-017ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-017ENA.pdf"
+    },
+    {
+      "filename": "2G985-034ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 423305,
+      "sha256": "dc5117a0504ed270f76384db7224b0f3ce2a81d840fe82a8a2fcf6ea4c0678a5",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-034ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-034ENA.pdf"
+    },
+    {
+      "filename": "2G985-040EN.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 660790,
+      "sha256": "d45e5ebdc18fe55eec41cddffeb47beb4e2709373ac46f643350e9148b151e70",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-040EN.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-040EN.pdf"
+    },
+    {
+      "filename": "miius0054eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3421514,
+      "sha256": "2e594aea0410471bdba3b18df69dc1455e8ba16f17e9892c9132ac06f4ca143e",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0054eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0054eaa.pdf"
+    },
+    {
+      "filename": "miius0054eab.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3356332,
+      "sha256": "7ea169d00b114e0c318eed1a061d164731d3bb4788114354b2a69586e6395c80",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0054eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0054eab.pdf"
+    },
+    {
+      "filename": "2g985-008en.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3452251,
+      "sha256": "7e544ba00c413aa9f6d794a6c25a1baa62f82ab9be8422af07a688a7190dad62",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-008en.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-008en.pdf"
+    },
+    {
+      "filename": "2g985-008ena.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3699275,
+      "sha256": "afd98f03008534fac22778ca8a39d2955c9e7c465c7c7afd7f24f3cd6106b993",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-008ena.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-008ena.pdf"
+    },
+    {
+      "filename": "miius0047ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 1128528,
+      "sha256": "25d72a87813f177673f5661a76fb0536a9cd6e814afd22da3426bbc55abf74e2",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0047ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0047ea.pdf"
+    },
+    {
+      "filename": "miius0050eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 5750534,
+      "sha256": "6c1bbad1f7a44c15e63e6682ea357202eb8952b53661d3ae8853758ae33aee0b",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0050eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0050eaa.pdf"
+    },
+    {
+      "filename": "miius0032ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 603915,
+      "sha256": "fbe7bf128c99e7e84a212c021efa075f8792711feeecf5892d33ed200c5a3f73",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0032ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0032ea.pdf"
+    },
+    {
+      "filename": "miius0033ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 603900,
+      "sha256": "6c596758c135b7b4eaca0f4eda85c6db1624a521d0939acf078482e97dfe2aa4",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0033ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0033ea.pdf"
+    },
+    {
+      "filename": "miius0040ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 1068415,
+      "sha256": "47b3dc24a70d013d6ff28c201d1bbafd511442df436f92eccd1ec06525963ef0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0040ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0040ea.pdf"
+    },
+    {
+      "filename": "miius0043ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 1063161,
+      "sha256": "22092556324c48fc441a6d537c385db9278dfb9404ac4160dd1f338a37a4b867",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0043ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0043ea.pdf"
+    },
+    {
+      "filename": "miius0015ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 59654,
+      "sha256": "541a7cdb0e7a4c76fef01245445fe64f1ced306cd52b99eaf03bc5ae77a7a55a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0015ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0015ea.pdf"
+    },
+    {
+      "filename": "miius0016ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 156088,
+      "sha256": "937d98f645924b8aecf7dfdb0c719af4ea7036705f16abe86ebea1df4d4aee79",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0016ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0016ea.pdf"
+    },
+    {
+      "filename": "miius0019ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 208963,
+      "sha256": "52a294756073d00847e86e280d2bbe759daba2b084dadd5a6e1a815855f0be75",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0019ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0019ea.pdf"
+    },
+    {
+      "filename": "miius0022ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 314418,
+      "sha256": "5cbf9d984226c42aa33925249a5c1d5f4c2a386921c88f60d468e9bbc508515f",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0022ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0022ea.pdf"
+    },
+    {
+      "filename": "miius0023ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 305169,
+      "sha256": "c95647fa0b79272c30c42560ca0ea740392918ab50fa0eec14f9281df684c25c",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0023ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0023ea.pdf"
+    },
+    {
+      "filename": "miius0025ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 313778,
+      "sha256": "645d0acd04f23f87619bd788f8d7926cd650d9b5447d361c554cf754aa669acb",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0025ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0025ea.pdf"
+    },
+    {
+      "filename": "miius0027ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 600786,
+      "sha256": "56216f1de7a461c2a8b14d9e182a4c0b1876f631aa9ec938a8a2f73514b256cd",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0027ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0027ea.pdf"
+    },
+    {
+      "filename": "miius0029ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 606986,
+      "sha256": "8e20b711ec542772bf7aeedac14ab51a3010368f76032419278652e9dfb24850",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0029ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0029ea.pdf"
+    },
+    {
+      "filename": "miius0034ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 603903,
+      "sha256": "53b4b888e04b702677b709b20fee5ad3a72930b0a01fcd3845405341e567de9a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0034ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0034ea.pdf"
+    },
+    {
+      "filename": "miius0026eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 604145,
+      "sha256": "25e48b24b561fa3767620fd4e050fb3ade07bed3dac8aa9740a11b063b02feac",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0026eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0026eaa.pdf"
+    },
+    {
+      "filename": "miius0028eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 606492,
+      "sha256": "b60c30f50a2f0b9f7eb0553f70166ecb4c264fdde2724c211b2a16583648a882",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0028eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0028eaa.pdf"
+    },
+    {
+      "filename": "miius0030ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 606799,
+      "sha256": "7f0d9b368b43509e1e4b32cc4c671b651577cc931c39fc7733471f4f87106f70",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0030ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0030ea.pdf"
+    },
+    {
+      "filename": "miius0038ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 601065,
+      "sha256": "88c0df8870b13092bbb673710f74eef97d24aa22b80ac9d59c692bd2ca0de198",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0038ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0038ea.pdf"
+    },
+    {
+      "filename": "miius0017ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 215518,
+      "sha256": "fb84f19b22c4074fa6ce26ebe6f3e95692ed36bd57d456c76af28b84682724c9",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0017ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0017ea.pdf"
+    },
+    {
+      "filename": "miius0021ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 2003184,
+      "sha256": "1c12a2bf521cd49978438b75326241723b153e86ff706d97d141bfe5b574611d",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0021ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0021ea.pdf"
+    },
+    {
+      "filename": "miius0031ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 1529349,
+      "sha256": "2a327b75f6a60cd8cbe352afdb674b3068131a80938e7aec78627ddacdf906ca",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0031ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0031ea.pdf"
+    },
+    {
+      "filename": "miius0051ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 1044600,
+      "sha256": "92035aab26b788d82105a02f31bea8fb502e68bb973993f55bd78ef4dac97183",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0051ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0051ea.pdf"
+    },
+    {
+      "filename": "miius0024ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 70824,
+      "sha256": "d60d2cb5db2b7c6004ec5b29313f00a97bcf406b32f7d98798ece69ee2768d96",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0024ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0024ea.pdf"
+    },
+    {
+      "filename": "miius0041ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 196632,
+      "sha256": "f5c6b76a7174b008923851cdb2bc93b7bc73fbd2847fc93e6407ed48eaf2b157",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0041ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0041ea.pdf"
+    },
+    {
+      "filename": "miius0044ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 281005,
+      "sha256": "43acc1b29ab9ff5c2ecb5c299ebf5fe24bae96d12c5ef6cc26507dbc2faea779",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0044ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0044ea.pdf"
+    },
+    {
+      "filename": "miius0046ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 377099,
+      "sha256": "8610ed09b400f2bf8975a3e316234a2e0fcc40c2961319b4431185655b590068",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0046ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0046ea.pdf"
+    },
+    {
+      "filename": "miius0049ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 531670,
+      "sha256": "60117ce272866a31df7bb322fd7743b7a9e9af56bd06791b7e46b3aef454efca",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0049ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0049ea.pdf"
+    },
+    {
+      "filename": "2g985-006en.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 751869,
+      "sha256": "b45fedf8a6f2583be5ac7820cd1bbc62d7b6c006371bcb8a26f7202ce43400fc",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2g985-006en.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2g985-006en.pdf"
+    },
+    {
+      "filename": "miius0035ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 457487,
+      "sha256": "1789e2b5a9e87ebbb4565f32ab2094732b15f60e4ea87f568d80f2f236815702",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0035ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0035ea.pdf"
+    },
+    {
+      "filename": "miius0036ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 483815,
+      "sha256": "5d26091517d18fdbd651b6c423cc7c0a4ba0ecea47d23ae61c30ab0959027a86",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0036ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0036ea.pdf"
+    },
+    {
+      "filename": "miius0039eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 563909,
+      "sha256": "9d24c373cad52fbc6a837d388a996ccc80fd69c2a34e79505a4bde391681afa6",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0039eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0039eaa.pdf"
+    },
+    {
+      "filename": "miius0042eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 617864,
+      "sha256": "d7690113e9e80ee019200b42864bc3be6692846de3a49d9136a335d97c675fbe",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0042eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0042eaa.pdf"
+    },
+    {
+      "filename": "miius0045ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 1017948,
+      "sha256": "5e5aeb413665bf0109eed992421c923c549aae493c9d0d7652cf0792c4cdd438",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0045ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0045ea.pdf"
+    },
+    {
+      "filename": "miius0048ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 4033324,
+      "sha256": "0eb85c30490b6f2a91a7fb78841050ecf7fc759053f1e175f11fe41fa5a71100",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0048ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0048ea.pdf"
+    },
+    {
+      "filename": "miius0048eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 4073903,
+      "sha256": "7d01f738b404f28519684e8679846c537870d29e74422cf73100926a257f04f8",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0048eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0048eaa.pdf"
+    },
+    {
+      "filename": "miius0048eab.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 4555954,
+      "sha256": "6eceae5e38cd69e9ed416f51a758037da9e8a2f525ced06e1e499288078b7654",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0048eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0048eab.pdf"
+    },
+    {
+      "filename": "MIIUS0048EAD.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 4150984,
+      "sha256": "98df4f2980b1677c766c7a1a22ba2f07ead3bce3a5dd4c339fdcf8fe59432228",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIUS0048EAD.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIUS0048EAD.pdf"
+    },
+    {
+      "filename": "miius0052ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3279638,
+      "sha256": "4d78af4b88ab3c6ee28a2801974e8d9601da2edc68dc994b08e085dbf638526a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0052ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0052ea.pdf"
+    },
+    {
+      "filename": "miius0052eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3259609,
+      "sha256": "48ecdaa1e10cecbc249e48ac2788ee3c195a17c16a8da45a25d79ac263b56efb",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0052eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0052eaa.pdf"
+    },
+    {
+      "filename": "2G985-004ENA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 3464099,
+      "sha256": "bef89f8dd4cbd0731d7bf4f4b32238db12aa01e1452eb520a20a814f83f3f2e7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/2G985-004ENA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/2G985-004ENA.pdf"
+    },
+    {
+      "filename": "miius0001ea.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 108782,
+      "sha256": "8fcf2fb0ff9e0917eef1f369b9db3f804334acd9ce771f3782aad8f5d93107b7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0001ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0001ea.pdf"
+    },
+    {
+      "filename": "miius0005eaa.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 211440,
+      "sha256": "24ac2110dfe91bd0171b8839f759f1ecb8247a6c85b408123227d8486e074061",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miius0005eaa.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miius0005eaa.pdf"
+    },
+    {
+      "filename": "MIIUS0037EAA.pdf",
+      "vendor": "canon",
+      "modality": "Ultrasound",
+      "size_bytes": 306227,
+      "sha256": "5fbf0097c83782a06b739e548db60cc75865c5c85723f98b6ddd1eef151d4895",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/MIIUS0037EAA.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/MIIUS0037EAA.pdf"
+    },
+    {
+      "filename": "miinm0003ea.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 71781,
+      "sha256": "bf50377f1d90ee9025be65ee71b854c633da61f0ad14a48370482961fb1fd693",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miinm0003ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miinm0003ea.pdf"
+    },
+    {
+      "filename": "miinm0005ea.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 71291,
+      "sha256": "a33e280d2ecd383f352ce380c05ded13edaf2e0eb17bf04bc5330a4eb978ddeb",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miinm0005ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miinm0005ea.pdf"
+    },
+    {
+      "filename": "miinm0007ea.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 79952,
+      "sha256": "91bc2351dc9c6534abeaeaf668284673a9976b663377ca062efaf129627d7623",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miinm0007ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miinm0007ea.pdf"
+    },
+    {
+      "filename": "miinm0008ea.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 111871,
+      "sha256": "1636e7867eaabd257132edda3e9c2dcbdf4fe7bbd927fef8a5680a68f5a290e9",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miinm0008ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miinm0008ea.pdf"
+    },
+    {
+      "filename": "miinm0009ea.pdf",
+      "vendor": "canon",
+      "modality": "Nuclear Medicine",
+      "size_bytes": 93124,
+      "sha256": "6521a99c54fd39d63bf746302bf2426a1b2b495113a549284af69267a546c358",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miinm0009ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miinm0009ea.pdf"
+    },
+    {
+      "filename": "miims0009ea.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 144784,
+      "sha256": "01b72b22456d7e17dcd73b46ae92b1b3c3d156d9cfdf9fa676558d5e6f884450",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miims0009ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miims0009ea.pdf"
+    },
+    {
+      "filename": "miims0013ea.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 272897,
+      "sha256": "dca0837d2417080a942b62c217b50a3b6248b802493079b591281db20c3ea8f0",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miims0013ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miims0013ea.pdf"
+    },
+    {
+      "filename": "miims0012eab.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 517931,
+      "sha256": "89e5d5b6de2a975b06acf4c188b5fc6eb56d7918ad5fe40a3cea88cbb2a29eed",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miims0012eab.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miims0012eab.pdf"
+    },
+    {
+      "filename": "mimsS0014ea.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 292454,
+      "sha256": "6e6a6601fd49df3e75767881207aeba6ee24621eb5460fb673fe20e01a1b09c3",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/mimsS0014ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/mimsS0014ea.pdf"
+    },
+    {
+      "filename": "miims0002eag.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 467926,
+      "sha256": "336d5bec26f1dece8df9f9b826fe72b0493483c0519fbbcf783fcd47ddf792f7",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miims0002eag.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miims0002eag.pdf"
+    },
+    {
+      "filename": "miims0016ea.pdf",
+      "vendor": "canon",
+      "modality": "SERVER / WORKSTATION",
+      "size_bytes": 301550,
+      "sha256": "1bf2b4cbf3c156341927660a7a6af4a16d0c0e542778c38a5463706a09b4992a",
+      "original_url": "https://www.medical.canon/Interoperability/dicom/miims0016ea.pdf",
+      "archive_url": "https://archive.org/download/dicom-conformance-canon/miims0016ea.pdf"
     }
   ]
 }

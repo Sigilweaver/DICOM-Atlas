@@ -137,6 +137,8 @@ def run(
                 vendor = "philips"
             elif name_lower.startswith("siemens_") or "siemens" in name_lower or name_lower.startswith("syngo"):
                 vendor = "siemens"
+            elif "toshiba" in name_lower or "canon" in name_lower or name_lower.startswith("miict") or name_lower.startswith("miius") or name_lower.startswith("miimr") or name_lower.startswith("miixr") or name_lower.startswith("miinm") or name_lower.startswith("miii") or name_lower.startswith("bt8"):
+                vendor = "canon"
             else:
                 vendor = "unknown"
         if vendor_filter and vendor != vendor_filter:

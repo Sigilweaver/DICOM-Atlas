@@ -10,6 +10,7 @@ dependencies = [
     "beautifulsoup4>=4.12",
     "rich>=13.7",
     "click>=8.1",
+    "pydicom>=3.0.2",
 ]
 
 [project.optional-dependencies]

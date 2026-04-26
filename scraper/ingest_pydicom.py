@@ -121,19 +121,25 @@ def main() -> int:
     )
     args = p.parse_args()
 
-    # Load existing rows
+    # Load existing rows; track which have inferred VRs so pydicom can upgrade them
     existing: list[dict] = []
     seen_keys: set[tuple[str, int, int]] = set()
+    # (creator_upper, group, element) -> index in `existing` for vr_inferred rows
+    inferred_index: dict[tuple[str, int, int], int] = {}
     with args.input.open() as fh:
         for ln in fh:
             ln = ln.strip()
             if not ln:
                 continue
             r = json.loads(ln)
+            idx = len(existing)
             existing.append(r)
             creator = (r.get("private_creator") or "").strip().upper()
             if creator:
-                seen_keys.add((creator, int(r["group"]), int(r["element"])))
+                key = (creator, int(r["group"]), int(r["element"]))
+                seen_keys.add(key)
+                if r.get("vr_inferred") and r.get("vr") == "UN":
+                    inferred_index[key] = idx
 
     skip_creators: set[str] = set()
     if args.skip_creators and args.skip_creators.exists():
@@ -161,7 +167,19 @@ def main() -> int:
                 continue
             group, elem, is_block = parsed
 
-            if (creator_norm, group, elem) in seen_keys:
+            key = (creator_norm, group, elem)
+            vr = (meta[0] or "").strip() if len(meta) > 0 else ""
+            if not vr or vr in {"NONE", "??"}:
+                vr = "UN"
+
+            # If this tag exists with an inferred UN VR, upgrade it with pydicom's known VR
+            if key in inferred_index and vr != "UN":
+                existing[inferred_index[key]]["vr"] = vr
+                existing[inferred_index[key]]["vr_inferred"] = False
+                skipped_have += 1
+                continue
+
+            if key in seen_keys:
                 skipped_have += 1
                 continue
 

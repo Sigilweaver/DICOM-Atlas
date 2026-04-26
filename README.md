@@ -6,8 +6,23 @@ with additional entries contributed by [pydicom](https://github.com/pydicom/pydi
 and [GDCM](https://gdcm.sourceforge.net). Queryable from Rust, C, or Python
 in O(log n) with no runtime dependencies.
 
-Current shipped size: **19,213 tags** (13,919 private + 5,294 public) in a
-**3.5 MB** `tags.dmap` file.
+Current shipped size: **19,688 tags** (14,559 private + 5,129 public) in a
+**3.9 MB** `tags.dmap` file.
+
+### Private tag breakdown
+
+| Source | Tags | PDFs scraped |
+|--------|-----:|-------------:|
+| Siemens Healthineers (PDF scrape) | 1,951 | 439 |
+| GE HealthCare (PDF scrape) | 1,762 | 257 |
+| Philips Healthcare (PDF scrape) | 791 | 807 |
+| Canon Medical (PDF scrape) | 410 | 284 |
+| Acuson (PDF scrape) | 214 | 57 |
+| **PDF-scraped subtotal** | **5,128** | **1,844** |
+| pydicom / GDCM (community-compiled) | 9,472 | — |
+| **Total private** | **14,559** | |
+| Public (PS3.6 standard) | 5,129 | — |
+| **Grand total** | **19,688** | |
 
 ## Quick start — use the dictionary
 
@@ -105,11 +120,17 @@ harm.
 **Sources:**
 - Public tags: DICOM Standard Part 6 (PS3.6) via the
   [Innolitics JSON export](https://github.com/innolitics/dicom-standard).
-- Private tags: 1,633 conformance statement PDFs from GE HealthCare, Siemens
-  Healthineers, and Philips Healthcare, archived at
+- Private tags: 1,844 conformance statement PDFs from GE HealthCare, Siemens
+  Healthineers, Philips Healthcare, Canon Medical, and Acuson (Siemens ultrasound).
+  GE, Siemens, and Philips PDFs are archived at
   [archive.org/details/dicom-conformance-ge](https://archive.org/details/dicom-conformance-ge),
   [archive.org/details/dicom-conformance-siemens](https://archive.org/details/dicom-conformance-siemens), and
   [archive.org/details/dicom-conformance-philips](https://archive.org/details/dicom-conformance-philips).
+  Canon PDFs are fetched directly from
+  [global.medical.canon](https://global.medical.canon/service-support/Interoperability)
+  and archived at
+  [archive.org/details/dicom-conformance-canon](https://archive.org/details/dicom-conformance-canon).
+  Acuson PDFs are fetched directly from the Siemens Healthineers product page.
   Original vendor source URLs are in `data/sources.json`.
 
 Each private tag record carries a `sources` field listing the specific PDF
