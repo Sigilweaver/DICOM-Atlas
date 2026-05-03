@@ -17,8 +17,8 @@ Current shipped size: **19,688 tags** (14,559 private + 5,129 public) in a
 | GE HealthCare (PDF scrape) | 1,762 | 257 |
 | Philips Healthcare (PDF scrape) | 791 | 807 |
 | Canon Medical (PDF scrape) | 410 | 284 |
-| Acuson (PDF scrape) | 214 | 57 |
-| **PDF-scraped subtotal** | **5,128** | **1,844** |
+| Acuson (PDF scrape) | 214 | 53 |
+| **PDF-scraped subtotal** | **5,128** | **1,840** |
 | pydicom / GDCM (community-compiled) | 9,472 | — |
 | **Total private** | **14,559** | |
 | Public (PS3.6 standard) | 5,129 | — |
@@ -120,7 +120,7 @@ harm.
 **Sources:**
 - Public tags: DICOM Standard Part 6 (PS3.6) via the
   [Innolitics JSON export](https://github.com/innolitics/dicom-standard).
-- Private tags: 1,844 conformance statement PDFs from GE HealthCare, Siemens
+- Private tags: 1,840 conformance statement PDFs from GE HealthCare, Siemens
   Healthineers, Philips Healthcare, Canon Medical, and Acuson (Siemens ultrasound).
   GE, Siemens, and Philips PDFs are archived at
   [archive.org/details/dicom-conformance-ge](https://archive.org/details/dicom-conformance-ge),
