@@ -11,7 +11,7 @@ how to run the test suite. If you just want to **use** the dictionary, see
 
 ```
 scraper/            Python — PDF → JSON-L pipeline
-  harvest/            per-vendor extractors (ge, siemens, philips)
+  harvest/            per-vendor extractors (ge, siemens, philips, canon, acuson)
   resolve.py          merges interim JSON-L → ResolvedTag (majority VR vote)
   ingest_pydicom.py   imports pydicom/GDCM entries not covered by PDFs
 
@@ -74,6 +74,8 @@ Then re-harvest, resolve, and merge:
 python -m scraper.harvest_batch --vendor ge --jobs 4
 python -m scraper.harvest_batch --vendor siemens --jobs 6
 python -m scraper.harvest_batch --vendor philips --jobs 4
+python -m scraper.harvest_batch --vendor canon --jobs 4
+python -m scraper.harvest_batch --vendor acuson --jobs 4
 python -m scraper.resolve -o data/resolved.jsonl data/interim/*.jsonl
 python -m scraper.ingest_pydicom \
   --input data/resolved.jsonl \

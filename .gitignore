@@ -20,6 +20,7 @@ data/html/
 data/catalog.json
 data/interim_resolved_old.jsonl
 data/resolved.jsonl
+data/canon_manifest.csv
 *.dmap
 
 # Private planning notes — kept local only

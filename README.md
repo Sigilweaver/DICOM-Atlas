@@ -1,7 +1,7 @@
 # DICOM-Atlas
 
 An open registry of **public and private DICOM tags** compiled from vendor
-conformance statements (GE, Siemens, Philips, ...) plus the PS3.6 standard,
+conformance statements plus the PS3.6 standard,
 with additional entries contributed by [pydicom](https://github.com/pydicom/pydicom)
 and [GDCM](https://gdcm.sourceforge.net). Queryable from Rust, C, or Python
 in O(log n) with no runtime dependencies.
