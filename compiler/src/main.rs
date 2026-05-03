@@ -9,6 +9,7 @@
 //!   --out        <path>  write .dmap archive
 //!   --export-csv <path>  also write a human-editable tags.csv
 
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use std::path::PathBuf;
@@ -417,6 +418,63 @@ fn compile(rows: &[Row], out: &PathBuf) -> Result<()> {
 }
 
 // ---------------------------------------------------------------------------
+// Normalisation + deduplication
+//
+// Two issues in the input data require pre-processing before compilation:
+//
+// 1. Some private tags in resolved_pydicom_backfilled.jsonl have
+//    element_is_block_offset=false and a concrete element address (e.g. 0x1011
+//    for block 0x10, offset 0x11). The lookup API always uses the block offset
+//    (low byte, 0x11), so these tags would be unfindable in the compiled index.
+//    Fix: normalise all private-tag elements to their block offset (low byte).
+//
+// 2. Some creator strings that differ only in case (e.g. "SPI RELEASE 1" vs
+//    "SPI Release 1") canonicalise to the same string and therefore produce the
+//    same creator_hash. When both appear in the input for the same tag, the
+//    compiled index contains two entries with identical (group, element, hash)
+//    keys, and binary_search returns whichever one happens to land first.
+//    Fix: after normalisation, deduplicate by the index key, keeping the entry
+//    with the most informative data (PDF source > pydicom-only; named > Unknown).
+
+fn normalize_and_dedup(rows: Vec<Row>) -> Vec<Row> {
+    let mut map: BTreeMap<(u16, u16, u32), Row> = BTreeMap::new();
+    for mut r in rows {
+        // Normalise private-tag element to the block offset (low byte).
+        if !r.private_creator.is_empty() && !r.element_is_block_offset {
+            r.element &= 0xFF;
+            r.element_is_block_offset = true;
+        }
+        let ch = creator_hash(if r.private_creator.is_empty() {
+            None
+        } else {
+            Some(r.private_creator.as_str())
+        });
+        let key = (r.group, r.element, ch);
+        let replace = match map.get(&key) {
+            None => true,
+            Some(prev) => {
+                let curr_pdf = r.sources.iter().any(|s| s != "pydicom");
+                let prev_pdf = prev.sources.iter().any(|s| s != "pydicom");
+                if curr_pdf && !prev_pdf {
+                    true // PDF source beats pydicom-only
+                } else if !curr_pdf && prev_pdf {
+                    false // keep existing PDF entry
+                } else {
+                    // Same source type: prefer a real name over "Unknown".
+                    r.name != "Unknown" && prev.name == "Unknown"
+                }
+            }
+        };
+        if replace {
+            map.insert(key, r);
+        }
+    }
+    // BTreeMap iterates in key order, so the result is already sorted by
+    // (group, element, creator_hash) — matching the index sort in compile().
+    map.into_values().collect()
+}
+
+// ---------------------------------------------------------------------------
 
 fn main() -> Result<()> {
     let args = Args::parse();
@@ -435,6 +493,9 @@ fn main() -> Result<()> {
     };
 
     eprintln!("loaded {} rows", rows.len());
+
+    let rows = normalize_and_dedup(rows);
+    eprintln!("after dedup: {} rows", rows.len());
 
     if let Some(p) = args.export_csv.as_ref() {
         write_csv(p, &rows)?;

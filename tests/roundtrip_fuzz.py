@@ -80,9 +80,12 @@ def main() -> int:
                 f"scraper={want_vr} dmap={got_vr}"
             )
         # Name must match (dmap may have CamelCased keyword but .name is raw).
+        # Skip the name check when the sampled row has name="Unknown" — the
+        # compiler's dedup may have promoted a more informative name from a
+        # duplicate entry, which is correct behaviour, not a mismatch.
         want_name = (r.get("name") or "").strip()
         got_name = (out.get("name") or "").strip()
-        if want_name and want_name != got_name:
+        if want_name and want_name != "Unknown" and want_name != got_name:
             mismatches.append(
                 f"name mismatch ({group},{element}) {creator!r}: "
                 f"scraper={want_name!r} dmap={got_name!r}"
