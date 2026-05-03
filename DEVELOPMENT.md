@@ -53,8 +53,9 @@ cargo run --release --bin dmap-compile -- \
   --out tags.dmap
 ```
 
-CI verifies that the committed `tags.dmap` matches a fresh rebuild on every
-push, so it will never silently drift from the source data.
+CI rebuilds `tags.dmap` from the checked-in source data on every push and
+runs the full test suite against the freshly compiled file, so correctness
+is always verified.
 
 ---
 
