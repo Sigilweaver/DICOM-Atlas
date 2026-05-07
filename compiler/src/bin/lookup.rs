@@ -1,4 +1,4 @@
-//! `dicom-lookup` — query a `.dmap` file from the command line.
+//! `dicom-lookup` - query a `.dmap` file from the command line.
 //!
 //! Examples:
 //!
@@ -7,6 +7,10 @@
 //! dicom-lookup 0021 xx01 GEMS_XR3DCAL_01
 //! dicom-lookup --file tags.dmap --json 0021 xx01 "Siemens: Thorax/Multix FD Lab Settings"
 //! ```
+//!
+//! When built with `--features embedded`, the binary contains a baked-in copy
+//! of `tags.dmap` and does not require an external file unless `--file` is
+//! given explicitly.
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -23,6 +27,8 @@ use dicom_map::DmapDict;
 )]
 struct Args {
     /// Path to the .dmap file. Defaults to $DMAP_FILE then ./tags.dmap.
+    /// When built with the `embedded` feature, the file is optional; the
+    /// binary contains a baked-in dictionary that is used when no path is given.
     #[arg(short, long)]
     file: Option<PathBuf>,
 
@@ -129,6 +135,26 @@ fn render_json(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Opt
     );
 }
 
+fn load_dict(explicit: Option<PathBuf>) -> DmapDict {
+    // When built with the `embedded` feature and no explicit path is given,
+    // use the baked-in dictionary without touching the filesystem.
+    #[cfg(feature = "embedded")]
+    if explicit.is_none() {
+        if std::env::var_os("DMAP_FILE").filter(|v| !v.is_empty()).is_none() {
+            return dicom_map::embedded::embedded();
+        }
+    }
+
+    let path = resolve_dmap_path(explicit);
+    match DmapDict::open(&path) {
+        Ok(d) => d,
+        Err(e) => {
+            eprintln!("error: cannot open {}: {e}", path.display());
+            std::process::exit(1);
+        }
+    }
+}
+
 fn main() -> ExitCode {
     let args = Args::parse();
 
@@ -147,14 +173,7 @@ fn main() -> ExitCode {
         }
     };
 
-    let path = resolve_dmap_path(args.file);
-    let dict = match DmapDict::open(&path) {
-        Ok(d) => d,
-        Err(e) => {
-            eprintln!("error: cannot open {}: {e}", path.display());
-            return ExitCode::from(1);
-        }
-    };
+    let dict = load_dict(args.file);
 
     let creator_ref = args.creator.as_deref();
     match dict.lookup(group, element, creator_ref) {

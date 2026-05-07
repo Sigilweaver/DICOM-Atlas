@@ -4,6 +4,34 @@
 
 ## May 2026
 
+### Per-vendor integration tests
+
+`dicom-map/tests/integration.rs` extended with ground-truth spot checks for all
+shipped vendor families: GE HealthCare (`GEMS_DL_IMG_01`, `GEMS_ACQU_01`), Philips
+(`PHILIPS MR IMAGING DD 001`, `PHILIPS IMAGING DD 001`), Siemens
+(`Siemens: Thorax/Multix FD Lab Settings`), Canon Medical (`CANON MDW NON-IMAGE`,
+`CANON_MEC_MG3`), and Acuson / Siemens ultrasound (`SIEMENS ULTRASOUND SC2000`).
+All values are PDF-verified. Existing 9 library tests unchanged.
+
+### Embedded binary mode for dicom-lookup
+
+`dicom-map` crate gains an `embedded` feature (already scaffolded, now working).
+When the `compiler` crate is built with `--features embedded`, `dicom-lookup` bakes
+`tags.dmap` into the binary at compile time. The binary works with no external file:
+
+    cargo build --release --bin dicom-lookup --features embedded
+    ./target/release/dicom-lookup 0008 0005   # no tags.dmap needed
+
+The `--file` flag still overrides the embedded dictionary when given. The alignment
+bug (rkyv requires 4-byte alignment; `include_bytes!` only guarantees 1-byte) is
+fixed via an `#[repr(C, align(4))]` wrapper in `dicom-map/src/embedded.rs`.
+
+### GE variant-C re-harvest
+
+Interim files for GE Senographe mammography PDFs regenerated via:
+
+    uv run python3 -m scraper.harvest_batch --force --vendor ge
+
 ### Compiler: private-tag normalization and deduplication
 
 `normalize_and_dedup()` added to `compiler/src/main.rs`, called before compilation.

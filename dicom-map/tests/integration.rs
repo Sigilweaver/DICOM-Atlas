@@ -105,6 +105,17 @@ fn known_tags() -> &'static [(u16, u16, &'static str, &'static str, &'static str
             "US",
             "Auto Window",
         ),
+        // Canon Medical (PDF-sourced, verified against 2G985-* conformance docs)
+        (0x7FE1, 0x0010, "CANON MDW NON-IMAGE", "OB", "US Private Data"),
+        (0x7099, 0x0002, "CANON_MEC_MG3", "CS", "Miss Shot Status"),
+        // Acuson / Siemens ultrasound (PDF-sourced, verified against SC2000 conformance docs)
+        (
+            0x0119,
+            0x0001,
+            "SIEMENS ULTRASOUND SC2000",
+            "OB",
+            "Common Acoustic Meta Information",
+        ),
     ]
 }
 

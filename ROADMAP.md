@@ -1,9 +1,9 @@
 # DICOM-Map Roadmap
 
 Current state (May 2026): 19,521 tags (14,392 private + 5,129 public), covering GE,
-Siemens, Philips, Canon Medical, Acuson, and 200+ smaller vendors. Sources: 1,897
+Siemens, Philips, Canon Medical, Acuson, and 200+ smaller vendors. Sources: 1,840
 conformance statement PDFs (5,128 PDF-sourced private tags) plus pydicom/GDCM ingest
-(9,431 additional entries). Binary artifact `tags.dmap` is 4.1 MB. CLI, Python
+(9,264 additional entries). Binary artifact `tags.dmap` is 4.1 MB. CLI, Python
 bindings (with pydicom adapter), C FFI, CI pipeline, and GitHub Release job are all
 shipped.
 
@@ -57,28 +57,7 @@ acquisition before harvester work can begin.
 
 ## Validation
 
-### Per-vendor integration tests
-
-`dicom-map/tests/integration.rs` currently has 9 tests covering library correctness
-but not vendor-specific ground truth. Useful additions:
-
-| Creator family | Representative tag |
-|---|---|
-| `GEMS_ACQU_01` | (0019,xxxx) |
-| `GEMS_XR3DCAL_01` | (0021,xx01) IS "3Dcal image rows" |
-| `Philips MR Imaging DD 001` | spot-check from resolved set |
-| `SIEMENS: THORAX/MULTIX FD LAB SETTINGS` | (0021,xx08) US "Auto Window Flag" |
-| `MedCom OOG` | spot-check from resolved set |
-
----
-
-## Distribution
-
-### Embed dictionary in binary (offline mode)
-
-`include_bytes!("../../tags.dmap")` at compile time so the CLI/library works with no
-external file. Tradeoff: binary is larger and the dictionary cannot be hot-swapped
-without recompiling.
+All planned vendor integration tests are complete. See CHANGELOG.md.
 
 ---
 

@@ -22,3 +22,9 @@ clap = { workspace = true }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 csv = { workspace = true }
+
+[features]
+# Bake tags.dmap into the dicom-lookup binary. Build with:
+#   cargo build --release --bin dicom-lookup --features embedded
+# The binary will then work with no external .dmap file.
+embedded = ["dicom-map/embedded"]
