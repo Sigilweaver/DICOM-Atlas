@@ -15,5 +15,5 @@ name = "_dicom_map"
 crate-type = ["cdylib"]
 
 [dependencies]
-dicom-map = { path = "../dicom-map", version = "0.2.1" }
+dicom-map = { path = "../dicom-map", version = "0.2.2" }
 pyo3 = { version = "0.22", features = ["extension-module", "generate-import-lib"] }

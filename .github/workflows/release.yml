@@ -78,7 +78,11 @@ jobs:
       - name: cargo publish dicom-map
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: cargo publish -p dicom-map --token "$CARGO_REGISTRY_TOKEN"
+        run: |
+          if cargo publish -p dicom-map --token "$CARGO_REGISTRY_TOKEN" 2>&1 | tee out.log; then
+            exit 0
+          fi
+          grep -qi 'already uploaded\|already exists' out.log && exit 0 || exit 1
 
   publish-dmap-compiler:
     name: Publish dmap-compiler to crates.io
@@ -95,7 +99,11 @@ jobs:
       - name: cargo publish dmap-compiler
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: cargo publish -p dmap-compiler --token "$CARGO_REGISTRY_TOKEN"
+        run: |
+          if cargo publish -p dmap-compiler --token "$CARGO_REGISTRY_TOKEN" 2>&1 | tee out.log; then
+            exit 0
+          fi
+          grep -qi 'already uploaded\|already exists' out.log && exit 0 || exit 1
 
   publish-dicom-map-ffi:
     name: Publish dicom-map-ffi to crates.io
@@ -112,7 +120,11 @@ jobs:
       - name: cargo publish dicom-map-ffi
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: cargo publish -p dicom-map-ffi --token "$CARGO_REGISTRY_TOKEN"
+        run: |
+          if cargo publish -p dicom-map-ffi --token "$CARGO_REGISTRY_TOKEN" 2>&1 | tee out.log; then
+            exit 0
+          fi
+          grep -qi 'already uploaded\|already exists' out.log && exit 0 || exit 1
 
   # ---------------------------------------------------------------
   # Build Python wheels (manylinux, macOS, Windows) and publish the
@@ -155,25 +167,9 @@ jobs:
           name: wheels-${{ matrix.os }}-${{ matrix.target }}
           path: dicom-map-py/dist
 
-  build-sdist:
-    name: Build sdist
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build sdist
-        uses: PyO3/maturin-action@v1
-        with:
-          working-directory: dicom-map-py
-          command: sdist
-          args: --out dist
-      - uses: actions/upload-artifact@v4
-        with:
-          name: wheels-sdist
-          path: dicom-map-py/dist
-
   publish-pypi:
     name: Publish dicom-map to PyPI
-    needs: [build-wheels, build-sdist]
+    needs: [build-wheels]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
