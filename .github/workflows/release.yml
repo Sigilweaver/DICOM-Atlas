@@ -71,17 +71,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: crates-io
     permissions:
-      id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: rust-lang/crates-io-auth-action@v1
-        id: auth
       - name: cargo publish dicom-map
         env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-        run: cargo publish -p dicom-map
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p dicom-map --token "$CARGO_REGISTRY_TOKEN"
 
   publish-dmap-compiler:
     name: Publish dmap-compiler to crates.io
@@ -89,19 +86,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: crates-io
     permissions:
-      id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Wait for crates.io index
         run: sleep 30
-      - uses: rust-lang/crates-io-auth-action@v1
-        id: auth
       - name: cargo publish dmap-compiler
         env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-        run: cargo publish -p dmap-compiler
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p dmap-compiler --token "$CARGO_REGISTRY_TOKEN"
 
   publish-dicom-map-ffi:
     name: Publish dicom-map-ffi to crates.io
@@ -109,19 +103,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: crates-io
     permissions:
-      id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Wait for crates.io index
         run: sleep 30
-      - uses: rust-lang/crates-io-auth-action@v1
-        id: auth
       - name: cargo publish dicom-map-ffi
         env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-        run: cargo publish -p dicom-map-ffi
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p dicom-map-ffi --token "$CARGO_REGISTRY_TOKEN"
 
   # ---------------------------------------------------------------
   # Build Python wheels (manylinux, macOS, Windows) and publish the
