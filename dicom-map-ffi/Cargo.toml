@@ -2,7 +2,15 @@
 name = "dicom-map-ffi"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
 license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+readme = "../README.md"
+keywords.workspace = true
+categories.workspace = true
 description = "C FFI for dicom-map"
 
 [lib]

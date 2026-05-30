@@ -5,7 +5,23 @@ resolver = "2"
 [workspace.package]
 version = "0.2.0"
 edition = "2021"
+rust-version = "1.87"
+authors = ["Nathan Riley <git@nathanriley.com>"]
 license = "Apache-2.0"
+repository = "https://github.com/Sigilweaver/DICOM-Atlas"
+homepage = "https://sigilweaver.app/dicom-atlas/"
+documentation = "https://sigilweaver.app/dicom-atlas/docs/"
+readme = "README.md"
+keywords = ["dicom", "medical-imaging", "tags", "registry", "rkyv"]
+categories = ["science", "data-structures", "command-line-utilities"]
+
+# Note: a workspace-wide `unsafe_code = "forbid"` lint was considered
+# to match the rest of the Sigilweaver suite, but `dicom-map` requires
+# `unsafe` to memory-map the rkyv archive (`Mmap::map`,
+# `archived_root`) and `dicom-map-ffi` is a C FFI surface and is
+# therefore inherently unsafe. The `unsafe` blocks are tightly
+# scoped, well-commented, and covered by integration and round-trip
+# fuzz tests.
 
 [workspace.dependencies]
 rkyv = { version = "0.7.45", default-features = false, features = [

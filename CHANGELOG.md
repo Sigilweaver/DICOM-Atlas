@@ -1,5 +1,33 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+- `SECURITY.md` with private GHSA reporting policy.
+- `CONTRIBUTING.md` with PR checklist and development setup.
+- Docusaurus documentation site at `docs/`, published to
+  <https://sigilweaver.app/dicom-atlas/docs/>.
+- README badges (CI, license, MSRV, docs).
+
+### Changed
+
+- Workspace metadata fully consolidated under `[workspace.package]`:
+  `authors`, `rust-version`, `repository`, `homepage`,
+  `documentation`, `readme`, `keywords`, `categories`.
+- `[lints.rust] unsafe_code` not forbidden: `dicom-map` requires
+  `unsafe` for `Mmap::map` and `archived_root`, and `dicom-map-ffi`
+  is a C FFI surface. Documented in the workspace manifest.
+
+## [0.2.0] - 2026-05-31
+
+Detailed historical changes for 0.2.0 and earlier are preserved in
+the dated sections below.
+
 ---
 
 ## May 2026
