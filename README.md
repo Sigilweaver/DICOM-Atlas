@@ -1,12 +1,13 @@
 # DICOM-Atlas
 
 [![CI](https://github.com/Sigilweaver/DICOM-Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Sigilweaver/DICOM-Atlas/actions/workflows/ci.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Data License: CC-BY-SA 4.0](https://img.shields.io/badge/data-CC--BY--SA--4.0-blue.svg)](LICENSE-DATA)
-[![Rust MSRV](https://img.shields.io/badge/rust-1.87+-orange.svg)](https://www.rust-lang.org)
 [![crates.io](https://img.shields.io/crates/v/dicom-map.svg)](https://crates.io/crates/dicom-map)
 [![PyPI](https://img.shields.io/pypi/v/dicom-map.svg)](https://pypi.org/project/dicom-map/)
-[![Docs](https://img.shields.io/badge/docs-sigilweaver.app-blue)](https://sigilweaver.app/dicom-atlas/docs/)
+[![docs.rs](https://img.shields.io/docsrs/dicom-map)](https://docs.rs/dicom-map)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Data License: CC-BY-SA-4.0](https://img.shields.io/badge/data-CC--BY--SA--4.0-blue.svg)](LICENSE-DATA)
+[![Rust MSRV](https://img.shields.io/badge/rust-1.87%2B-orange.svg)](https://www.rust-lang.org)
+[![Docs](https://img.shields.io/badge/docs-sigilweaver.app-blue.svg)](https://sigilweaver.app/dicom-atlas/docs/)
 
 An open registry of **public and private DICOM tags** compiled from vendor
 conformance statements plus the PS3.6 standard,
