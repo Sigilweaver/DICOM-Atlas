@@ -6,6 +6,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-05-30
+
+### Fixed
+
+- Add explicit `version = "0.2.1"` to internal `dicom-map` path deps so
+  publishing the `dmap-compiler`, `dicom-map-ffi`, and `dicom-map-py`
+  crates resolves correctly from crates.io.
+- Add `generate-import-lib` to the `pyo3` feature set so Windows abi3
+  wheels build under maturin without a Python interpreter present.
+
 ### Added
 
 - `SECURITY.md` with private GHSA reporting policy.

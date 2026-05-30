@@ -109,6 +109,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "cc"
+version = "1.2.63"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "556e016178bb5662a08681bbe0f00f8e17631781a4dfc8c45e466e4b185ec27f"
+dependencies = [
+ "find-msvc-tools",
+ "shlex",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -183,7 +193,7 @@ dependencies = [
 
 [[package]]
 name = "dicom-map"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "memmap2",
@@ -193,14 +203,14 @@ dependencies = [
 
 [[package]]
 name = "dicom-map-ffi"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "dicom-map",
 ]
 
 [[package]]
 name = "dicom-map-py"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "dicom-map",
  "pyo3",
@@ -208,7 +218,7 @@ dependencies = [
 
 [[package]]
 name = "dmap-compiler"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "clap",
@@ -219,6 +229,12 @@ dependencies = [
  "serde_json",
  "thiserror",
 ]
+
+[[package]]
+name = "find-msvc-tools"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582"
 
 [[package]]
 name = "funty"
@@ -375,6 +391,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b14b5775b5ff446dd1056212d778012cbe8a0fbffd368029fd9e25b514479c38"
 dependencies = [
  "once_cell",
+ "python3-dll-a",
  "target-lexicon",
 ]
 
@@ -411,6 +428,15 @@ dependencies = [
  "pyo3-build-config",
  "quote",
  "syn 2.0.117",
+]
+
+[[package]]
+name = "python3-dll-a"
+version = "0.2.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d80ba7540edb18890d444c5aa8e1f1f99b1bdf26fb26ae383135325f4a36042b"
+dependencies = [
+ "cc",
 ]
 
 [[package]]
@@ -524,6 +550,12 @@ dependencies = [
  "serde_core",
  "zmij",
 ]
+
+[[package]]
+name = "shlex"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
 
 [[package]]
 name = "strsim"

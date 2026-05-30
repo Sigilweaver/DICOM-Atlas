@@ -22,7 +22,7 @@ name = "dicom-lookup"
 path = "src/bin/lookup.rs"
 
 [dependencies]
-dicom-map = { path = "../dicom-map" }
+dicom-map = { path = "../dicom-map", version = "0.2.1" }
 rkyv = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
