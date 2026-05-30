@@ -193,7 +193,7 @@ dependencies = [
 
 [[package]]
 name = "dicom-map"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "anyhow",
  "memmap2",
@@ -203,14 +203,14 @@ dependencies = [
 
 [[package]]
 name = "dicom-map-ffi"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "dicom-map",
 ]
 
 [[package]]
 name = "dicom-map-py"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "dicom-map",
  "pyo3",
@@ -218,7 +218,7 @@ dependencies = [
 
 [[package]]
 name = "dmap-compiler"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "anyhow",
  "clap",

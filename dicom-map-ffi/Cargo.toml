@@ -18,4 +18,4 @@ name = "dicom_map_ffi"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-dicom-map = { path = "../dicom-map", version = "0.2.2" }
+dicom-map = { path = "../dicom-map", version = "0.2.3" }
