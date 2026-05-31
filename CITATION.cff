@@ -5,7 +5,9 @@ message: >
   below. Citation is encouraged and appreciated but not legally required.
 type: dataset
 authors:
-  - alias: Sigilweaver
+  - family-names: Riley
+    given-names: Nathan
+    orcid: "https://orcid.org/0009-0004-1579-7312"
     website: "https://github.com/Sigilweaver"
 repository-code: "https://github.com/Sigilweaver/DicomAtlas"
 url: "https://github.com/Sigilweaver/DicomAtlas"
@@ -33,3 +35,9 @@ keywords:
   - GE HealthCare
   - Siemens Healthineers
   - Philips Healthcare
+# Zenodo DOI - filled in after first GitHub-triggered Zenodo release.
+# After Zenodo mints the concept DOI, uncomment and replace the value below:
+# identifiers:
+#   - type: doi
+#     value: "10.5281/zenodo.XXXXXXXX"
+#     description: "Concept DOI (all versions) - Zenodo"
