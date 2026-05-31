@@ -1,6 +1,7 @@
 # DICOM-Atlas
 
 [![CI](https://github.com/Sigilweaver/DICOM-Atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/Sigilweaver/DICOM-Atlas/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20470742.svg)](https://doi.org/10.5281/zenodo.20470742)
 [![crates.io](https://img.shields.io/crates/v/dicom-map.svg)](https://crates.io/crates/dicom-map)
 [![PyPI](https://img.shields.io/pypi/v/dicom-map.svg)](https://pypi.org/project/dicom-map/)
 [![docs.rs](https://img.shields.io/docsrs/dicom-map)](https://docs.rs/dicom-map)
