@@ -6,6 +6,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-05-31
+
+### Added
+
+- `CITATION.cff`: author identity (Nathan Riley + ORCID) and a
+  scaffolded `identifiers:` block ready for the Zenodo concept DOI.
+
+### Changed
+
+- README badge block unified across the Sigilweaver portfolio.
+
 ## [0.2.3] - 2026-05-30
 
 ### Changed

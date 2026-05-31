@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "dicom-map"
-version = "0.2.0"
+version = "0.2.4"
 description = "Memory-mapped O(log n) DICOM tag dictionary (private + public tags)"
 readme = "../README.md"
 license = { text = "Apache-2.0" }
