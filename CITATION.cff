@@ -9,8 +9,8 @@ authors:
     given-names: Nathan
     orcid: "https://orcid.org/0009-0004-1579-7312"
     website: "https://github.com/Sigilweaver"
-repository-code: "https://github.com/Sigilweaver/DicomAtlas"
-url: "https://github.com/Sigilweaver/DicomAtlas"
+repository-code: "https://github.com/Sigilweaver/DICOM-Atlas"
+url: "https://github.com/Sigilweaver/DICOM-Atlas"
 abstract: >
   DICOM-Atlas is an open registry of public and private DICOM tags compiled
   from vendor conformance statements (GE HealthCare, Siemens Healthineers,
@@ -20,10 +20,12 @@ abstract: >
   conformance document page. The registry is distributed as a human-editable
   CSV (tags.csv), a memory-mapped binary (tags.dmap), and queryable via
   a Rust library, Python bindings, and C FFI.
-license: "Apache-2.0 AND CC0-1.0"
-license-url: "https://github.com/Sigilweaver/DicomAtlas/blob/main/LICENSE-DATA"
-date-released: "2026-04-24"
-version: "0.2.0"
+license:
+  - Apache-2.0
+  - CC0-1.0
+license-url: "https://github.com/Sigilweaver/DICOM-Atlas/blob/main/LICENSE-DATA"
+date-released: "2026-05-31"
+version: "0.2.4"
 keywords:
   - DICOM
   - medical imaging
