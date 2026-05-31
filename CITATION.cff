@@ -25,7 +25,7 @@ license:
   - CC0-1.0
 license-url: "https://github.com/Sigilweaver/DICOM-Atlas/blob/main/LICENSE-DATA"
 date-released: "2026-05-31"
-version: "0.2.4"
+version: "0.2.5"
 keywords:
   - DICOM
   - medical imaging

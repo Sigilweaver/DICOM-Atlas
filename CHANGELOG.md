@@ -6,6 +6,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-05-31
+
+### Fixed
+
+- `CITATION.cff`: split compound `Apache-2.0 AND CC0-1.0` into a CFF
+  list; CFF v1.2.0 does not allow compound SPDX expressions and Zenodo
+  rejected the v0.2.4 deposit with "Citation metadata load failed".
+- `CITATION.cff`: correct stale `repository-code`, `url`, and
+  `license-url` values left over from the `DicomAtlas` -> `DICOM-Atlas`
+  organisation rename.
+- `CITATION.cff`: bump version / date-released to reflect 0.2.4 release.
+
 ## [0.2.4] - 2026-05-31
 
 ### Added
