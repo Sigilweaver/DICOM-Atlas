@@ -6,6 +6,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.6] - 2026-05-31
+
+### Fixed
+
+- `CITATION.cff`: change `type` from `dataset` to `software` and
+  `license` from a YAML list to a plain `Apache-2.0` string. Zenodo's
+  `cffconvert` integration does not handle `type: dataset` or a license
+  list, causing "Citation metadata load failed" on both v0.2.4 and v0.2.5.
+- `CITATION.cff`: remove `license-url` (not recognised by cffconvert).
+
 ## [0.2.5] - 2026-05-31
 
 ### Fixed

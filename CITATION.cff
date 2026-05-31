@@ -3,7 +3,7 @@ title: "DICOM-Atlas: An open registry of public and private DICOM tags"
 message: >
   If you use DICOM-Atlas in your research, please cite it using the metadata
   below. Citation is encouraged and appreciated but not legally required.
-type: dataset
+type: software
 authors:
   - family-names: Riley
     given-names: Nathan
@@ -20,12 +20,9 @@ abstract: >
   conformance document page. The registry is distributed as a human-editable
   CSV (tags.csv), a memory-mapped binary (tags.dmap), and queryable via
   a Rust library, Python bindings, and C FFI.
-license:
-  - Apache-2.0
-  - CC0-1.0
-license-url: "https://github.com/Sigilweaver/DICOM-Atlas/blob/main/LICENSE-DATA"
+license: "Apache-2.0"
 date-released: "2026-05-31"
-version: "0.2.5"
+version: "0.2.6"
 keywords:
   - DICOM
   - medical imaging
