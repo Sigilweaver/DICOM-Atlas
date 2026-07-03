@@ -1,1 +1,1 @@
-"""scraper.crawl — web crawlers for vendor DICOM conformance pages."""
+"""scraper.crawl - web crawlers for vendor DICOM conformance pages."""

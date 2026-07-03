@@ -2,19 +2,19 @@
 
 Three formats encountered in Canon conformance statements:
 
-Format A — plain text lines (not captured in pdfplumber tables):
+Format A - plain text lines (not captured in pdfplumber tables):
     ``(GGGG,xxEE)[*]  Attribute Name  VR  VM``
     The creator declaration row ``(GGGG,00xx)`` carries no creator string;
     ``private_creator`` is emitted as ``None``.
 
-Format B — 4-column table, tag-first:
+Format B - 4-column table, tag-first:
     Tag | Attribute Name | VR | VM
     Creator declaration: ``(GGGG,00xx) | Private Creator Code | LO | 1``
     No creator string is documented in these PDFs; emitted as ``None``.
 
-Format C — ≥5-column table, name-first (Toshiba legacy / older Canon):
+Format C - ≥5-column table, name-first (Toshiba legacy / older Canon):
     Attribute Name | Tag | VR | Value | Presence of Value | Source
-    Creator row: ``Private Creator Code | (GGGG,00xx) | LO | "CREATOR_STR" …``
+    Creator row: ``Private Creator Code | (GGGG,00xx) | LO | "CREATOR_STR" ...``
     Creator string is extracted from the Value column (quotes stripped).
 
 Harvest strategy
@@ -79,7 +79,7 @@ def _strip_creator_quotes(raw: str) -> str | None:
 
 
 def _group_from_tag(tag_s: str) -> int | None:
-    """Parse ``(GGGG,…)`` → int, or None on failure."""
+    """Parse ``(GGGG,...)`` → int, or None on failure."""
     m = re.match(r"^\(\s*([0-9A-Fa-f]{4})\s*,", tag_s)
     if m:
         return int(m.group(1), 16)
@@ -105,7 +105,7 @@ class CanonHarvester(Harvester):
                 if not _FILTER_RE.search(text):
                     continue
                 seen_tags: set[str] = set()
-                # Table extraction is expensive — only call it when the page
+                # Table extraction is expensive - only call it when the page
                 # text contains an actual ``(GGGG,xxEE)``-form tag token.
                 if _TABLE_FILTER_RE.search(text):
                     for table_idx, table in enumerate(page.extract_tables()):
@@ -125,7 +125,7 @@ class CanonHarvester(Harvester):
                         yield raw
 
     # ------------------------------------------------------------------
-    # Pass 1 — collect creator strings from the entire PDF
+    # Pass 1 - collect creator strings from the entire PDF
     # ------------------------------------------------------------------
 
     def _collect_creators(self, pages: list) -> dict[int, str]:
@@ -167,7 +167,7 @@ class CanonHarvester(Harvester):
         return creator_map
 
     # ------------------------------------------------------------------
-    # Pass 2 — emit RawTag entries
+    # Pass 2 - emit RawTag entries
     # ------------------------------------------------------------------
 
     def _parse_table(
@@ -194,7 +194,7 @@ class CanonHarvester(Harvester):
         page_num: int,
         creator_map: dict[int, str],
     ) -> Iterator[RawTag]:
-        """Format B: [Tag | Attribute Name | VR | VM] — no creator string."""
+        """Format B: [Tag | Attribute Name | VR | VM] - no creator string."""
         # Locate columns
         name_col: int = next(
             (i for i, h in enumerate(header) if "attribute" in h or h == "name"), 1
@@ -239,7 +239,7 @@ class CanonHarvester(Harvester):
         page_num: int,
         creator_map: dict[int, str],
     ) -> Iterator[RawTag]:
-        """Format C: [Name | Tag | VR | Value | …] — creator from pass-1 map."""
+        """Format C: [Name | Tag | VR | Value | ...] - creator from pass-1 map."""
         vr_col: int | None = next((i for i, h in enumerate(header) if h == "vr"), None)
         for row in table[1:]:
             if not row or len(row) <= tag_col:
@@ -252,7 +252,7 @@ class CanonHarvester(Harvester):
             if "xx" not in tag_s.lower():
                 continue  # public tag
             name_s = _cell(row[0])
-            # Strip sequence-depth markers (">", ">>", …)
+            # Strip sequence-depth markers (">", ">>", ...)
             name_s = name_s.lstrip("> ").strip()
             # Skip macro-include lines and empty names
             if not name_s or name_s.lower().startswith("include"):

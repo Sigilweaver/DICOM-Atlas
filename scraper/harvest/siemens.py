@@ -4,12 +4,12 @@ Handles three layout variants found across Siemens conformance PDFs:
 
 Format A  (older products, e.g. FLUOROSPOT):
     Header: Tag | Private Owner Code | Name | VR | VM
-    Tag cell: (GGGG,xxEE)  — 'xx' is block-offset placeholder
+    Tag cell: (GGGG,xxEE) - 'xx' is block-offset placeholder
     Creator: separate column
 
 Format B  (newer products, e.g. MAGNETOM XA/MR VA12S):
     Header: DICOM Tag | Name | VR | VM
-    Tag cell: (GGGG, CREATOR NAME, EE)  — creator embedded
+    Tag cell: (GGGG, CREATOR NAME, EE) - creator embedded
     Creator: extracted from tag cell
 
 Format C  (text-only / class-B pages):
@@ -29,23 +29,23 @@ import pdfplumber
 from scraper.harvest.base import Harvester, squeeze_row
 from scraper.models import RawTag, VR_CODES
 
-# ── Tag regexes ───────────────────────────────────────────────────────────────
+# -- Tag regexes --
 
 # Format A: (GGGG,xxEE)  or  (GGGG,EEEE)
 TAG_A_RE = re.compile(
     r"^\(\s*([0-9A-Fa-f]{4})\s*,\s*([0-9A-Fa-fxX]{4})\s*\)$"
 )
 
-# Format B/C: (GGGG, CREATOR STRING, HH)  — hex element is 1-2 digits
+# Format B/C: (GGGG, CREATOR STRING, HH) - hex element is 1-2 digits
 TAG_BC_RE = re.compile(
     r"\(\s*([0-9A-Fa-f]{4})\s*,\s*([^,()]+?)\s*,\s*([0-9A-Fa-f]{1,2})\s*\)"
 )
 
-# ── Valid VR codes (as pipe-separated string for regex) ───────────────────────
+# -- Valid VR codes (as pipe-separated string for regex) --
 _VR_ALTS = "|".join(sorted(VR_CODES, key=len, reverse=True))
 _VR_RE = re.compile(rf"\b({_VR_ALTS})\b")
 
-# ── Text-line regex (Format C) ────────────────────────────────────────────────
+# -- Text-line regex (Format C) --
 # Matches: (GGGG, CREATOR, EE) Name  VR  VM
 _TEXT_LINE_RE = re.compile(
     r"\(\s*([0-9A-Fa-f]{4})\s*,\s*([^,()]+?)\s*,\s*([0-9A-Fa-f]{1,2})\s*\)"  # tag
@@ -59,18 +59,18 @@ _TEXT_LINE_RE = re.compile(
     re.MULTILINE,
 )
 
-# ── Tag regexes for Format D (stateful creator tracking) ─────────────────────
+# -- Tag regexes for Format D (stateful creator tracking) --
 
-# (GGGG,00xx) — creator declaration row
+# (GGGG,00xx) - creator declaration row
 _TAG_CREATOR_DECL_RE = re.compile(
     r"^\(\s*([0-9A-Fa-f]{4})\s*,\s*00[xX]{2}\s*\)$"
 )
-# (GGGG,xxEE) — private attribute row (xx literal or XX)
+# (GGGG,xxEE) - private attribute row (xx literal or XX)
 _TAG_PRIVATE_ATTR_RE = re.compile(
     r"^\(\s*([0-9A-Fa-f]{4})\s*,\s*[xX]{2}([0-9A-Fa-f]{2})\s*\)$"
 )
 
-# ── Header detection ──────────────────────────────────────────────────────────
+# -- Header detection --
 _FORMAT_A_MUST = {"tag", "private owner code", "name", "vr"}
 _FORMAT_B_MUST = {"dicom tag", "name", "vr"}
 # Format D: CT-style IOD tables  (Attribute Name | Tag | VR | VM | ... | Value ...)
@@ -101,7 +101,7 @@ def _at(cells: list[str], i: int | None) -> str | None:
     return cells[i].strip() or None
 
 
-# ── Harvester ─────────────────────────────────────────────────────────────────
+# -- Harvester --
 
 class SiemensHarvester(Harvester):
     vendor = "siemens"
@@ -128,7 +128,7 @@ class SiemensHarvester(Harvester):
                         text = ""
                     yield from self._parse_text(text, page_num)
 
-                # Free cached layout objects per page — pdfplumber retains a lot
+                # Free cached layout objects per page - pdfplumber retains a lot
                 # of intermediate state per page, which otherwise accumulates
                 # across hundred-page PDFs.
                 try:
@@ -137,7 +137,7 @@ class SiemensHarvester(Harvester):
                 except Exception:
                     pass
 
-    # ── Format A / B (table-based) ────────────────────────────────────────────
+    # -- Format A / B (table-based) --
 
     def _parse_table(
         self, table: list[list[str | None]], page: int, tbl_idx: int
@@ -295,7 +295,7 @@ class SiemensHarvester(Harvester):
             elem_hex  = m_attr.group(2).upper()
             creator = creator_map.get(group_hex)
             if not creator:
-                continue  # unknown creator — skip
+                continue  # unknown creator - skip
             name = _at(cells, idx_name)
             if not name:
                 continue
@@ -311,7 +311,7 @@ class SiemensHarvester(Harvester):
                 vm=_at(cells, idx_vm),
             )
 
-    # ── Format C (text fallback) ──────────────────────────────────────────────
+    # -- Format C (text fallback) --
 
     def _parse_text(self, text: str, page: int) -> Iterator[RawTag]:
         for m in _TEXT_LINE_RE.finditer(text):

@@ -4,13 +4,13 @@ Acuson conformance statements (Sequoia, Juniper, NX-series, Bonsai, Maple,
 Origin, Freestyle, Redwood, etc.) document private tags using two main
 table layouts:
 
-Variant Sequoia — six logical columns:
+Variant Sequoia - six logical columns:
     Attribute | Attribute | Tag | VR | VM | Value
 Tags are concrete (e.g. ``(0029, 1041)``). Creator declared in the row
 where ``Attribute == "Private Creator"`` with the creator string in the
 ``Value`` cell.
 
-Variant Juniper / NX — four logical columns:
+Variant Juniper / NX - four logical columns:
     Module | Attribute | Tag | Notes
 Tags are concrete. Creator declared in the row where ``Attribute ==
 "Private Creator"`` with the creator string in the ``Notes`` cell. VR/VM
@@ -50,7 +50,7 @@ _PRIVATE_TAG_TEXT_RE = re.compile(
 _HEADER_MUST_SEQUOIA = {"attribute", "tag", "vr", "vm"}
 
 # Juniper/NX-family header: must contain Module + Attribute + Tag.
-# (No VR/VM columns — VR is inferred downstream or left UN.)
+# (No VR/VM columns - VR is inferred downstream or left UN.)
 _HEADER_MUST_JUNIPER = {"module", "attribute", "tag"}
 
 # Reservation-summary tables describe block reservations rather than naming

@@ -29,12 +29,12 @@ Current shipped size: **19,688 tags** (14,559 private + 5,129 public) in a
 | Canon Medical (PDF scrape) | 410 | 284 |
 | Acuson (PDF scrape) | 214 | 53 |
 | **PDF-scraped subtotal** | **5,128** | **1,840** |
-| pydicom / GDCM (community-compiled) | 9,472 | — |
+| pydicom / GDCM (community-compiled) | 9,472 | - |
 | **Total private** | **14,559** | |
-| Public (PS3.6 standard) | 5,129 | — |
+| Public (PS3.6 standard) | 5,129 | - |
 | **Grand total** | **19,688** | |
 
-## Quick start — use the dictionary
+## Quick start - use the dictionary
 
 ### CLI
 
@@ -76,7 +76,7 @@ elem = ds[0x0021, 0x1008]
 print(elem.name, elem.VR)             # resolved via dicom-map
 ```
 
-By default `patch_pydicom` runs in `mode="fill"` — it only adds entries
+By default `patch_pydicom` runs in `mode="fill"` - it only adds entries
 pydicom doesn't already have, so existing pydicom data is never clobbered.
 Pass `mode="override"` to make DICOM-Atlas take precedence on conflicts, or
 call `dicom_map.unpatch_pydicom()` to revert.
@@ -105,20 +105,20 @@ gcc my_app.c -I dicom-map-ffi/include -L target/release -ldicom_map_ffi
 
 See `dicom-map-ffi/include/dicom_map.h`.
 
-## Quick start — rebuild from source
+## Quick start - rebuild from source
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for the full repository layout, rebuild
 instructions, re-scrape pipeline, and test suite guide.
 
 ## Data provenance and limitations
 
-Private DICOM tags are **inherently undocumented by design** — the standard
+Private DICOM tags are **inherently undocumented by design** - the standard
 deliberately leaves the `(gggg, xxxx, creator)` space to vendors, who are under
 no obligation to publish or stabilise their tag definitions. Even official
 conformance statements vary across product versions, may contradict each other,
 and sometimes document tags that were quietly dropped or repurposed in later
 firmware. This registry is a **best-effort compilation for non-critical
-use cases** — it can help you understand what you're looking at in a DICOM file,
+use cases** - it can help you understand what you're looking at in a DICOM file,
 but it should **not** be the basis for clinical decisions, automated
 de-identification, or any application where a wrong VR or stale name would cause
 harm.
@@ -145,14 +145,14 @@ harm.
 
 Each private tag record carries a `sources` field listing the specific PDF
 file(s) (with page number anchors) that the definition was scraped from. This
-is exposed at runtime via the lookup API — `TagView::sources()` in Rust and the
-`"sources"` key in the Python dict — so you can always trace a tag back to the
+is exposed at runtime via the lookup API - `TagView::sources()` in Rust and the
+`"sources"` key in the Python dict - so you can always trace a tag back to the
 document it came from.
 
 **Known limitations:**
 - Only PDFs in which the vendor explicitly tabulates private tag dictionaries
   are harvested (~21% of the corpus). Many conformance statements describe
-  service classes but do not enumerate private tags — these are not gaps in our
+  service classes but do not enumerate private tags - these are not gaps in our
   extraction, they simply contain nothing to extract.
 - Some widely-used private tags (e.g. `(0019,100a)` `NumberOfImagesInMosaic`
   for Siemens MRI mosaics) were established by community reverse-engineering
@@ -181,6 +181,6 @@ guide.
 |------|---------|
 | Source code (`compiler/`, `dicom-map/`, `dicom-map-py/`, `dicom-map-ffi/`, `scraper/`) | Apache-2.0 |
 | Original compiled data (entries in `tags.csv` / `tags.dmap` whose `sources` field references a PDF) | CC0 1.0 (public domain) |
-| pydicom / GDCM-derived entries (`sources = ["pydicom"]`) | MIT (pydicom) + BSD-3-Clause (GDCM) — see `THIRD_PARTY_LICENSES.md` |
+| pydicom / GDCM-derived entries (`sources = ["pydicom"]`) | MIT (pydicom) + BSD-3-Clause (GDCM) - see `THIRD_PARTY_LICENSES.md` |
 
 Full texts: [LICENSE](LICENSE) (Apache-2.0), [LICENSE-DATA](LICENSE-DATA) (CC0 1.0), [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).

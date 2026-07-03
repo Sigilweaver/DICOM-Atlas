@@ -1,4 +1,4 @@
-# `.dmap` binary format — versioning policy
+# `.dmap` binary format - versioning policy
 
 The `.dmap` file format is a compact, memory-mapped DICOM tag dictionary.
 This document describes how the format evolves and what consumers must do
@@ -40,7 +40,7 @@ Changes that do NOT change the bit-level layout of `FileHeader`,
 Safe to do at any time:
 - Adding new tag entries (public or private).
 - Correcting existing entries (name, VR, description, keyword).
-- Changing the sort order of `.index` (readers don't rely on it — binary
+- Changing the sort order of `.index` (readers don't rely on it - binary
   search is performed on the key, not the physical order).
 - Changing the `.strings` encoding in an additive way that remains valid
   UTF-8 at the existing offsets (e.g. appending new strings).

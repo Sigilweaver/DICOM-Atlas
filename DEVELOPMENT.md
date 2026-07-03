@@ -10,7 +10,7 @@ how to run the test suite. If you just want to **use** the dictionary, see
 ## Repository layout
 
 ```
-scraper/            Python — PDF → JSON-L pipeline
+scraper/            Python - PDF → JSON-L pipeline
   harvest/            per-vendor extractors (ge, siemens, philips, canon, acuson)
   resolve.py          merges interim JSON-L → ResolvedTag (majority VR vote)
   ingest_pydicom.py   imports pydicom/GDCM entries not covered by PDFs

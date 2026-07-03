@@ -36,7 +36,7 @@ fn lookup_known_standard_tag() {
         return;
     }
     let d = DmapDict::open(&path).expect("open dmap");
-    // (0008,0005) SpecificCharacterSet — core DICOM tag, always present.
+    // (0008,0005) SpecificCharacterSet - core DICOM tag, always present.
     let v = d
         .lookup(0x0008, 0x0005, None)
         .expect("SpecificCharacterSet missing");

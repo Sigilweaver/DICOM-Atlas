@@ -75,7 +75,7 @@ fn set_err(inner: &Inner, msg: &str) {
 }
 
 /// Opens a `.dmap` file. Returns NULL on failure (use `dmap_last_error` with
-/// a non-null handle — for `dmap_open` itself, failure is only "bad path"
+/// a non-null handle - for `dmap_open` itself, failure is only "bad path"
 /// and you get no error string).
 ///
 /// `path` must be a NUL-terminated UTF-8 string.
@@ -158,7 +158,7 @@ pub unsafe extern "C" fn dmap_lookup(
             // Strings in the dmap file are NOT NUL-terminated; we must copy
             // them into a small buffer owned by the caller. Our contract says
             // pointers borrow into the file, so instead we produce leaked
-            // CStrings attached to Inner's last-lookup buffer — but that
+            // CStrings attached to Inner's last-lookup buffer - but that
             // breaks thread-safety. Simplest safe answer: return copies and
             // document that `dmap_free_tag_strings` releases them.
             //

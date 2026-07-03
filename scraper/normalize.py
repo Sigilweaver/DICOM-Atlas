@@ -71,7 +71,7 @@ def _parse_tag(raw: str) -> tuple[int, int, bool] | None:
         # store only the low byte (the stable part) and set the flag.
         low_s = elem_s[2:]
         if any(c == "x" for c in low_s):
-            return None  # fully wildcard — we can't use it
+            return None  # fully wildcard - we can't use it
         return g, int(low_s, 16), True
     return g, int(elem_s, 16), False
 
@@ -88,7 +88,7 @@ def _clean_vr(vr: str | None) -> str | None:
     vr = vr.strip().upper()
     if vr in VR_CODES:
         return vr
-    # Occasionally two VRs separated by ' or ' — take the first.
+    # Occasionally two VRs separated by ' or ' - take the first.
     m = _VR_RE.match(vr)
     if m and m.group(0) in VR_CODES:
         return m.group(0)

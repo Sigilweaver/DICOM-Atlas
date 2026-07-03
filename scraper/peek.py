@@ -22,7 +22,7 @@ def peek(pdf_path: Path, rng: range) -> None:
             tables = page.extract_tables() or []
             if not tables:
                 continue
-            rprint(f"\n[bold magenta]── page {i} — {len(tables)} table(s) ──")
+            rprint(f"\n[bold magenta]── page {i} - {len(tables)} table(s) ──")
             for ti, tbl in enumerate(tables):
                 rprint(f"[cyan]table {ti} ({len(tbl)} rows)[/cyan]")
                 for row in tbl[:25]:

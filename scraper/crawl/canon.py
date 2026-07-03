@@ -225,7 +225,7 @@ def crawl(
     session = _session()
     PDFS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # ── 1. Fetch and parse index pages ──────────────────────────────────────
+    # -- 1. Fetch and parse index pages --
     all_entries: list[PdfEntry] = []
     labels = ["current", "past"]
     for url, label in zip(INDEX_URLS, labels):
@@ -252,7 +252,7 @@ def crawl(
         f"[green]{len(unique_entries)}[/green] unique PDFs"
     )
 
-    # ── 2. Write manifest (always, even in dry-run) ──────────────────────────
+    # -- 2. Write manifest (always, even in dry-run) --
     field_names = [f.name for f in fields(PdfEntry)] + ["local_filename"]
     with MANIFEST_PATH.open("w", newline="") as mf:
         writer = csv.DictWriter(mf, fieldnames=field_names)
@@ -267,11 +267,11 @@ def crawl(
 
     if not download:
         console.print(
-            "[yellow]Dry-run mode — pass --download to actually fetch PDFs."
+            "[yellow]Dry-run mode - pass --download to actually fetch PDFs."
         )
         return
 
-    # ── 3. Download PDFs ─────────────────────────────────────────────────────
+    # -- 3. Download PDFs --
     to_download: list[tuple[PdfEntry, str, Path]] = []
     skipped_size = 0
     skipped_done = 0

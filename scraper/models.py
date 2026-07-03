@@ -57,12 +57,12 @@ def is_private_group(group: int) -> bool:
 
 
 class RawTag(BaseModel):
-    """Whatever the harvester pulled out of a PDF row — minimal cleaning."""
+    """Whatever the harvester pulled out of a PDF row - minimal cleaning."""
 
     source_pdf: str            # filename / relative path
     source_page: int           # 1-based page number
     source_table: int | None = None
-    tag_str: str               # e.g. "(0019,xx0C)" — may contain placeholders
+    tag_str: str               # e.g. "(0019,xx0C)" - may contain placeholders
     name: str | None = None
     vr: str | None = None
     vm: str | None = None

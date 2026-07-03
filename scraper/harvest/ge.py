@@ -1,20 +1,20 @@
 """GE DICOM conformance statement harvester.
 
-GE conformance PDFs (e.g. Brightspeed, Optima, Discovery, Senographe…) document
+GE conformance PDFs (e.g. Brightspeed, Optima, Discovery, Senographe...) document
 private tags in several formats:
 
-Variant A — 4-column table:
+Variant A - 4-column table:
     Description | Type | Tag | Value
 where ``Type == 'P'`` flags a private row. Creator strings are declared in rows
 whose tag looks like ``GGGG,00xx`` and whose Value cell holds the creator
 string (e.g. ``GEMS_IDEN_01``). VR is absent; we leave it ``None``.
 
-Variant B — name-first text (DL / Discovery / Innova xr-mammo families):
+Variant B - name-first text (DL / Discovery / Innova xr-mammo families):
     <attribute name>   (GGGG,xxEE)   VR   VM   <description>
 Creator declared in a preceding section heading such as
 "5.5.3 Private Group GEMS_XR3DCAL_01".
 
-Variant C — 6-column table (Senographe mammography families, rev 40+):
+Variant C - 6-column table (Senographe mammography families, rev 40+):
     Attribute name | Tag | Type | Attribute description | VR | VM
 Creator is declared in a "Private Creator" row within the same table whose tag
 is (GGGG,00BB) (DICOM block-reservation range) and whose description cell holds
@@ -61,7 +61,7 @@ _TEXT_NAME_TAG_RE = re.compile(
     r"^(?P<name>\S.{1,100}?)\s+"
     r"\(\s*(?P<group>[0-9A-Fa-f]{4})\s*,\s*[a-zA-Z]{2}(?P<elem>[0-9A-Fa-f]{2})\s*\)\s+"
     rf"(?P<vr>{_VR_ALTERNATION})\s+"
-    r"(?P<vm>\d+(?:[-–](?:\d+|[nNN]))?)"
+    r"(?P<vm>\d+(?:[--](?:\d+|[nNN]))?)"
     r"(?:\s+(?P<desc>.*))?$"
 )
 _CREATOR_SECTION_RE = re.compile(
@@ -134,7 +134,7 @@ class GEHarvester(Harvester):
                 for m in _CREATOR_SECTION_RE.finditer(text):
                     section_creator = m.group("creator")
 
-                # Variant B (name-first with VR/VM) always runs — these tables
+                # Variant B (name-first with VR/VM) always runs - these tables
                 # are usually missed by pdfplumber.extract_tables.
                 for tag in self._parse_text_variant_b(
                     text, page_num, section_creator
@@ -354,7 +354,7 @@ class GEHarvester(Harvester):
             elem_lo = m.group("elem").upper()
             synthetic = f"({group},xx{elem_lo})"
             vr = m.group("vr").upper()
-            vm = m.group("vm").strip().replace("–", "-")
+            vm = m.group("vm").strip().replace("-", "-")
             desc = (m.group("desc") or "").strip() or None
             yield RawTag(
                 source_pdf=self.pdf_path.name,

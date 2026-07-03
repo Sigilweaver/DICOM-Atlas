@@ -57,7 +57,7 @@ def _iter_dmap_private_records(d: _Dict) -> Iterable[tuple[str, int, int, bool, 
 
     The Rust ``Dict`` doesn't currently expose a full iterator (lookup-only),
     so we rely on the CSV being co-located. If that's missing we fall back to
-    iterating via the lookup interface — but since lookup needs a key, the
+    iterating via the lookup interface - but since lookup needs a key, the
     practical fallback is "this won't work without the CSV". A future schema
     revision will add a `Dict.iter_private()` method to remove this dependency.
     """
@@ -116,7 +116,7 @@ def patch_pydicom(
         binary format does not yet expose iteration).
     csv_path
         Path to ``tags.csv``. If omitted, defaults to ``<dmap_path>.csv``-style
-        sibling lookup — i.e. ``tags.csv`` next to ``tags.dmap``.
+        sibling lookup - i.e. ``tags.csv`` next to ``tags.dmap``.
     mode
         ``"fill"`` (default): only add entries that pydicom doesn't already
         have for a given (creator, key). Existing pydicom data is preserved.

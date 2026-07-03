@@ -91,8 +91,8 @@ def parse_pydicom_key(k: str) -> tuple[int, int, bool] | None:
     """Returns (group, element, is_block_offset) or None for unsupported formats.
 
     pydicom uses two main key shapes:
-      - ``GGGGxxEE`` — block-relative private tag (low byte = block offset)
-      - ``GGGGEEEE`` — concrete (non-block-relative) private tag
+      - ``GGGGxxEE`` - block-relative private tag (low byte = block offset)
+      - ``GGGGEEEE`` - concrete (non-block-relative) private tag
 
     A small minority of entries use ``GGBBxxEE`` or ``GGGGEExx`` to encode
     additional block constraints; these are skipped for now.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-fetch_from_archive.py — Download DICOM conformance PDFs from archive.org.
+fetch_from_archive.py - Download DICOM conformance PDFs from archive.org.
 
 Reads data/sources.json and downloads every PDF that has an archive_url into
 data/pdfs/.  Already-present files are skipped (idempotent).

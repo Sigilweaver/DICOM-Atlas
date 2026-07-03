@@ -71,7 +71,7 @@ impl PyDmapDict {
         format!("<dicom_map.Dict len={}>", self.inner.len())
     }
 
-    /// Context-manager support (no-op — mmap is released on drop).
+    /// Context-manager support (no-op - mmap is released on drop).
     fn __enter__(slf: Py<Self>) -> Py<Self> {
         slf
     }

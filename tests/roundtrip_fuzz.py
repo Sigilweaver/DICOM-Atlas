@@ -31,8 +31,8 @@ def _require(cond: bool, msg: str) -> None:
 
 def main() -> int:
     _require(RESOLVED.exists(), f"missing {RESOLVED}")
-    _require(DMAP.exists(), f"missing {DMAP} — run dmap-compile first")
-    _require(CLI.exists(), f"missing {CLI} — run `cargo build --release`")
+    _require(DMAP.exists(), f"missing {DMAP} - run dmap-compile first")
+    _require(CLI.exists(), f"missing {CLI} - run `cargo build --release`")
 
     rows = [
         json.loads(line)
@@ -80,7 +80,7 @@ def main() -> int:
                 f"scraper={want_vr} dmap={got_vr}"
             )
         # Name must match (dmap may have CamelCased keyword but .name is raw).
-        # Skip the name check when the sampled row has name="Unknown" — the
+        # Skip the name check when the sampled row has name="Unknown" - the
         # compiler's dedup may have promoted a more informative name from a
         # duplicate entry, which is correct behaviour, not a mismatch.
         want_name = (r.get("name") or "").strip()

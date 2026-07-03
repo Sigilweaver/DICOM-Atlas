@@ -95,7 +95,7 @@ def resolve(
                     f"VR conflict at {key}: votes={dict(vr_votes)} chose={vr}"
                 )
         else:
-            # No real VR votes — every PDF entry was inferred or UN. Try
+            # No real VR votes - every PDF entry was inferred or UN. Try
             # pydicom as a last resort before falling back to UN.
             vr = "UN"
             if _pydicom_lookup is not None:

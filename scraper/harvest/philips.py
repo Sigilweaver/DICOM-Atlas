@@ -11,7 +11,7 @@ strings do not appear in the tables; they are mentioned in prose. We emit
 ``vr=None`` (normalizer defaults to ``UN``) and ``private_creator=None``.
 
 Continuation tables (same columns repeated on a later page without a header
-row) are common — we keep the last matched header on the harvester instance
+row) are common - we keep the last matched header on the harvester instance
 and treat headerless tag-heavy tables as continuations.
 
 A second format seen in multi-vendor conformance statements (e.g. the Cloud
@@ -190,7 +190,7 @@ class PhilipsHarvester(Harvester):
         idx_vm = _col(header, "vm")
 
         if idx_tag is not None and idx_name is not None:
-            # Fresh header — remember it for continuation tables.
+            # Fresh header - remember it for continuation tables.
             self._last_idx_name = idx_name
             self._last_idx_tag = idx_tag
             self._last_idx_desc = idx_desc
@@ -224,7 +224,7 @@ class PhilipsHarvester(Harvester):
             idx_vm = self._last_idx_vm
             body = table  # entire block is data
 
-        # Sticky creator map (harvester-wide) — populated by in-table creator
+        # Sticky creator map (harvester-wide) - populated by in-table creator
         # rows and also by text-level "Private creator code" declarations.
         creator_map = self._creator_map
 
@@ -314,12 +314,12 @@ class PhilipsHarvester(Harvester):
     def _parse_text(self, text: str, page: int) -> Iterator[RawTag]:
         """Running-text fallback for two formats.
 
-        Variant A — tag-first (Cloud / Gateway-style appendices)::
+        Variant A - tag-first (Cloud / Gateway-style appendices)::
 
             (7053,xx00)   Philips PET Private Group   DS   1   SUV Factor - ...
             (0019,xx23)   GEMS_ACQU_01                DS   1   Table Speed ...
 
-        Variant B — name-first (Forcare-style 1-row dictionaries)::
+        Variant B - name-first (Forcare-style 1-row dictionaries)::
 
             Forcare defines private attributes with Block Descriptor (0067, 00xx) = "Forcare B.V.".
             AdditionalSeriesInfo (0067,xx01) SQ 1 Additional Series Information.

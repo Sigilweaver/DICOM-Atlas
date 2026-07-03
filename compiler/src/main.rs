@@ -1,4 +1,4 @@
-//! `dmap-compile` — freeze DICOM tag records into a .dmap file.
+//! `dmap-compile` - freeze DICOM tag records into a .dmap file.
 //!
 //! Sources (pick any combination):
 //!   --standard <path>    PS3.6 attributes.json (public tags)
@@ -470,7 +470,7 @@ fn normalize_and_dedup(rows: Vec<Row>) -> Vec<Row> {
         }
     }
     // BTreeMap iterates in key order, so the result is already sorted by
-    // (group, element, creator_hash) — matching the index sort in compile().
+    // (group, element, creator_hash) - matching the index sort in compile().
     map.into_values().collect()
 }
 

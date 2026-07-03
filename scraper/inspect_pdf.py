@@ -36,7 +36,7 @@ APPENDIX_HINTS = (
     "private tag",
 )
 
-# Canonical VR codes (PS3.5 §6.2) — used to score table columns.
+# Canonical VR codes (PS3.5 §6.2) - used to score table columns.
 VR_CODES = {
     "AE", "AS", "AT", "CS", "DA", "DS", "DT", "FL", "FD", "IS",
     "LO", "LT", "OB", "OD", "OF", "OL", "OV", "OW", "PN", "SH",
@@ -147,7 +147,7 @@ def inspect(path: Path, pages: range | None = None) -> Report:
 
             try:
                 tables = page.extract_tables() or []
-            except Exception:  # noqa: BLE001 — pdfplumber can choke on odd pages
+            except Exception:  # noqa: BLE001 - pdfplumber can choke on odd pages
                 tables = []
             for tbl in tables:
                 if not tbl or not tbl[0]:
@@ -177,14 +177,14 @@ def inspect(path: Path, pages: range | None = None) -> Report:
 def _classify(r: Report) -> str:
     """Return a rough harvester class (see Plan.md Step 5)."""
     if r.text_pages == 0:
-        return "D — scanned / image-only (OCR needed)"
+        return "D - scanned / image-only (OCR needed)"
     if r.table_headers and any("vr" in h for h in r.table_headers):
-        return "A — clean tables with VR column"
+        return "A - clean tables with VR column"
     if r.table_col_counts:
-        return "B — tables present but headers unclear / merged cells"
+        return "B - tables present but headers unclear / merged cells"
     if r.tag_hit_pages:
-        return "C — tags in prose / free text"
-    return "? — no DICOM tags detected at all"
+        return "C - tags in prose / free text"
+    return "? - no DICOM tags detected at all"
 
 
 def render(r: Report) -> None:
@@ -192,10 +192,10 @@ def render(r: Report) -> None:
     console.print(f"pages: {r.n_pages}   text pages: {r.text_pages}")
     console.print(f"pages containing tags: {len(r.tag_hit_pages)}")
     if r.tag_hit_pages:
-        span = f"{r.tag_hit_pages[0]}–{r.tag_hit_pages[-1]}"
-        console.print(f"  first–last: {span}")
+        span = f"{r.tag_hit_pages[0]}-{r.tag_hit_pages[-1]}"
+        console.print(f"  first-last: {span}")
     if r.appendix_ranges:
-        ranges = ", ".join(f"{a}–{b}" for a, b in r.appendix_ranges)
+        ranges = ", ".join(f"{a}-{b}" for a, b in r.appendix_ranges)
         console.print(f"private-appendix hint pages: {ranges}")
 
     if r.table_col_counts:

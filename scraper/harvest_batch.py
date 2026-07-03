@@ -10,11 +10,11 @@ pdfplumber holds a lot of per-page layout state in memory and does not always
 release it. When parallelised naively, each worker's RSS grows PDF-by-PDF
 until the host OOMs. We mitigate this with:
 
-* ``max_tasks_per_child=1`` — each worker processes a single PDF then exits,
+* ``max_tasks_per_child=1`` - each worker processes a single PDF then exits,
   returning all memory to the OS. This is the single biggest win.
-* ``resource.RLIMIT_AS`` — hard per-worker virtual-memory ceiling. A runaway
+* ``resource.RLIMIT_AS`` - hard per-worker virtual-memory ceiling. A runaway
   pdfplumber page cannot blow up the host.
-* A file-size skip threshold — scanned manuals >100 MB almost never contain
+* A file-size skip threshold - scanned manuals >100 MB almost never contain
   structured private-tag tables and waste ~minutes each.
 * A conservative default worker count (4 on a 16-thread box). pdfplumber is
   not CPU-bound past ~4 workers; more workers just multiply memory pressure.
@@ -224,7 +224,7 @@ def run(
     errors = [(n, e) for n, _, ok, e in results if not ok]
 
     console.print(
-        f"\n[green]Done.[/green] {len(results)} PDFs processed — "
+        f"\n[green]Done.[/green] {len(results)} PDFs processed - "
         f"[bold]{total_tags}[/bold] tags across {len(nonzero)} PDFs  "
         f"([yellow]{len(zero)}[/yellow] zero-yield, "
         f"[red]{len(errors)}[/red] errors)"
