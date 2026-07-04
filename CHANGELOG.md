@@ -6,6 +6,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.7] - 2026-07-04
+
+### Added
+
+- Release workflow now builds and publishes a source distribution
+  (sdist) to PyPI alongside the wheels, with `LICENSE` bundled. Enables
+  source-based installs and conda-forge packaging. (The `embedded`
+  feature stays default-off, so source builds do not require
+  `tags.dmap`.)
+
+### Changed
+
+- Realign the `dicom-map` PyPI package version with the crate version
+  (both now 0.2.7); the wheel had lagged at 0.2.4.
+
 ## [0.2.6] - 2026-05-31
 
 ### Fixed

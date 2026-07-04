@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "dicom-map"
-version = "0.2.4"
+version = "0.2.7"
 description = "Memory-mapped O(log n) DICOM tag dictionary (private + public tags)"
 readme = "../README.md"
 license = { text = "Apache-2.0" }
@@ -20,3 +20,6 @@ features = ["pyo3/extension-module"]
 module-name = "dicom_map._dicom_map"
 manifest-path = "Cargo.toml"
 python-source = "python"
+# Bundle LICENSE into the sdist (the license lives at the repo root and
+# maturin include forbids `..`, so a copy is co-located here).
+include = [{ path = "LICENSE", format = "sdist" }]
