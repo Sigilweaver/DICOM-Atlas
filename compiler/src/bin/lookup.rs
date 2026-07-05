@@ -131,7 +131,7 @@ fn render_json(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Opt
         esc(v.description()),
         v.retired(),
         v.is_block_offset(),
-        v.sources().map(|s| esc(s)).collect::<Vec<_>>().join(","),
+        v.sources().map(esc).collect::<Vec<_>>().join(","),
     );
 }
 
@@ -140,7 +140,10 @@ fn load_dict(explicit: Option<PathBuf>) -> DmapDict {
     // use the baked-in dictionary without touching the filesystem.
     #[cfg(feature = "embedded")]
     if explicit.is_none() {
-        if std::env::var_os("DMAP_FILE").filter(|v| !v.is_empty()).is_none() {
+        if std::env::var_os("DMAP_FILE")
+            .filter(|v| !v.is_empty())
+            .is_none()
+        {
             return dicom_map::embedded::embedded();
         }
     }

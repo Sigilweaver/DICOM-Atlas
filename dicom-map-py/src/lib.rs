@@ -15,6 +15,11 @@
 //! `retired`, `block_offset`, `sources`.
 
 #![forbid(unsafe_code)]
+// pyo3's #[pyfunction]/#[pymethods] macro expansion inserts an internal
+// PyErr -> PyErr conversion for functions that already return PyResult,
+// which clippy flags as useless. Function-level #[allow] doesn't reach
+// into the macro-generated code, so this is silenced crate-wide.
+#![allow(clippy::useless_conversion)]
 
 use std::path::PathBuf;
 use std::sync::Arc;
