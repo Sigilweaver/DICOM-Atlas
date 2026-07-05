@@ -14,6 +14,8 @@
 //! `group`, `element`, `creator`, `keyword`, `name`, `vr`, `description`,
 //! `retired`, `block_offset`, `sources`.
 
+#![forbid(unsafe_code)]
+
 use std::path::PathBuf;
 use std::sync::Arc;
 
