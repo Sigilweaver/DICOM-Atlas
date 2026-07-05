@@ -79,6 +79,11 @@ fn set_err(inner: &Inner, msg: &str) {
 /// and you get no error string).
 ///
 /// `path` must be a NUL-terminated UTF-8 string.
+///
+/// # Safety
+///
+/// `path` must be either null or a valid pointer to a NUL-terminated C
+/// string, valid for reads for the duration of this call.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_open(path: *const c_char) -> *mut DmapHandle {
     if path.is_null() {
@@ -103,6 +108,12 @@ pub unsafe extern "C" fn dmap_open(path: *const c_char) -> *mut DmapHandle {
 }
 
 /// Releases a handle returned by `dmap_open`. No-op on NULL.
+///
+/// # Safety
+///
+/// `h` must be either null or a handle previously returned by `dmap_open`
+/// that has not already been passed to `dmap_close`. After this call, `h`
+/// and any `DmapTag` string pointers borrowed from it are invalid.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_close(h: *mut DmapHandle) {
     if h.is_null() {
@@ -113,6 +124,11 @@ pub unsafe extern "C" fn dmap_close(h: *mut DmapHandle) {
 }
 
 /// Number of entries in the dictionary. Returns 0 for NULL handle.
+///
+/// # Safety
+///
+/// `h` must be either null or a handle returned by `dmap_open` that has not
+/// since been passed to `dmap_close`.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_len(h: *const DmapHandle) -> usize {
     if h.is_null() {
@@ -129,6 +145,14 @@ pub unsafe extern "C" fn dmap_len(h: *const DmapHandle) -> usize {
 ///
 /// String pointers in `*out` borrow into the mmap'd file and are valid
 /// until `dmap_close(h)`.
+///
+/// # Safety
+///
+/// `h` must be either null or a handle returned by `dmap_open` that has not
+/// since been passed to `dmap_close`. `creator` must be either null or a
+/// valid pointer to a NUL-terminated C string, valid for reads for the
+/// duration of this call. `out` must be either null or a valid pointer to
+/// a writable `DmapTag`.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_lookup(
     h: *const DmapHandle,
@@ -199,6 +223,13 @@ pub unsafe extern "C" fn dmap_lookup(
 
 /// Release strings populated by `dmap_lookup`. Safe to call with zeroed
 /// fields. Does NOT touch `vr` (inline array).
+///
+/// # Safety
+///
+/// `tag` must be either null or a valid pointer to a `DmapTag` whose
+/// `keyword`/`name`/`creator`/`description` fields are each either null or
+/// were produced by `dmap_lookup` and not yet freed. Passing pointers from
+/// any other source is undefined behavior.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_free_tag(tag: *mut DmapTag) {
     if tag.is_null() {
@@ -221,6 +252,11 @@ pub unsafe extern "C" fn dmap_free_tag(tag: *mut DmapTag) {
 
 /// Returns the last error string for this handle, or NULL if none. Valid
 /// until the next error-producing call on the same handle.
+///
+/// # Safety
+///
+/// `h` must be either null or a handle returned by `dmap_open` that has not
+/// since been passed to `dmap_close`.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_last_error(h: *const DmapHandle) -> *const c_char {
     if h.is_null() {
