@@ -53,6 +53,18 @@ corpus maintenance workflow.
   [CHANGELOG.md](CHANGELOG.md) under `[Unreleased]`.
 - If your change is user-facing, update the README and/or the
   Docusaurus site in `docs/`.
+- Prefer [Conventional Commits](https://www.conventionalcommits.org/)
+  (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`).
+- Code is ASCII only. `dicom-map-py` sets `#![forbid(unsafe_code)]`;
+  `dicom-map` and `dicom-map-ffi` do not, since they need `unsafe`
+  for mmap-backed zero-copy dictionary lookups and the C ABI
+  boundary respectively.
+
+## Security
+
+Please report security vulnerabilities privately via GitHub Security
+Advisories - see [SECURITY.md](SECURITY.md). Do not open public issues
+for vulnerabilities.
 
 ## Code of conduct
 
