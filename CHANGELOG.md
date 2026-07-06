@@ -6,6 +6,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.8] - 2026-07-06
+
+### Fixed
+
+- Corrected the published package description: `dicom-map`/`dicom-map-py`
+  claimed an O(1) lookup, but `Dictionary::lookup` uses `binary_search_by`
+  over a sorted index, which is O(log n). Both crates.io and PyPI
+  descriptions now say O(log n).
+
+### Added
+
+- `dicom-map-py`: `keywords` (`dicom`, `medical-imaging`, `tags`,
+  `registry`, `rkyv`) added to `pyproject.toml` for PyPI search
+  discoverability; the Rust crate already had them.
+
 ## [0.2.7] - 2026-07-04
 
 ### Added

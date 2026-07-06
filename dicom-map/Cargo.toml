@@ -11,7 +11,7 @@ documentation.workspace = true
 readme.workspace = true
 keywords.workspace = true
 categories.workspace = true
-description = "Memory-mapped O(1) DICOM tag dictionary"
+description = "Memory-mapped O(log n) DICOM tag dictionary"
 
 [dependencies]
 rkyv = { workspace = true }
