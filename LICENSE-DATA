@@ -11,7 +11,7 @@ and use the data, even for commercial purposes, all without asking permission.
 
 Attribution is not required by the CC0 dedication. If you use this dataset in
 publications or software and would like to credit the work, you are warmly
-welcomed (but not obligated) to cite it — see the Attribution notice below.
+welcomed (but not obligated) to cite it - see the Attribution notice below.
 
 -------------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ Third-party exceptions
 
 A subset of the entries in tags.csv and tags.dmap were derived from
 third-party sources with their own licenses. These entries are identified
-by their `sources` field and are NOT covered by the CC0 dedication — they
+by their `sources` field and are NOT covered by the CC0 dedication - they
 retain their original upstream terms:
 
   pydicom / GDCM-derived entries  (sources = ["pydicom"])
@@ -59,7 +59,7 @@ retain their original upstream terms:
   pydicom's git history confirms the vast majority of entries are GDCM-derived;
   a small number of corrections and additions were made directly by pydicom
   contributors (e.g. TOSHIBA_MEC_MR3^10, several MITRA family corrections in
-  2021–2022). No per-entry provenance flag exists in pydicom's source — a
+  2021-2022). No per-entry provenance flag exists in pydicom's source - a
   finer-grained split between GDCM-origin and pydicom-origin is not possible
   from the published data alone.
 
@@ -70,15 +70,15 @@ retain their original upstream terms:
   the "facts are free" doctrine (e.g. Feist v. Rural Telephone in the US).
   We respect the upstream licenses regardless, and reproduce their full texts
   in THIRD_PARTY_LICENSES.md. In practice, both MIT and BSD-3 require only
-  that you retain the copyright notice and license text — no additional
+  that you retain the copyright notice and license text - no additional
   attribution burden, though technically more than what CC0 asks (which is nothing).
 
   These entries are subject to:
 
-    pydicom  — MIT License
+    pydicom  - MIT License
                Copyright (c) 2008-2020 Darcy Mason and pydicom contributors
 
-    GDCM     — BSD 3-Clause License
+    GDCM     - BSD 3-Clause License
                Copyright (c) 2006-2016 Mathieu Malaterre
                Copyright (c) 1993-2005 CREATIS (also: Leo Joskowicz,
                Jean-Pierre Roux, Françoise Gourdon, Alain Guibert)

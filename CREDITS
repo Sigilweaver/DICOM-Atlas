@@ -22,7 +22,7 @@ standards. Each is listed with its license and the role it plays here.
   technical information extracted and curated from these documents. The
   source PDFs themselves are not redistributed.
 
-### pydicom — `_private_dict.py`
+### pydicom - `_private_dict.py`
 - **URL:** https://github.com/pydicom/pydicom
 - **License:** MIT (see `THIRD_PARTY_LICENSES.md`)
 - **Role:** Two distinct uses:
@@ -36,7 +36,7 @@ standards. Each is listed with its license and the role it plays here.
      `community` provenance flag so consumers can distinguish PDF-derived
      data from community-derived data.
 
-### GDCM — Grassroots DICOM library
+### GDCM - Grassroots DICOM library
 - **URL:** https://gdcm.sourceforge.net / https://github.com/malaterre/GDCM
 - **License:** BSD-3-Clause (see `THIRD_PARTY_LICENSES.md`)
 - **Role:** Original upstream of pydicom's `_private_dict.py`. pydicom's
@@ -62,7 +62,7 @@ standards. Each is listed with its license and the role it plays here.
 ### PyO3
 - **URL:** https://github.com/PyO3/pyo3
 - **License:** MIT / Apache-2.0
-- **Role:** Rust–Python bindings in `dicom-map-py`.
+- **Role:** Rust-Python bindings in `dicom-map-py`.
 
 ### maturin
 - **URL:** https://github.com/PyO3/maturin

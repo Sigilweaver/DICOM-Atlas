@@ -1,4 +1,4 @@
-/* dicom_map.h — C API for dicom-map.
+/* dicom_map.h - C API for dicom-map.
  *
  * Link against libdicom_map_ffi (shared or static). Call dmap_abi_version()
  * at startup and bail if it does not equal DMAP_ABI_VERSION below.
@@ -40,8 +40,8 @@ void dmap_close(DmapHandle* h);
 size_t dmap_len(const DmapHandle* h);
 
 /* Look up a tag. Returns:
- *   1  on hit — `*out` populated, caller must dmap_free_tag(out) when done.
- *   0  on miss — `*out` is untouched.
+ *   1  on hit - `*out` populated, caller must dmap_free_tag(out) when done.
+ *   0  on miss - `*out` is untouched.
  *  -1  on error (NULL args, bad UTF-8 in creator, etc.).
  *
  * `creator` may be NULL for public tags.
