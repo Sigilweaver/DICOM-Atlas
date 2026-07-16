@@ -6,6 +6,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- Docs: Python API reference page covering the `dicom_map` module
+  functions (`open`, `patch_pydicom`, `unpatch_pydicom`) and the `Dict`
+  class, registered in the sidebar under "Use the dictionary". (thanks
+  @Nabejo)
+
 ## [0.2.8] - 2026-07-06
 
 ### Fixed

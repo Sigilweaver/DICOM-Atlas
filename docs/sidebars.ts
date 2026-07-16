@@ -13,6 +13,7 @@ const sidebars: SidebarsConfig = {
                 'quickstart-rust',
                 'quickstart-python',
                 'quickstart-c',
+                'python-api',
             ],
         },
         {
