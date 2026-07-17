@@ -47,3 +47,4 @@ citations if you find one.
 - [Rust quickstart](./quickstart-rust.md)
 - [Python quickstart](./quickstart-python.md)
 - [C FFI quickstart](./quickstart-c.md)
+- [Python API reference](./python-api.md)
