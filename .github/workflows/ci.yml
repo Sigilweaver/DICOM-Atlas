@@ -8,8 +8,19 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-14]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    defaults:
+      run:
+        # Windows runners default to pwsh; the steps below rely on POSIX
+        # shell syntax (heredocs, `.` sourcing). Git-for-Windows ships bash
+        # with GNU coreutils, so `shell: bash` works uniformly across all
+        # three OSes.
+        shell: bash
     steps:
       - uses: actions/checkout@v4
 
@@ -21,10 +32,14 @@ jobs:
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2
 
+      # fmt/clippy results don't depend on the OS; only run them once to
+      # avoid tripling redundant CI time.
       - name: cargo fmt
+        if: matrix.os == 'ubuntu-latest'
         run: cargo fmt --all -- --check
 
       - name: cargo clippy
+        if: matrix.os == 'ubuntu-latest'
         run: cargo clippy --workspace --all-targets -- -D warnings
 
       - name: Set up Python
@@ -35,10 +50,15 @@ jobs:
       - name: Install Python test deps
         run: |
           python -m venv .venv
-          . .venv/bin/activate
+          if [ -f .venv/bin/activate ]; then
+            . .venv/bin/activate
+            echo "$PWD/.venv/bin" >> $GITHUB_PATH
+          else
+            . .venv/Scripts/activate
+            echo "$PWD/.venv/Scripts" >> $GITHUB_PATH
+          fi
           pip install -e ".[dev]" maturin pydicom
           echo "VIRTUAL_ENV=$PWD/.venv" >> $GITHUB_ENV
-          echo "$PWD/.venv/bin" >> $GITHUB_PATH
 
       - name: Build Rust workspace
         run: cargo build --release --workspace
@@ -52,7 +72,7 @@ jobs:
 
       - name: Verify dmap row count
         run: |
-          size=$(stat -c%s tags.dmap)
+          size=$(python -c "import os; print(os.path.getsize('tags.dmap'))")
           if [ "$size" -lt 3000000 ]; then
             echo "::error::tags.dmap is suspiciously small: $size bytes"
             exit 1
@@ -90,7 +110,13 @@ jobs:
           print('python smoke OK')
           "
 
+      # gcc/.so/LD_LIBRARY_PATH here are Linux-specific tooling assumptions
+      # (Windows needs a DLL + PATH, no guaranteed gcc/mingw; macOS needs a
+      # .dylib). The C FFI surface itself isn't OS-specific, but porting this
+      # smoke test is a separate, non-trivial effort from the parsing/reader
+      # coverage this matrix is meant to add - keep it Linux-only for now.
       - name: C FFI smoke test
+        if: runner.os == 'Linux'
         run: |
           gcc -Wall -Wextra -O2 \
             -I dicom-map-ffi/include \
@@ -100,7 +126,7 @@ jobs:
           LD_LIBRARY_PATH=target/release /tmp/dmap_smoke
 
       - name: Upload tags.dmap
-        if: github.ref == 'refs/heads/main'
+        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: tags-dmap

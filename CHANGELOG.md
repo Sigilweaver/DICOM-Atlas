@@ -13,6 +13,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   class, registered in the sidebar under "Use the dictionary". (thanks
   @Nabejo)
 
+### Changed
+
+- `dicom-map-py`: bump `pyo3` from 0.22 to 0.29, clearing RUSTSEC-2025-0020
+  and RUSTSEC-2026-0177. Updated the `PyDict::new_bound` and `__exit__`
+  parameter types for the 0.29 API (`Bound` is now the default; the
+  `PyObject` type alias was removed in favour of `Py<PyAny>`). Removed the
+  now-stale `--ignore` flags from the `cargo audit` workflow. (#3)
+- `.github/workflows/ci.yml`: added `windows-latest` and `macos-14` to the
+  test matrix, matching the wheel targets the release workflow already
+  ships for `dicom-map-py`. `fmt`/`clippy` still run once (Linux only) to
+  avoid redundant CI time; the C FFI smoke test (which hard-codes
+  gcc/`.so`/`LD_LIBRARY_PATH`) stays Linux-only since porting it to
+  Windows/macOS is a separate effort from the parsing/reader coverage
+  this change is meant to add. (#1)
+
 ## [0.2.8] - 2026-07-06
 
 ### Fixed

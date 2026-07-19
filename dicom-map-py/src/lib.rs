@@ -37,7 +37,7 @@ struct PyDmapDict {
 }
 
 fn tag_view_to_pydict<'py>(py: Python<'py>, v: &TagView<'_>) -> PyResult<Bound<'py, PyDict>> {
-    let d = PyDict::new_bound(py);
+    let d = PyDict::new(py);
     d.set_item("group", v.group())?;
     d.set_item("element", v.element())?;
     d.set_item("creator", v.creator())?;
@@ -86,9 +86,9 @@ impl PyDmapDict {
     #[pyo3(signature = (_exc_type=None, _exc=None, _tb=None))]
     fn __exit__(
         &self,
-        _exc_type: Option<PyObject>,
-        _exc: Option<PyObject>,
-        _tb: Option<PyObject>,
+        _exc_type: Option<Py<PyAny>>,
+        _exc: Option<Py<PyAny>>,
+        _tb: Option<Py<PyAny>>,
     ) -> bool {
         false
     }
