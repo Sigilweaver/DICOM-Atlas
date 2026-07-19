@@ -39,6 +39,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - The new Windows CI job failed `tests/roundtrip_fuzz.py`: it looked for
   the `dicom-lookup` CLI binary without the `.exe` suffix Windows needs.
   (#1)
+- `tests/roundtrip_fuzz.py` also crashed on Windows reading the CLI's
+  JSON output and `data/resolved_pydicom_backfilled.jsonl`: both relied
+  on Python's default text encoding, which is the `cp1252` locale
+  codec on Windows, not UTF-8. Non-ASCII bytes in tag names/creators
+  (e.g. `0x9d`) raised `UnicodeDecodeError` in the subprocess reader
+  thread. Pass `encoding="utf-8"` explicitly in both places. (#1)
 
 ## [0.2.8] - 2026-07-06
 

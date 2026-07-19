@@ -38,7 +38,7 @@ def main() -> int:
 
     rows = [
         json.loads(line)
-        for line in RESOLVED.read_text().splitlines()
+        for line in RESOLVED.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
     private = [r for r in rows if r.get("private_creator")]
@@ -58,6 +58,7 @@ def main() -> int:
             [str(CLI), "--file", str(DMAP), "--json", group, element, creator],
             capture_output=True,
             text=True,
+            encoding="utf-8",
             timeout=10,
         )
         if proc.returncode not in (0, 3):
