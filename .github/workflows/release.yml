@@ -160,7 +160,7 @@ jobs:
           args: --release --out dist --interpreter 3.8 3.9 3.10 3.11 3.12 3.13
           manylinux: ${{ matrix.manylinux }}
           sccache: "true"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.os }}-${{ matrix.target }}
           path: dicom-map-py/dist
@@ -176,7 +176,7 @@ jobs:
           working-directory: dicom-map-py
           command: sdist
           args: --out dist
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-sdist
           path: dicom-map-py/dist/*.tar.gz
