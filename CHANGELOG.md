@@ -28,6 +28,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   Windows/macOS is a separate effort from the parsing/reader coverage
   this change is meant to add. (#1)
 
+### Fixed
+
+- The new macOS CI job failed to link `dicom-map-py`: pyo3's
+  `extension-module` feature disables linking against libpython, which is
+  normally papered over by maturin's build-time linker flags but not by a
+  plain `cargo build`/`cargo test`. Added `.cargo/config.toml` with the
+  `-undefined dynamic_lookup` flag for both macOS targets (documented in
+  pyo3's FAQ). Linux/Windows are unaffected. (#1)
+- The new Windows CI job failed `tests/roundtrip_fuzz.py`: it looked for
+  the `dicom-lookup` CLI binary without the `.exe` suffix Windows needs.
+  (#1)
+
 ## [0.2.8] - 2026-07-06
 
 ### Fixed

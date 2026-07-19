@@ -18,7 +18,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RESOLVED = ROOT / "data" / "resolved_pydicom_backfilled.jsonl"
 DMAP = ROOT / "tags.dmap"
-CLI = ROOT / "target" / "release" / "dicom-lookup"
+CLI = ROOT / "target" / "release" / (
+    "dicom-lookup.exe" if sys.platform == "win32" else "dicom-lookup"
+)
 
 SAMPLE_SIZE = 500
 

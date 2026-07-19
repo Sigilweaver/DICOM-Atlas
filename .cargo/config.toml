@@ -1,0 +1,10 @@
+# pyo3's `extension-module` feature (dicom-map-py) disables linking against
+# libpython, which is normally fine because maturin passes the right linker
+# flags at wheel-build time. A plain `cargo build`/`cargo test --workspace`
+# on macOS has no such help and fails with undefined symbols like
+# `_PyExc_AttributeError`. See https://pyo3.rs/main/faq.html.
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "link-arg=-undefined", "-C", "link-arg=dynamic_lookup"]
+
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "link-arg=-undefined", "-C", "link-arg=dynamic_lookup"]
