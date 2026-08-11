@@ -29,4 +29,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: taiki-e/install-action@cargo-audit
-      - run: cargo audit
+      # RUSTSEC-2026-0235 affects validation of attacker-controlled rkyv
+      # archives. dicom-map only reads its own build-time-embedded, trusted
+      # tags.dmap archive, so the vulnerable path is not reachable here.
+      # Remove this waiver when dicom-map migrates to rkyv >= 0.8.17.
+      - run: cargo audit --ignore RUSTSEC-2026-0235
