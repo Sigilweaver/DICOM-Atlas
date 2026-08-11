@@ -30,6 +30,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- CI: document and scope the temporary `RUSTSEC-2026-0235` audit waiver to
+  `dicom-map`'s trusted, build-time-embedded `tags.dmap` archive. The rkyv 0.8
+  migration requires a breaking `.dmap` format upgrade and will remove the
+  waiver when it can be coordinated safely.
 - The new macOS CI job failed to link `dicom-map-py`: pyo3's
   `extension-module` feature disables linking against libpython, which is
   normally papered over by maturin's build-time linker flags but not by a
