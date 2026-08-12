@@ -6,12 +6,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.8] - 2026-08-12
+
 ### Added
 
 - Docs: Python API reference page covering the `dicom_map` module
   functions (`open`, `patch_pydicom`, `unpatch_pydicom`) and the `Dict`
   class, registered in the sidebar under "Use the dictionary". (thanks
   @Nabejo)
+- `dicom-map-py`: `keywords` (`dicom`, `medical-imaging`, `tags`,
+  `registry`, `rkyv`) added to `pyproject.toml` for PyPI search
+  discoverability; the Rust crate already had them.
 
 ### Changed
 
@@ -30,6 +35,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- Corrected the published package description: `dicom-map`/`dicom-map-py`
+  claimed an O(1) lookup, but `Dictionary::lookup` uses `binary_search_by`
+  over a sorted index, which is O(log n). Both crates.io and PyPI
+  descriptions now say O(log n).
 - CI: document and scope the temporary `RUSTSEC-2026-0235` audit waiver to
   `dicom-map`'s trusted, build-time-embedded `tags.dmap` archive. The rkyv 0.8
   migration requires a breaking `.dmap` format upgrade and will remove the
@@ -49,21 +58,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   codec on Windows, not UTF-8. Non-ASCII bytes in tag names/creators
   (e.g. `0x9d`) raised `UnicodeDecodeError` in the subprocess reader
   thread. Pass `encoding="utf-8"` explicitly in both places. (#1)
-
-## [0.2.8] - 2026-07-06
-
-### Fixed
-
-- Corrected the published package description: `dicom-map`/`dicom-map-py`
-  claimed an O(1) lookup, but `Dictionary::lookup` uses `binary_search_by`
-  over a sorted index, which is O(log n). Both crates.io and PyPI
-  descriptions now say O(log n).
-
-### Added
-
-- `dicom-map-py`: `keywords` (`dicom`, `medical-imaging`, `tags`,
-  `registry`, `rkyv`) added to `pyproject.toml` for PyPI search
-  discoverability; the Rust crate already had them.
+- CI was red on `main`: a newer `clippy` (rust 1.97) added the
+  `collapsible_if` lint, which fired on a pre-existing nested `if` in
+  `compiler/src/bin/lookup.rs`'s embedded-dictionary lookup. Collapsed
+  per clippy's own suggestion.
 
 ## [0.2.7] - 2026-07-04
 

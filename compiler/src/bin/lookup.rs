@@ -139,13 +139,12 @@ fn load_dict(explicit: Option<PathBuf>) -> DmapDict {
     // When built with the `embedded` feature and no explicit path is given,
     // use the baked-in dictionary without touching the filesystem.
     #[cfg(feature = "embedded")]
-    if explicit.is_none() {
-        if std::env::var_os("DMAP_FILE")
+    if explicit.is_none()
+        && std::env::var_os("DMAP_FILE")
             .filter(|v| !v.is_empty())
             .is_none()
-        {
-            return dicom_map::embedded::embedded();
-        }
+    {
+        return dicom_map::embedded::embedded();
     }
 
     let path = resolve_dmap_path(explicit);
