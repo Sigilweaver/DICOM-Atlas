@@ -10,7 +10,7 @@ to stay compatible.
 +----------------------------------------------+
 | FileHeader (32 bytes, little-endian)         |
 |   magic:        b"DMAP"                      |
-|   version:      u16  (currently 1)           |
+|   version:      u16  (currently 3)           |
 |   _reserved:    [u8; 2]                      |
 |   body_len:     u64                          |
 |   body_sha256_lo: u64  (integrity hint)      |
@@ -24,12 +24,12 @@ to stay compatible.
 ```
 
 All integer fields in the header are little-endian. The body is produced by
-[rkyv](https://rkyv.org) and validated via `check_archived_root` on load.
+[rkyv](https://rkyv.org) and validated via `rkyv::access` on load.
 
 ## Version field
 
 `FileHeader::version` is the single source of truth. The current value is
-**`VERSION = 1`** (`dicom_map::schema::VERSION`).
+**`VERSION = 3`** (`dicom_map::schema::VERSION`).
 
 ## Compatibility contract
 
@@ -46,7 +46,7 @@ Safe to do at any time:
   UTF-8 at the existing offsets (e.g. appending new strings).
 
 ### Breaking (MUST bump `VERSION`)
-Any change that would cause a `v1` reader to misinterpret a field:
+Any change that would cause an older reader to misinterpret a field:
 
 - Adding, removing, reordering, or resizing fields in `FileHeader`,
   `IndexEntry`, or `TagRecord`.
@@ -70,7 +70,7 @@ When `VERSION` bumps:
 Readers MUST:
 
 - Validate `magic == b"DMAP"`.
-- Validate `version == VERSION` (currently `2`).
+- Validate `version == VERSION` (currently `3`).
 - Fail loudly (don't silently continue) if either check fails.
 
 The provided `DmapDict::open` and `DmapDict::from_static` functions already
@@ -82,3 +82,19 @@ enforce this and return `DmapError::UnsupportedVersion { got }` on mismatch.
 |---------|------------|-------------------------------------------------------------|
 | 1       | 2026-04    | Initial format. 32-byte header, rkyv-archived Dictionary.   |
 | 2       | 2026-04    | Added `sources_off: u32` and `sources_len: u32` to `TagRecord`. Stores pipe-delimited source PDF filenames (with `#pN` page anchors) in the shared string pool. Empty for public PS3.6 tags. |
+| 3       | 2026-10    | rkyv 0.8 archive layout, little-endian, aligned primitives, 32-bit pointers. Requires regeneration of version 1 and 2 files. |
+
+## Version 3 migration
+
+The checked-in `tags.dmap` and external `.dmap` files are persisted data.
+Version 3 readers reject version 1 and 2 files before archive validation;
+older readers reject version 3. There is no backward-compatible reader.
+Do not change only the header of an old archive: the body layout differs.
+
+Regenerate from the original inputs with the new compiler, for example:
+
+```sh
+cargo run --bin dmap-compile -- \
+  --standard data/standard/attributes.json \
+  --resolved data/resolved_pydicom_backfilled.jsonl --out tags.dmap
+```

@@ -19,8 +19,7 @@ use clap::Parser;
 use dicom_map::schema::{
     canonicalize_creator, creator_hash, Dictionary, FileHeader, IndexEntry, TagRecord, VrCode,
 };
-use rkyv::ser::serializers::AllocSerializer;
-use rkyv::ser::Serializer;
+use rkyv::rancor::Error;
 use serde::Deserialize;
 
 // ---------------------------------------------------------------------------
@@ -397,10 +396,8 @@ fn compile(rows: &[Row], out: &PathBuf) -> Result<()> {
         dict.strings.len()
     );
 
-    let mut ser = AllocSerializer::<{ 1 << 20 }>::default();
-    ser.serialize_value(&dict)
-        .map_err(|e| anyhow::anyhow!("rkyv serialize: {e}"))?;
-    let body = ser.into_serializer().into_inner();
+    let body =
+        rkyv::to_bytes::<Error>(&dict).map_err(|e| anyhow::anyhow!("rkyv serialize: {e}"))?;
     let hdr = FileHeader::new(body.len() as u64);
 
     let mut f = File::create(out)?;
