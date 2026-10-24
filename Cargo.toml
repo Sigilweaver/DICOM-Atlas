@@ -18,15 +18,17 @@ categories = ["science", "data-structures", "command-line-utilities"]
 # Note: a workspace-wide `unsafe_code = "forbid"` lint was considered
 # to match the rest of the Sigilweaver suite, but `dicom-map` requires
 # `unsafe` to memory-map the rkyv archive (`Mmap::map`,
-# `archived_root`) and `dicom-map-ffi` is a C FFI surface and is
+# `access_unchecked`) and `dicom-map-ffi` is a C FFI surface and is
 # therefore inherently unsafe. The `unsafe` blocks are tightly
 # scoped, well-commented, and covered by integration and round-trip
 # fuzz tests.
 
 [workspace.dependencies]
-rkyv = { version = "0.7.45", default-features = false, features = [
-    "validation",
-    "size_32",
+rkyv = { version = "0.8.17", default-features = false, features = [
+    "bytecheck",
+    "pointer_width_32",
+    "little_endian",
+    "aligned",
     "alloc",
 ] }
 memmap2 = "0.9"

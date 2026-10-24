@@ -216,3 +216,67 @@ fn private_tag_has_creator_string() {
     assert!(!v.creator().is_empty());
     assert!(v.is_block_offset());
 }
+
+// These migration checks require the tracked archive and must never skip it.
+fn static_archive() -> &'static [u8] {
+    let bytes = std::fs::read(dmap_path()).expect("read tracked tags.dmap");
+    let mut aligned = rkyv::util::AlignedVec::<16>::new();
+    aligned.extend_from_slice(&bytes);
+    Box::leak(Box::new(aligned)).as_slice()
+}
+
+#[test]
+fn static_archive_uses_the_same_format_as_mmap() {
+    let d = DmapDict::from_static(static_archive()).expect("validate static archive");
+    let mapped = DmapDict::open(dmap_path()).expect("validate mapped archive");
+    assert_eq!(d.len(), mapped.len());
+    let v = d.lookup(0x0008, 0x0005, None).expect("standard tag");
+    assert_eq!(v.group(), 0x0008);
+    assert_eq!(v.element(), 0x0005);
+    assert_eq!(v.keyword(), "SpecificCharacterSet");
+    assert_eq!(v.vr(), "CS");
+    let private = d
+        .lookup(
+            0x0021,
+            0x0008,
+            Some("Siemens: Thorax/Multix FD Lab Settings"),
+        )
+        .expect("private tag");
+    assert_eq!(private.name(), "Auto Window Flag");
+    assert!(!private.sources_raw().is_empty());
+}
+
+#[test]
+fn rejects_incompatible_format_before_archive_validation() {
+    use dicom_map::schema::{FileHeader, VERSION};
+    use dicom_map::DmapError;
+
+    for version in [1, 2, VERSION + 1] {
+        // No body: the version error must take precedence over validation.
+        let mut header = FileHeader::new(0);
+        header.version = version;
+        let bytes = Box::leak(Box::new(header.to_bytes()));
+        assert!(matches!(DmapDict::from_static(bytes),
+            Err(DmapError::UnsupportedVersion { got }) if got == version));
+    }
+}
+
+#[test]
+fn rejects_truncated_current_archive() {
+    let bytes = static_archive();
+    assert!(matches!(
+        DmapDict::from_static(&bytes[..36]),
+        Err(dicom_map::DmapError::BadArchive(_))
+    ));
+}
+
+#[cfg(feature = "embedded")]
+#[test]
+fn embedded_archive_uses_current_format() {
+    let d = dicom_map::embedded::embedded();
+    assert_eq!(d.len(), DmapDict::open(dmap_path()).unwrap().len());
+    assert_eq!(
+        d.lookup(0x0008, 0x0005, None).unwrap().keyword(),
+        "SpecificCharacterSet"
+    );
+}

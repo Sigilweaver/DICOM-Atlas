@@ -6,6 +6,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Breaking
+
+- `.dmap` format version 3; `tags.dmap` is regenerated. Version 1 and 2
+  archives are rejected with `unsupported version` and must be regenerated
+  from source with the new compiler; see `dicom-map/FORMAT.md`. The next
+  release is 0.3.0.
+
+### Security
+
+- Migrate rkyv to >=0.8.17 with checked access APIs, validation derives, and
+  little-endian, aligned, 32-bit-pointer settings. Fixes RUSTSEC-2026-0235
+  (#22). The `cargo audit` waiver for it is removed.
+
 ## [0.2.8] - 2026-08-12
 
 ### Added

@@ -49,3 +49,8 @@ in `#[repr(C, align(4))]` to satisfy the requirement after
 Format version bumps are recorded in
 [CHANGELOG.md](https://github.com/Sigilweaver/DICOM-Atlas/blob/main/CHANGELOG.md).
 Old readers refuse to open a newer-format archive and vice versa.
+
+The current format is version 3, which uses rkyv 0.8. Existing version 1 and 2
+archives must be regenerated from source with the matching compiler;
+changing the header alone is not sufficient. External archives used through
+Rust, Python, C, or the CLI are affected.

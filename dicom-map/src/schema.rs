@@ -20,7 +20,8 @@
 use rkyv::{Archive, Deserialize, Serialize};
 
 pub const MAGIC: &[u8; 4] = b"DMAP";
-pub const VERSION: u16 = 2;
+// Version 3 uses rkyv 0.8; version 2 archives must be regenerated.
+pub const VERSION: u16 = 3;
 
 /// 32-byte file prefix. Kept outside rkyv so we can sanity-check before
 /// attempting to deserialize the body.
@@ -79,7 +80,6 @@ impl FileHeader {
 
 /// One entry in the sorted lookup index.
 #[derive(Archive, Serialize, Deserialize, Debug, Clone, Copy)]
-#[archive(check_bytes)]
 pub struct IndexEntry {
     pub group: u16,
     pub element: u16,
@@ -92,7 +92,6 @@ pub struct IndexEntry {
 
 /// One fully resolved tag record.
 #[derive(Archive, Serialize, Deserialize, Debug, Clone)]
-#[archive(check_bytes)]
 pub struct TagRecord {
     pub group: u16,
     pub element: u16,
@@ -119,7 +118,6 @@ pub struct TagRecord {
 /// DICOM value representation, 2-byte ASCII packed into one byte via a
 /// fixed enum so records stay small.
 #[derive(Archive, Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
-#[archive(check_bytes)]
 #[repr(u8)]
 pub enum VrCode {
     AE,
@@ -244,7 +242,6 @@ impl VrCode {
 
 /// Root archived object in the `.dmap` file body.
 #[derive(Archive, Serialize, Deserialize, Debug)]
-#[archive(check_bytes)]
 pub struct Dictionary {
     pub index: Vec<IndexEntry>,
     pub records: Vec<TagRecord>,

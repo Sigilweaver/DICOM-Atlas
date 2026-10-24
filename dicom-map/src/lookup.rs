@@ -4,11 +4,11 @@ use std::fs::File;
 use std::path::Path;
 
 use memmap2::Mmap;
-use rkyv::{archived_root, check_archived_root};
+use rkyv::{access, access_unchecked, rancor::Error};
 
 use crate::schema::{
     creator_hash as compute_creator_hash, ArchivedDictionary, ArchivedTagRecord, ArchivedVrCode,
-    Dictionary, FileHeader, MAGIC, VERSION,
+    FileHeader, MAGIC, VERSION,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -65,7 +65,7 @@ impl DmapDict {
         }
 
         let body = &mmap[FileHeader::SIZE..];
-        check_archived_root::<Dictionary>(body)
+        access::<ArchivedDictionary, Error>(body)
             .map_err(|e| DmapError::BadArchive(e.to_string()))?;
 
         Ok(Self {
@@ -88,7 +88,7 @@ impl DmapDict {
             return Err(DmapError::UnsupportedVersion { got: hdr.version });
         }
         let body = &bytes[FileHeader::SIZE..];
-        check_archived_root::<Dictionary>(body)
+        access::<ArchivedDictionary, Error>(body)
             .map_err(|e| DmapError::BadArchive(e.to_string()))?;
         Ok(Self {
             backing: Backing::Static(bytes),
@@ -98,7 +98,7 @@ impl DmapDict {
 
     fn archived(&self) -> &ArchivedDictionary {
         // SAFETY: validated in `open()` / `from_static()`.
-        unsafe { archived_root::<Dictionary>(&self.backing.bytes()[self.body_off..]) }
+        unsafe { access_unchecked::<ArchivedDictionary>(&self.backing.bytes()[self.body_off..]) }
     }
 
     pub fn len(&self) -> usize {
@@ -116,10 +116,17 @@ impl DmapDict {
 
         let key = (group, element, ch);
         let idx = index
-            .binary_search_by(|e| (e.group, e.element, e.creator_hash).cmp(&key))
+            .binary_search_by(|e| {
+                (
+                    e.group.to_native(),
+                    e.element.to_native(),
+                    e.creator_hash.to_native(),
+                )
+                    .cmp(&key)
+            })
             .ok()?;
 
-        let rec_idx = index[idx].record_idx as usize;
+        let rec_idx = index[idx].record_idx.to_native() as usize;
         let rec = &dict.records[rec_idx];
         Some(TagView {
             rec,
@@ -141,38 +148,50 @@ impl<'a> TagView<'a> {
     }
 
     pub fn group(&self) -> u16 {
-        self.rec.group
+        self.rec.group.to_native()
     }
 
     pub fn element(&self) -> u16 {
-        self.rec.element
+        self.rec.element.to_native()
     }
 
     pub fn keyword(&self) -> &'a str {
-        self.slice(self.rec.keyword_off, self.rec.keyword_len as u32)
+        self.slice(
+            self.rec.keyword_off.to_native(),
+            self.rec.keyword_len.to_native() as u32,
+        )
     }
 
     pub fn name(&self) -> &'a str {
-        self.slice(self.rec.name_off, self.rec.name_len as u32)
+        self.slice(
+            self.rec.name_off.to_native(),
+            self.rec.name_len.to_native() as u32,
+        )
     }
 
     pub fn creator(&self) -> &'a str {
-        let len = self.rec.creator_len;
+        let len = self.rec.creator_len.to_native();
         if len == 0 {
             return "";
         }
-        self.slice(self.rec.creator_off, len as u32)
+        self.slice(self.rec.creator_off.to_native(), len as u32)
     }
 
     pub fn description(&self) -> &'a str {
-        self.slice(self.rec.description_off, self.rec.description_len)
+        self.slice(
+            self.rec.description_off.to_native(),
+            self.rec.description_len.to_native(),
+        )
     }
 
     /// Pipe-delimited list of source PDF filenames that document this tag.
     /// Each entry is a filename (optionally with a `#pN` page anchor) from
     /// `data/sources.json`. Empty for public PS3.6 tags.
     pub fn sources_raw(&self) -> &'a str {
-        self.slice(self.rec.sources_off, self.rec.sources_len)
+        self.slice(
+            self.rec.sources_off.to_native(),
+            self.rec.sources_len.to_native(),
+        )
     }
 
     /// Source PDF filenames split on `|`. Empty iterator for public PS3.6 tags.
