@@ -16,22 +16,18 @@
 
 use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::{BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use clap::Parser;
-use dicom_map::schema::{
-    canonicalize_creator, creator_hash, Dictionary, FileHeader, IndexEntry, TagRecord, VrCode,
-    VM_UNBOUNDED,
-};
-use rkyv::rancor::Error;
+use dicom_map::{canonicalize_creator, creator_hash, DmapBuilder, NewRecord, Vm};
 use serde::Deserialize;
 
 mod strict;
 use strict::{
     fit_len, parse_csv_element, parse_hex4, parse_standard_tag, parse_vm, parse_vr, InputError,
-    Loc, StdTag, Vm,
+    Loc, StdTag, NO_VR,
 };
 
 // ---------------------------------------------------------------------------
@@ -58,6 +54,10 @@ struct Args {
     /// Also export all tags to a human-editable CSV file.
     #[arg(long)]
     export_csv: Option<PathBuf>,
+    /// Metadata to store in the archive, `key=value` (repeatable), for
+    /// example `--meta standard_edition=2024b`.
+    #[arg(long = "meta", value_name = "KEY=VALUE")]
+    meta: Vec<String>,
 }
 
 // ---------------------------------------------------------------------------
@@ -170,17 +170,18 @@ fn build_row(
             element,
         });
     }
-    let vr_code = parse_vr(vr, public).map_err(|e| bad_field(&loc, "vr", e, vr))?;
-    // Store the canonical spelling so tags.csv is stable across spellings.
-    let vr = if vr_code == VrCode::Unknown {
+    let canon_vr = parse_vr(vr, public).map_err(|e| bad_field(&loc, "vr", e, vr))?;
+    // Store the canonical spelling so tags.csv is stable across spellings;
+    // the two "no VR" spellings are kept as written.
+    let vr = if canon_vr == NO_VR {
         vr.to_owned()
     } else {
-        vr_code.as_str().to_owned()
+        canon_vr.to_owned()
     };
     let vm = parse_vm(vm, public).map_err(|e| bad_field(&loc, "vm", e, vm))?;
-    check_text(&loc, "keyword", &keyword, u16::MAX as usize)?;
-    check_text(&loc, "name", &name, u16::MAX as usize)?;
-    check_text(&loc, "private_creator", private_creator, u16::MAX as usize)?;
+    check_text(&loc, "keyword", &keyword, u32::MAX as usize)?;
+    check_text(&loc, "name", &name, u32::MAX as usize)?;
+    check_text(&loc, "private_creator", private_creator, u32::MAX as usize)?;
     check_text(&loc, "description", &description, u32::MAX as usize)?;
     let src = sources.join("|");
     check_text(&loc, "sources", &src, u32::MAX as usize)?;
@@ -357,17 +358,7 @@ fn split_pipe(s: &str) -> Vec<String> {
 // Element: concrete tags as 4-char uppercase hex; block-relative private tags as xx<2-char hex>.
 
 fn vm_text(v: &Vm) -> String {
-    if *v == strict::VM_UNDECLARED {
-        String::new()
-    } else if v.max == VM_UNBOUNDED && v.step > 1 {
-        format!("{}-{}n", v.min, v.step)
-    } else if v.max == VM_UNBOUNDED {
-        format!("{}-n", v.min)
-    } else if v.min == v.max {
-        v.min.to_string()
-    } else {
-        format!("{}-{}", v.min, v.max)
-    }
+    v.to_string()
 }
 
 fn write_csv(path: &PathBuf, rows: &[Row]) -> Result<()> {
@@ -422,122 +413,38 @@ fn write_csv(path: &PathBuf, rows: &[Row]) -> Result<()> {
 // ---------------------------------------------------------------------------
 // Compiler helpers
 
-struct StringPool {
-    bytes: Vec<u8>,
-}
-
-impl StringPool {
-    fn new() -> Self {
-        Self {
-            bytes: Vec::with_capacity(1 << 20),
-        }
+fn compile(rows: &[Row], meta: &[String], out: &PathBuf) -> Result<()> {
+    let mut b = DmapBuilder::new();
+    for m in meta {
+        let (k, v) = m
+            .split_once('=')
+            .ok_or_else(|| anyhow::anyhow!("--meta {m:?} is not key=value"))?;
+        b.meta(k, v)?;
     }
-    fn intern(&mut self, s: &str) -> Result<(u32, u32)> {
-        if s.is_empty() {
-            return Ok((0, 0));
-        }
-        let off = u32::try_from(self.bytes.len())
-            .map_err(|_| anyhow::anyhow!("string pool exceeds 4 GiB"))?;
-        let len = u32::try_from(s.len()).map_err(|_| {
-            anyhow::anyhow!("string of {} bytes exceeds the 32-bit length", s.len())
-        })?;
-        self.bytes.extend_from_slice(s.as_bytes());
-        Ok((off, len))
-    }
-}
-
-fn narrow_u16(row: &Row, column: &'static str, len: u32) -> Result<u16> {
-    u16::try_from(len).map_err(|_| {
-        InputError::FieldTooLong {
-            loc: row.loc.clone(),
-            column,
-            len: len as usize,
-            max: u16::MAX as usize,
-        }
-        .into()
-    })
-}
-
-fn compile(rows: &[Row], out: &PathBuf) -> Result<()> {
-    let mut pool = StringPool::new();
-    let mut records: Vec<TagRecord> = Vec::with_capacity(rows.len());
-    let mut entries: Vec<IndexEntry> = Vec::with_capacity(rows.len());
-
     for r in rows {
-        let creator = if r.private_creator.is_empty() {
-            None
-        } else {
-            Some(r.private_creator.as_str())
-        };
-        let canon = creator.map(canonicalize_creator);
-        let ch = creator_hash(creator);
         let vr = parse_vr(&r.vr, true).map_err(|e| bad_field(&r.loc, "vr", e, &r.vr))?;
-        let (k_off, k_len) = pool.intern(&r.keyword)?;
-        let (n_off, n_len) = pool.intern(&r.name)?;
-        let (c_off, c_len) = match canon.as_deref() {
-            Some(c) => pool.intern(c)?,
-            None => (0, 0),
-        };
-        let (d_off, d_len) = pool.intern(&r.description)?;
-        let (s_off, s_len) = pool.intern(&r.sources.join("|"))?;
-        records.push(TagRecord {
-            group: r.group,
-            element: r.element,
-            element_is_block_offset: r.element_is_block_offset,
-            retired: r.retired,
-            vr,
-            vm_min: r.vm.min,
-            vm_max: r.vm.max,
-            vm_step: r.vm.step,
-            keyword_off: k_off,
-            keyword_len: narrow_u16(r, "keyword", k_len)?,
-            name_off: n_off,
-            name_len: narrow_u16(r, "name", n_len)?,
-            creator_off: c_off,
-            creator_len: narrow_u16(r, "private_creator", c_len)?,
-            description_off: d_off,
-            description_len: d_len,
-            sources_off: s_off,
-            sources_len: s_len,
-        });
-        entries.push(IndexEntry {
-            group: r.group,
-            element: r.element,
-            creator_hash: ch,
-            record_idx: u32::try_from(records.len() - 1)
-                .map_err(|_| anyhow::anyhow!("more than 2^32 records"))?,
-        });
+        b.push(
+            NewRecord::new(r.group, r.element)
+                .creator(r.private_creator.as_str())
+                .vr(vr)
+                .vm(r.vm)
+                .keyword(r.keyword.as_str())
+                .name(r.name.as_str())
+                .description(r.description.as_str())
+                .sources(r.sources.join("|"))
+                .retired(r.retired)
+                .block_offset(r.element_is_block_offset),
+        );
     }
-
-    entries.sort_by_key(|e| (e.group, e.element, e.creator_hash));
-
-    let dict = Dictionary {
-        index: entries,
-        records,
-        strings: pool.bytes,
-    };
-
+    let bytes = b
+        .finish()
+        .with_context(|| format!("building {}", out.display()))?;
+    std::fs::write(out, &bytes).with_context(|| format!("writing {}", out.display()))?;
     eprintln!(
-        "compiling: {} tags, {} index entries, {} bytes in string pool",
-        dict.records.len(),
-        dict.index.len(),
-        dict.strings.len()
-    );
-
-    let body =
-        rkyv::to_bytes::<Error>(&dict).map_err(|e| anyhow::anyhow!("rkyv serialize: {e}"))?;
-    let hdr = FileHeader::new(body.len() as u64);
-
-    let mut f = File::create(out)?;
-    f.write_all(&hdr.to_bytes())?;
-    f.write_all(&body)?;
-    f.flush()?;
-
-    eprintln!(
-        "wrote {} ({} bytes body + {} header)",
+        "wrote {} ({} records, {} bytes)",
         out.display(),
-        body.len(),
-        FileHeader::SIZE
+        rows.len(),
+        bytes.len()
     );
     Ok(())
 }
@@ -697,7 +604,7 @@ fn main() -> Result<()> {
     }
 
     if let Some(p) = args.out.as_ref() {
-        compile(&rows, p)?;
+        compile(&rows, &args.meta, p)?;
     }
 
     Ok(())
@@ -718,11 +625,7 @@ mod tests {
             element_is_block_offset: true,
             private_creator: creator.to_owned(),
             vr: "US".into(),
-            vm: Vm {
-                min: 1,
-                max: 1,
-                step: 1,
-            },
+            vm: Vm::new(1, 1, 1),
             keyword: String::new(),
             name: name.to_owned(),
             description: String::new(),

@@ -16,7 +16,7 @@
 //! - DICOM PS3.5, Section 6.4 "Value Multiplicity (VM) and Delimitation":
 //!   VM is written `k`, `k-m`, `k-n` or `k-kn`.
 
-use dicom_map::schema::{VrCode, VM_UNBOUNDED};
+use dicom_map::{Vm, VM_UNBOUNDED};
 
 /// Where in which input a problem was found.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -129,20 +129,8 @@ pub fn parse_csv_element(s: &str) -> Option<(u16, bool)> {
     parse_hex4(s).map(|e| (e, false))
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Vm {
-    pub min: u16,
-    pub max: u16,
-    pub step: u16,
-}
-
-/// Value of `Vm` for a tag whose source declares no VM (a few retired PS3.6
-/// rows leave the column empty).
-pub const VM_UNDECLARED: Vm = Vm {
-    min: 0,
-    max: 0,
-    step: 1,
-};
+/// Value of `Vm` for a tag whose source declares no VM.
+pub const VM_UNDECLARED: Vm = Vm::UNDECLARED;
 
 fn parse_vm_number(s: &str) -> Option<u16> {
     if s.is_empty() || !s.bytes().all(|b| b.is_ascii_digit()) {
@@ -172,38 +160,22 @@ pub fn parse_vm(s: &str, allow_undeclared: bool) -> Result<Vm, &'static str> {
     }
     const EXPECTED: &str = "a value multiplicity (k, k-m, k-n or k-kn)";
     if t.eq_ignore_ascii_case("n") || t.eq_ignore_ascii_case("1-nor1") {
-        return Ok(Vm {
-            min: 1,
-            max: VM_UNBOUNDED,
-            step: 1,
-        });
+        return Ok(Vm::new(1, VM_UNBOUNDED, 1));
     }
     match t.split_once('-') {
         None => {
             let n = parse_vm_number(&t).ok_or(EXPECTED)?;
-            Ok(Vm {
-                min: n,
-                max: n,
-                step: 1,
-            })
+            Ok(Vm::new(n, n, 1))
         }
         Some((lo, hi)) => {
             let min = parse_vm_number(lo).ok_or(EXPECTED)?;
             if hi.eq_ignore_ascii_case("n") {
-                return Ok(Vm {
-                    min,
-                    max: VM_UNBOUNDED,
-                    step: 1,
-                });
+                return Ok(Vm::new(min, VM_UNBOUNDED, 1));
             }
             if let Some(k) = hi.strip_suffix('n').or_else(|| hi.strip_suffix('N')) {
                 let k = parse_vm_number(k).ok_or(EXPECTED)?;
                 if k == min && k > 0 {
-                    return Ok(Vm {
-                        min,
-                        max: VM_UNBOUNDED,
-                        step: k,
-                    });
+                    return Ok(Vm::new(min, VM_UNBOUNDED, k));
                 }
                 return Err(EXPECTED);
             }
@@ -211,26 +183,72 @@ pub fn parse_vm(s: &str, allow_undeclared: bool) -> Result<Vm, &'static str> {
             if max < min {
                 return Err(EXPECTED);
             }
-            Ok(Vm { min, max, step: 1 })
+            Ok(Vm::new(min, max, 1))
         }
     }
 }
 
-/// Parse a VR column.
+/// The 34 two-letter VRs of PS3.5 Table 6.2-1 and the four multi-VR spellings
+/// used by PS3.6.
+const VRS: &[&str] = &[
+    "AE",
+    "AS",
+    "AT",
+    "CS",
+    "DA",
+    "DS",
+    "DT",
+    "FL",
+    "FD",
+    "IS",
+    "LO",
+    "LT",
+    "OB",
+    "OD",
+    "OF",
+    "OL",
+    "OV",
+    "OW",
+    "PN",
+    "SH",
+    "SL",
+    "SQ",
+    "SS",
+    "ST",
+    "SV",
+    "TM",
+    "UC",
+    "UI",
+    "UL",
+    "UN",
+    "UR",
+    "US",
+    "UT",
+    "UV",
+    "US or SS",
+    "OB or OW",
+    "US or OW",
+    "US or SS or OW",
+];
+
+/// VR text stored when the source declares no VR.
+pub const NO_VR: &str = "??";
+
+/// Parse a VR column and return its canonical text.
 ///
 /// Exact two-letter VRs and the four PS3.6 multi-VR forms are accepted, plus
 /// the one spelling `OB_OW` seen in scraped data. The two ways PS3.6 says "no
 /// VR" (an empty cell, or `See Note 2`) are accepted only when
-/// `allow_undeclared` is set and map to [`VrCode::Unknown`].
-pub fn parse_vr(s: &str, allow_undeclared: bool) -> Result<VrCode, &'static str> {
-    if let Some(v) = VrCode::parse(s) {
+/// `allow_undeclared` is set and give [`NO_VR`].
+pub fn parse_vr(s: &str, allow_undeclared: bool) -> Result<&'static str, &'static str> {
+    if let Some(v) = VRS.iter().find(|v| **v == s) {
         return Ok(v);
     }
     if s == "OB_OW" {
-        return Ok(VrCode::ObOrOw);
+        return Ok("OB or OW");
     }
     if allow_undeclared && (s.is_empty() || s == "See Note 2") {
-        return Ok(VrCode::Unknown);
+        return Ok(NO_VR);
     }
     Err("a DICOM VR (two capital letters, or `US or SS`, `OB or OW`, `US or OW`, `US or SS or OW`)")
 }
@@ -305,7 +323,7 @@ mod tests {
     }
 
     fn vm(min: u16, max: u16, step: u16) -> Vm {
-        Vm { min, max, step }
+        Vm::new(min, max, step)
     }
 
     #[test]
@@ -343,13 +361,13 @@ mod tests {
 
     #[test]
     fn vr_forms() {
-        assert_eq!(parse_vr("US", false), Ok(VrCode::US));
-        assert_eq!(parse_vr("US or SS", false), Ok(VrCode::UsOrSs));
-        assert_eq!(parse_vr("OB or OW", false), Ok(VrCode::ObOrOw));
-        assert_eq!(parse_vr("OB_OW", false), Ok(VrCode::ObOrOw));
-        assert_eq!(parse_vr("US or SS or OW", false), Ok(VrCode::UsOrSsOrOw));
-        assert_eq!(parse_vr("", true), Ok(VrCode::Unknown));
-        assert_eq!(parse_vr("See Note 2", true), Ok(VrCode::Unknown));
+        assert_eq!(parse_vr("US", false), Ok("US"));
+        assert_eq!(parse_vr("US or SS", false), Ok("US or SS"));
+        assert_eq!(parse_vr("OB or OW", false), Ok("OB or OW"));
+        assert_eq!(parse_vr("OB_OW", false), Ok("OB or OW"));
+        assert_eq!(parse_vr("US or SS or OW", false), Ok("US or SS or OW"));
+        assert_eq!(parse_vr("", true), Ok(NO_VR));
+        assert_eq!(parse_vr("See Note 2", true), Ok(NO_VR));
     }
 
     #[test]

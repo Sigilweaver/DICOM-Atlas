@@ -102,6 +102,7 @@ fn render_human(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Op
     }
     println!("name       : {}", v.name());
     println!("VR         : {}", v.vr());
+    println!("VM         : {}", v.vm());
     if !v.description().is_empty() {
         println!("description: {}", v.description());
     }
@@ -135,13 +136,14 @@ fn render_json(v: dicom_map::TagView<'_>, group: u16, element: u16, creator: Opt
     };
     let creator_out = creator.unwrap_or(v.creator());
     println!(
-        "{{\"group\":\"{:04X}\",\"element\":\"{:04X}\",\"creator\":{},\"keyword\":{},\"name\":{},\"vr\":{},\"description\":{},\"retired\":{},\"block_offset\":{},\"sources\":[{}]}}",
+        "{{\"group\":\"{:04X}\",\"element\":\"{:04X}\",\"creator\":{},\"keyword\":{},\"name\":{},\"vr\":{},\"vm\":{},\"description\":{},\"retired\":{},\"block_offset\":{},\"sources\":[{}]}}",
         group,
         element,
         esc(creator_out),
         esc(v.keyword()),
         esc(v.name()),
         esc(v.vr()),
+        esc(&v.vm().to_string()),
         esc(v.description()),
         v.retired(),
         v.is_block_offset(),
