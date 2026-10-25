@@ -28,6 +28,11 @@ pub enum BuildError {
     },
     #[error("({group:04X},{element:04X}): odd group needs a private creator")]
     CreatorMissing { group: u16, element: u16 },
+    #[error(
+        "({group:04X},{element:04X}): a private element is stored as its block offset (0x00 to 0xFF); \
+         lookup reduces the element to its low byte, so this record could never be found"
+    )]
+    PrivateElementOutOfRange { group: u16, element: u16 },
     #[error("({group:04X},{element:04X}): VR {vr:?} is not 1 to 16 printable ASCII bytes")]
     InvalidVr {
         group: u16,
@@ -182,6 +187,12 @@ impl DmapBuilder {
             let canon = canonicalize_creator(&r.creator);
             if g % 2 == 1 && canon.is_empty() {
                 return Err(BuildError::CreatorMissing {
+                    group: g,
+                    element: e,
+                });
+            }
+            if g % 2 == 1 && e > 0x00FF {
+                return Err(BuildError::PrivateElementOutOfRange {
                     group: g,
                     element: e,
                 });

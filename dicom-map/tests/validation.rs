@@ -158,6 +158,18 @@ fn builder_refuses_what_the_reader_would_refuse() {
     b.push(NewRecord::new(0x0029, 0x0010).vr("LO"));
     assert!(matches!(b.finish(), Err(BuildError::CreatorMissing { .. })));
     let mut b = DmapBuilder::new();
+    b.push(NewRecord::new(0x0029, 0x1008).creator("ACME").vr("LO"));
+    assert!(matches!(
+        b.finish(),
+        Err(BuildError::PrivateElementOutOfRange {
+            group: 0x0029,
+            element: 0x1008
+        })
+    ));
+    let mut b = DmapBuilder::new();
+    b.push(NewRecord::new(0x0029, 0x00FF).creator("ACME").vr("LO"));
+    assert!(b.finish().is_ok());
+    let mut b = DmapBuilder::new();
     b.push(NewRecord::new(0x0008, 0x0005).vr("ob"));
     b.push(NewRecord::new(0x0008, 0x0006).vr("a\0"));
     assert!(matches!(b.finish(), Err(BuildError::InvalidVr { .. })));
