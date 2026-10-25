@@ -12,6 +12,7 @@ use crate::schema::{
 };
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum DmapError {
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),

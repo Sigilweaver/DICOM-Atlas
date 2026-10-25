@@ -130,6 +130,7 @@ pub struct TagRecord {
 /// fixed enum so records stay small.
 #[derive(Archive, Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
+#[non_exhaustive]
 pub enum VrCode {
     AE,
     AS,
@@ -180,13 +181,6 @@ pub enum VrCode {
 }
 
 impl VrCode {
-    /// Lossy parse kept for compatibility: anything that [`VrCode::parse`]
-    /// rejects becomes [`VrCode::Unknown`].
-    #[deprecated(note = "use VrCode::parse, which reports unrecognised VRs")]
-    pub fn from_str2(s: &str) -> Self {
-        Self::parse(s).unwrap_or(Self::Unknown)
-    }
-
     /// Parse an exact VR spelling. Returns `None` for anything that is not one
     /// of the 34 two-letter VRs or one of the four PS3.6 multi-VR forms
     /// (`"US or SS"`, `"OB or OW"`, `"US or OW"`, `"US or SS or OW"`). Case
