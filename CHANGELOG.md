@@ -39,16 +39,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `1-n or 1` read as `1-n`.
 - VR spellings `US or SS`, `OB or OW`, `US or OW` and `US or SS or OW` are
   kept instead of becoming `??`; `??` now means the source declares no VR.
-- `dmap_lookup` (C) returns -1 with `dmap_last_error` set instead of
-  truncating a VR that does not fit `DmapTag.vr`, and instead of returning
-  NULL strings for text containing NUL. `dmap_lookup_ex` and `DmapTagEx`
-  carry the full VR text.
+- `DmapTag.vr` (C) is 16 bytes and `DMAP_ABI_VERSION` is 2, so multi-VR text
+  is never truncated; `dmap_lookup` returns -1 with `dmap_last_error` set
+  instead of returning NULL strings for text containing NUL.
+- `VrCode::from_str2` is removed; use `VrCode::parse`. `VrCode` and
+  `DmapError` are `#[non_exhaustive]`.
 
 ### Added
 
-- `dmap_lookup_ex`, `dmap_free_tag_ex` and `DmapTagEx` in the C API.
-- `VrCode::parse`, which reports unrecognised VRs; `VrCode::from_str2` is
-  deprecated.
+- `VrCode::parse`, which reports unrecognised VRs.
 
 ### Security
 
