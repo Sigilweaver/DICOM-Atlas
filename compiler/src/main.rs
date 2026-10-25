@@ -1,13 +1,13 @@
 //! `dmap-compile` - freeze DICOM tag records into a .dmap file.
 //!
 //! Sources (pick any combination):
-//!   --standard <path>    PS3.6 attributes.json (public tags)
+//!   --standard <path>    PS3.6 2024b attributes.json (public tags)
 //!   --resolved <path>    ResolvedTag JSON-L from scraper.resolve (private tags)
 //!   --csv      <path>    tags.csv produced by --export-csv (replaces both above)
 //!
 //! Inputs are validated strictly: a tag, VR, VM, hex or Y/N field that does
 //! not match its grammar stops the build with the file, row and column.
-//! Repeating-group patterns in PS3.6 (`(60XX,0010)`) cannot be addressed by
+//! Repeating-group patterns in PS3.6 2024b (`(60XX,0010)`) cannot be addressed by
 //! the index; they are skipped, counted and listed on stderr.
 //!
 //! Outputs:
@@ -39,7 +39,7 @@ use strict::{
     about = "Compile DICOM tag records into a .dmap archive"
 )]
 struct Args {
-    /// PS3.6 standard attributes.json (public tags).
+    /// PS3.6 2024b standard attributes.json (public tags).
     #[arg(long)]
     standard: Option<PathBuf>,
     /// ResolvedTag JSON-L from scraper.resolve (private tags).
@@ -70,7 +70,7 @@ struct Row {
     element_is_block_offset: bool,
     private_creator: String,
     /// Validated VR text (an exact VR, a multi-VR form, or one of the two
-    /// "no VR" spellings of PS3.6).
+    /// "no VR" spellings of PS3.6 2024b).
     vr: String,
     vm: Vm,
     keyword: String,

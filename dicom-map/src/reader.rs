@@ -133,7 +133,7 @@ impl DmapDict {
 
     /// Look up a tag. For a private creator on an odd group the element is
     /// reduced to its block offset (low byte), since any block belongs to the
-    /// creator (PS3.5 7.8.1). A miss is `None`.
+    /// creator (PS3.5 2024b 7.8.1). A miss is `None`.
     pub fn lookup(&self, group: u16, element: u16, creator: Option<&str>) -> Option<TagView<'_>> {
         let element = if creator.is_some() && group % 2 == 1 {
             element & 0x00FF

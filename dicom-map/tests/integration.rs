@@ -76,7 +76,7 @@ fn miss_returns_none() {
 /// Per-creator smoke tests: at least one hand-verified tag per major family.
 ///
 /// Each tuple is `(group, element_low, creator, expected_vr, expected_name_fragment)`.
-/// Elements use the low byte (private block offset form, PS3.5 §7.8.1).
+/// Elements use the low byte (private block offset form, PS3.5 2024b §7.8.1).
 fn known_tags() -> &'static [(u16, u16, &'static str, &'static str, &'static str)] {
     &[
         // GE imaging families

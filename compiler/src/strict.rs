@@ -5,15 +5,15 @@
 //! characters or substitutes a default.
 //!
 //! Sources cited by the grammars below:
-//! - DICOM PS3.6 (Data Dictionary), Section 6 "Registry of DICOM Data
+//! - DICOM PS3.6 2024b (Data Dictionary), Section 6 "Registry of DICOM Data
 //!   Elements", Table 6-1: tags are written `(GGGG,EEEE)`, and a repeating
 //!   group or element is written with `x` (or `X`) in the varying hex
 //!   nibbles, e.g. `(60xx,0010)`.
-//! - DICOM PS3.5 (Data Structures and Encoding), Section 7.6 "Repeating
+//! - DICOM PS3.5 2024b (Data Structures and Encoding), Section 7.6 "Repeating
 //!   Groups": the `50xx`, `60xx` and `7Fxx` groups repeat.
-//! - DICOM PS3.5, Section 7.8.1 "Private Data Element Tags": private data
+//! - DICOM PS3.5 2024b, Section 7.8.1 "Private Data Element Tags": private data
 //!   elements live in odd groups and are addressed through a private creator.
-//! - DICOM PS3.5, Section 6.4 "Value Multiplicity (VM) and Delimitation":
+//! - DICOM PS3.5 2024b, Section 6.4 "Value Multiplicity (VM) and Delimitation":
 //!   VM is written `k`, `k-m`, `k-n` or `k-kn`.
 
 use dicom_map::{Vm, VM_UNBOUNDED};
@@ -45,7 +45,7 @@ pub enum InputError {
     },
     #[error(
         "{loc}: private tag ({group:04X},{element:04X}) has no private creator \
-         (odd group requires one, PS3.5 7.8.1)"
+         (odd group requires one, PS3.5 2024b 7.8.1)"
     )]
     MissingCreator { loc: Loc, group: u16, element: u16 },
     #[error("{loc}: column `{column}` is {len} bytes, the format stores at most {max}")]
@@ -146,7 +146,7 @@ fn parse_vm_number(s: &str) -> Option<u16> {
 /// Accepted forms (ASCII whitespace anywhere is ignored, `n`/`N` are the same):
 /// `k`, `k-m` (m >= k), `k-n`, `k-kn` (same k on both sides; stored as
 /// unbounded with step k), and the two spellings that appear in the sources:
-/// bare `n` (read as `1-n`) and PS3.6's `1-n or 1` (read as `1-n`).
+/// bare `n` (read as `1-n`) and PS3.6 2024b's `1-n or 1` (read as `1-n`).
 /// An empty VM is accepted only when `allow_undeclared` is set, and yields
 /// [`VM_UNDECLARED`].
 pub fn parse_vm(s: &str, allow_undeclared: bool) -> Result<Vm, &'static str> {
@@ -188,8 +188,8 @@ pub fn parse_vm(s: &str, allow_undeclared: bool) -> Result<Vm, &'static str> {
     }
 }
 
-/// The 34 two-letter VRs of PS3.5 Table 6.2-1 and the four multi-VR spellings
-/// used by PS3.6.
+/// The 34 two-letter VRs of PS3.5 2024b Table 6.2-1 and the four multi-VR spellings
+/// used by PS3.6 2024b.
 const VRS: &[&str] = &[
     "AE",
     "AS",
@@ -236,8 +236,8 @@ pub const NO_VR: &str = "??";
 
 /// Parse a VR column and return its canonical text.
 ///
-/// Exact two-letter VRs and the four PS3.6 multi-VR forms are accepted, plus
-/// the one spelling `OB_OW` seen in scraped data. The two ways PS3.6 says "no
+/// Exact two-letter VRs and the four PS3.6 2024b multi-VR forms are accepted, plus
+/// the one spelling `OB_OW` seen in scraped data. The two ways PS3.6 2024b says "no
 /// VR" (an empty cell, or `See Note 2`) are accepted only when
 /// `allow_undeclared` is set and give [`NO_VR`].
 pub fn parse_vr(s: &str, allow_undeclared: bool) -> Result<&'static str, &'static str> {

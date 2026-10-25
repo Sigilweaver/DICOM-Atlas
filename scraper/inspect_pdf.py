@@ -36,7 +36,7 @@ APPENDIX_HINTS = (
     "private tag",
 )
 
-# Canonical VR codes (PS3.5 §6.2) - used to score table columns.
+# Canonical VR codes (PS3.5 2024b §6.2) - used to score table columns.
 VR_CODES = {
     "AE", "AS", "AT", "CS", "DA", "DS", "DT", "FL", "FD", "IS",
     "LO", "LT", "OB", "OD", "OF", "OL", "OV", "OW", "PN", "SH",

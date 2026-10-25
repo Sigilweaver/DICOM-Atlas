@@ -105,7 +105,7 @@ def normalize(raw: RawTag, vendor: str) -> NormalizedTag | None:
         return None
 
     # Odd groups hold private data elements, which are only meaningful under
-    # a private creator (PS3.5 7.8.1). A creator-less odd-group row would be
+    # a private creator (PS3.5 2024b 7.8.1). A creator-less odd-group row would be
     # compiled as a public entry, so it is skipped (and counted by callers).
     if is_private_group(group) and not creator:
         return None
