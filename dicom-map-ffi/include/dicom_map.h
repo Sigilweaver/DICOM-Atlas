@@ -59,7 +59,7 @@ int32_t dmap_len(const DmapHandle* h, size_t* out);
  *   1  on hit - *out is a new DmapTag; release with dmap_tag_free.
  *   0  on miss - *out is untouched.
  *  -1  on error (NULL args, bad UTF-8 in creator, a record with an embedded
- *      NUL in a string). dmap_last_error() describes it.
+ *      NUL in a string). dmap_last_error() describes it on this thread.
  *
  * `creator` may be NULL for public tags. For a private creator on an odd
  * group the element may be given as written in a file (0x1008) or as the
@@ -93,8 +93,10 @@ const char* dmap_tag_creator(const DmapTag* tag);     /* "" for public tags */
 const char* dmap_tag_description(const DmapTag* tag);
 const char* dmap_tag_sources(const DmapTag* tag);     /* '|'-delimited */
 
-/* Last lookup error for this handle, or NULL. Valid until the next error on
- * the same handle or dmap_close. */
+/* Last lookup error on the calling thread (like errno), or NULL. Set by every
+ * dmap_lookup call that returns -1, including NULL arguments. `h` is accepted
+ * for compatibility and may be NULL. The string is valid until the next error
+ * on the same thread. A handle may be used from several threads at once. */
 const char* dmap_last_error(const DmapHandle* h);
 
 /* Open errors. */

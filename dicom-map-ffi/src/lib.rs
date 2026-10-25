@@ -10,12 +10,15 @@
 //!     valid until the tag is freed, even after the handle is closed.
 //!   * `DmapErr` is allocated by `dmap_open_ex` on failure and released with
 //!     `dmap_err_free`.
-//!   * All functions are thread-safe for reads on a single handle.
+//!   * A handle may be used for lookups from several threads at once.
+//!   * `dmap_last_error` reports the last lookup error on the calling thread
+//!     (like `errno`), not per handle. Its string is valid until the next
+//!     error on the same thread.
 
+use std::cell::RefCell;
 use std::ffi::{c_char, CStr, CString};
 use std::path::PathBuf;
 use std::ptr;
-use std::sync::Mutex;
 
 use dicom_map::{DmapDict, DmapError, TagView};
 
@@ -48,7 +51,10 @@ pub struct DmapErr {
 
 struct Inner {
     dict: DmapDict,
-    last_err: Mutex<Option<CString>>,
+}
+
+thread_local! {
+    static LAST_ERR: RefCell<Option<CString>> = const { RefCell::new(None) };
 }
 
 struct TagOwned {
@@ -75,10 +81,8 @@ fn cstring(s: &str) -> CString {
     CString::new(s.replace('\0', "?")).unwrap_or_default()
 }
 
-fn set_err(inner: &Inner, msg: &str) {
-    if let Ok(mut g) = inner.last_err.lock() {
-        *g = Some(cstring(msg));
-    }
+fn set_err(msg: &str) {
+    LAST_ERR.with(|e| *e.borrow_mut() = Some(cstring(msg)));
 }
 
 fn classify(e: &DmapError) -> ErrOwned {
@@ -117,10 +121,7 @@ unsafe fn open_inner(path: *const c_char) -> Result<Box<Inner>, ErrOwned> {
         .to_str()
         .map_err(|_| invalid("path is not valid UTF-8"))?;
     let dict = DmapDict::open(PathBuf::from(s)).map_err(|e| classify(&e))?;
-    Ok(Box::new(Inner {
-        dict,
-        last_err: Mutex::new(None),
-    }))
+    Ok(Box::new(Inner { dict }))
 }
 
 /// Opens a `.dmap` file. Returns `DMAP_OK` and sets `*out`, or a `DMAP_ERR_*`
@@ -235,6 +236,7 @@ pub unsafe extern "C" fn dmap_lookup(
     out: *mut *mut DmapTag,
 ) -> i32 {
     if h.is_null() || out.is_null() {
+        set_err("dmap_lookup: NULL handle or output pointer");
         return -1;
     }
     let inner = &*(h as *const Inner);
@@ -244,7 +246,7 @@ pub unsafe extern "C" fn dmap_lookup(
         match CStr::from_ptr(creator).to_str() {
             Ok(s) => Some(s),
             Err(_) => {
-                set_err(inner, "creator is not valid UTF-8");
+                set_err("creator is not valid UTF-8");
                 return -1;
             }
         }
@@ -256,7 +258,7 @@ pub unsafe extern "C" fn dmap_lookup(
                 1
             }
             Err(m) => {
-                set_err(inner, m);
+                set_err(m);
                 -1
             }
         },
@@ -328,22 +330,16 @@ getter_str!(dmap_tag_creator, creator);
 getter_str!(dmap_tag_description, description);
 getter_str!(dmap_tag_sources, sources);
 
-/// Last lookup error for this handle, or NULL. Valid until the next error on
-/// the same handle or `dmap_close`.
+/// Last lookup error on the calling thread, or NULL. `h` is accepted for
+/// ABI compatibility and may be NULL. Valid until the next error on the same
+/// thread.
 ///
 /// # Safety
 ///
-/// `h` must be NULL or a live handle.
+/// `h` is not dereferenced.
 #[no_mangle]
-pub unsafe extern "C" fn dmap_last_error(h: *const DmapHandle) -> *const c_char {
-    if h.is_null() {
-        return ptr::null();
-    }
-    let inner = &*(h as *const Inner);
-    match inner.last_err.lock() {
-        Ok(g) => g.as_ref().map_or(ptr::null(), |c| c.as_ptr()),
-        Err(_) => ptr::null(),
-    }
+pub unsafe extern "C" fn dmap_last_error(_h: *const DmapHandle) -> *const c_char {
+    LAST_ERR.with(|e| e.borrow().as_ref().map_or(ptr::null(), |c| c.as_ptr()))
 }
 
 /// Status of an open error (a `DMAP_ERR_*` value). 0 for NULL.
@@ -564,6 +560,36 @@ mod tests {
         assert!(t.is_null());
         let msg = s(unsafe { dmap_last_error(h) });
         assert!(msg.contains("name") && msg.contains("NUL"), "{msg}");
+        unsafe { dmap_close(h) };
+    }
+
+    #[test]
+    fn null_arguments_set_the_last_error() {
+        let mut t = ptr::null_mut();
+        let (rc, h, _) = open("nullargs", &archive("n", "CS"));
+        assert_eq!(rc, DMAP_OK);
+        assert_eq!(
+            unsafe { dmap_lookup(ptr::null(), 8, 5, ptr::null(), &mut t) },
+            -1
+        );
+        assert!(s(unsafe { dmap_last_error(h) }).contains("NULL"));
+        // A different thread does not see this thread's error, and an error
+        // on another thread does not replace ours.
+        let before = s(unsafe { dmap_last_error(ptr::null()) });
+        std::thread::spawn(|| {
+            assert!(unsafe { dmap_last_error(ptr::null()) }.is_null());
+            assert_eq!(
+                unsafe { dmap_lookup(ptr::null(), 8, 5, ptr::null(), ptr::null_mut()) },
+                -1
+            );
+        })
+        .join()
+        .unwrap();
+        assert_eq!(s(unsafe { dmap_last_error(ptr::null()) }), before);
+        assert_eq!(
+            unsafe { dmap_lookup(h, 8, 5, ptr::null(), ptr::null_mut()) },
+            -1
+        );
         unsafe { dmap_close(h) };
     }
 }
