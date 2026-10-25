@@ -12,6 +12,13 @@ standards. Each is listed with its license and the role it plays here.
 - **URL:** https://www.dicomstandard.org/current
 - **Role:** Canonical source for all public tag definitions. The file
   `data/standard/attributes.json` is derived from the PS3.6 XML release.
+- **Edition:** DICOM 2024b. `data/standard/attributes.json` is byte-identical
+  (git blob 354444f3eb5d41ce197c559f5382d6780ff082b6) to `standard/attributes.json`
+  in https://github.com/innolitics/dicom-standard at commit 8670abdd, "Update
+  standard to rev2024b" (Apr 18, 2024). It was compared against that repository's
+  file history; the earlier commits 7008b61a (2024a) and dcdda5c6 hold
+  different content. The compiler records it in the archive as
+  `standard_edition=2024b`.
 - **License:** Open publication; see https://www.dicomstandard.org/about-dicom
 
 ### Vendor conformance statements
@@ -48,11 +55,6 @@ standards. Each is listed with its license and the role it plays here.
 ---
 
 ## Rust libraries
-
-### rkyv
-- **URL:** https://github.com/rkyv/rkyv
-- **License:** MIT
-- **Role:** Zero-copy serialization format for the `.dmap` binary archive.
 
 ### memmap2
 - **URL:** https://github.com/RazrFalcon/memmap2-rs

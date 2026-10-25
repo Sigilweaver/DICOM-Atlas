@@ -8,20 +8,50 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Breaking
 
-- `.dmap` format version 4; `tags.dmap` is regenerated. Version 1, 2 and 3
-  archives are rejected with `unsupported version` and must be regenerated
-  from source with the new compiler; see `dicom-map/FORMAT.md`. The next
-  release is 0.3.0.
-- `TagRecord` stores `vm_min` and `vm_max` as `u16` and gains `vm_step`;
-  `VrCode` gains `UsOrSs`, `ObOrOw`, `UsOrOw` and `UsOrSsOrOw`.
+- `.dmap` format 4.0 with a hand-laid layout: a section directory, a header
+  with `format_major` and `format_minor`, per-record flags, VR stored as ASCII
+  text, 16-bit VM bounds plus a step, and a metadata section. A reader accepts
+  its own major with any minor and rejects other majors. `tags.dmap` is
+  regenerated; formats 1 to 3 are rejected with `UnsupportedVersion` and must
+  be regenerated with `dmap-compile`. See `dicom-map/FORMAT.md`.
+- Creator canonicalization is ASCII-only (whitespace collapse and uppercase of
+  ASCII letters), so creator hashes of names with non-ASCII characters change.
+- Rust: rkyv is no longer a dependency and no longer appears in the API. The
+  `schema` module, `Dictionary`, `FileHeader`, `IndexEntry`, `TagRecord`,
+  `VrCode` and `fnv1a32` are removed from `dicom-map`. `TagView::vr()` returns
+  text; new accessors `vm()`, `flags()`; new `DmapDict::iter`, `nth`, `meta`,
+  `meta_iter`, `from_vec`, `open_with(&OpenOptions)`. Archives are written
+  with `DmapBuilder` behind the `write` feature.
+- Rust: `DmapError` is `#[non_exhaustive]`; `TooSmall` and `UnsupportedVersion`
+  carry named fields (`got_major`, `got_minor`, `supported_major`), and
+  `BadArchive` is `{ check: ArchiveCheck, detail }` with a
+  `#[non_exhaustive]` `ArchiveCheck`.
+- C: `DmapTag` is opaque and read through `dmap_tag_*` getters; `dmap_lookup`
+  takes `DmapTag**`; `dmap_len` returns a status and writes the count;
+  `DMAP_ABI_VERSION` is 2 and `DMAP_ABI_MINOR` is added. New
+  `dmap_open_ex` returns the failure cause (`DMAP_ERR_*`, message, version
+  numbers); `dmap_open` remains.
+- Python: all errors derive from `dicom_map.DmapError` (a `ValueError`):
+  `DmapIOError` (also an `OSError`), `DmapFormatError`,
+  `UnsupportedVersionError`, `BadArchiveError`. A corrupt file used to raise
+  `IOError`, and an unsupported version a bare `ValueError`.
+- Python: `patch_pydicom(dmap_path, *, mode)` reads the `.dmap` itself; the
+  `csv_path` argument and the sibling `tags.csv` lookup are removed.
+  `dicom_map.Dict` is iterable and `lookup` results gain `vm` and `flags`.
+- Python wheels are abi3 with a floor of Python 3.10 (3.8 and 3.9 are no
+  longer supported). Type stubs and `py.typed` ship. `pydicom` is an optional
+  extra, `dicom-map[pydicom]`.
 
 ### Behavior changes
 
+- `patch_pydicom` raises a `DmapError` (not a partial patch) when the file
+  cannot be opened or a private record has no usable VR or VM.
+- The edition of the PS3.6 data is recorded: DICOM 2024b (see `CREDITS`), and
+  stored in the archive as `standard_edition`.
 - `dmap-compile` rejects input it cannot parse with confidence, naming the
   file, row and column: malformed `(GGGG,EEEE)` tags, non-hex or wrong-length
   group and element values in `tags.csv`, retired flags other than `Y` or `N`,
-  missing or unrecognised VR and VM values, text over the stored field widths
-  or containing NUL, and missing JSON-L keys (no serde defaults).
+  missing or unrecognised VR and VM values, text containing NUL, and missing JSON-L keys (no serde defaults).
 - Odd-group (private) rows with no private creator are an error. They were
   compiled as public entries, so `lookup(0x0029, 0x10, None)` returned an
   arbitrary vendor's tag. 329 such rows are removed from
@@ -39,17 +69,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `1-n or 1` read as `1-n`.
 - VR spellings `US or SS`, `OB or OW`, `US or OW` and `US or SS or OW` are
   kept instead of becoming `??`; `??` now means the source declares no VR.
-- `DmapTag.vr` (C) is 16 bytes and `DMAP_ABI_VERSION` is 2, so multi-VR text
-  is never truncated; `dmap_lookup` returns -1 with `dmap_last_error` set
-  instead of returning NULL strings for text containing NUL.
-- `VrCode::from_str2` is removed; use `VrCode::parse`. `VrCode` and
-  `DmapError` are `#[non_exhaustive]`.
 
-- `DmapDict::open` and `from_static` verify the header (`body_len`, reserved
-  bytes zero) and the archive's invariants: sorted unique index, in-range
-  `record_idx`, in-range UTF-8 string ranges, index keys that match their
-  records, no creator-less odd-group records. Failures are
-  `DmapError::BadArchive`; unsorted or inconsistent archives were previously
+- `DmapDict::open` and `from_static` verify the header (`body_len`) and the
+  archive's invariants: sorted unique index, in-range `record_idx`, in-range
+  UTF-8 string ranges, index keys that match their records, no creator-less
+  odd-group records. Failures are `DmapError::BadArchive` with a typed check; unsorted or inconsistent archives were previously
   accepted and gave misses, empty strings or panics.
 - A lookup with a private creator confirms the creator string, not only its
   32-bit hash.
@@ -59,16 +83,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `dicom-lookup` accepts `0x` and `xx` prefixes and 1 to 4 hex digits and
   rejects anything else; `0x0028` was read as group 0002 and extra digits
   were dropped.
-- `patch_pydicom` raises `ValueError`, before touching pydicom, when a
-  `tags.csv` row disagrees with the given `.dmap` on VR or name, or has an
-  empty VR or VM (it used to install `UN` and `1`).
 - `scraper.normalize` accepts only an exact VR; prefix matches such as
   `USED`, `FLOAT` or `US or SS` become `UN` with `vr_inferred=True` instead of
   a wrong VR.
-
-### Added
-
-- `VrCode::parse`, which reports unrecognised VRs.
 
 ### Security
 
