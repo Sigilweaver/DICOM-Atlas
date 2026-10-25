@@ -17,6 +17,24 @@ entries automatically::
 from __future__ import annotations
 
 from ._dicom_map import Dict, __version__, open  # noqa: F401
+from .errors import (  # noqa: F401
+    BadArchiveError,
+    DmapError,
+    DmapFormatError,
+    DmapIOError,
+    UnsupportedVersionError,
+)
 from .pydicom_adapter import patch_pydicom, unpatch_pydicom  # noqa: F401
 
-__all__ = ["Dict", "open", "patch_pydicom", "unpatch_pydicom", "__version__"]
+__all__ = [
+    "BadArchiveError",
+    "Dict",
+    "DmapError",
+    "DmapFormatError",
+    "DmapIOError",
+    "UnsupportedVersionError",
+    "open",
+    "patch_pydicom",
+    "unpatch_pydicom",
+    "__version__",
+]

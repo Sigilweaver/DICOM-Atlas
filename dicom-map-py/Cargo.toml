@@ -18,5 +18,6 @@ crate-type = ["cdylib"]
 dicom-map = { path = "../dicom-map", version = "0.2.3" }
 pyo3 = { version = "0.30", features = [
     "extension-module",
+    "abi3-py310",
     "generate-import-lib",
 ] }

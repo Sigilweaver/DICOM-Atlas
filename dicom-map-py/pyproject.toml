@@ -6,15 +6,20 @@ build-backend = "maturin"
 name = "dicom-map"
 version = "0.2.8"
 description = "Memory-mapped O(log n) DICOM tag dictionary (private + public tags)"
-keywords = ["dicom", "medical-imaging", "tags", "registry", "rkyv"]
+keywords = ["dicom", "medical-imaging", "tags", "registry"]
 readme = "../README.md"
 license = { text = "Apache-2.0" }
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
 ]
+
+[project.optional-dependencies]
+pydicom = ["pydicom>=3,<4"]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
