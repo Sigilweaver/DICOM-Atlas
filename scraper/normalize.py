@@ -107,6 +107,12 @@ def normalize(raw: RawTag, vendor: str) -> NormalizedTag | None:
     if creator and not is_private_group(group):
         return None
 
+    # Odd groups hold private data elements, which are only meaningful under
+    # a private creator (PS3.5 7.8.1). A creator-less odd-group row would be
+    # compiled as a public entry, so it is skipped (and counted by callers).
+    if is_private_group(group) and not creator:
+        return None
+
     vr = _clean_vr(raw.vr)
     vr_inferred = False
     if vr is None:

@@ -41,6 +41,22 @@ pub struct DmapTag {
     pub description: *const c_char,
 }
 
+/// Returned record for `dmap_lookup_ex`: same as `DmapTag` but with room for
+/// the multi-VR forms (`US or SS`, `OB or OW`, `US or OW`, `US or SS or OW`)
+/// and `??` (source declares no VR).
+#[repr(C)]
+pub struct DmapTagEx {
+    pub group: u16,
+    pub element: u16,
+    pub block_offset: bool,
+    pub retired: bool,
+    pub vr: [c_char; 16],
+    pub keyword: *const c_char,
+    pub name: *const c_char,
+    pub creator: *const c_char,
+    pub description: *const c_char,
+}
+
 /// Internal wrapper that keeps both the dict and per-view CStrings alive.
 struct Inner {
     dict: DmapDict,
@@ -139,12 +155,12 @@ pub unsafe extern "C" fn dmap_len(h: *const DmapHandle) -> usize {
 }
 
 /// Look up a tag. Writes fields into `*out` and returns 1 on hit, 0 on miss,
-/// -1 on error (NULL args).
+/// -1 on error (NULL args, a creator that is not UTF-8, a VR that does not
+/// fit `DmapTag.vr`, or a record whose text contains a NUL byte;
+/// `dmap_last_error` says which). Use `dmap_lookup_ex` for records whose VR
+/// is a multi-VR form such as `OB or OW`.
 ///
 /// `creator` may be NULL for public tags.
-///
-/// String pointers in `*out` borrow into the mmap'd file and are valid
-/// until `dmap_close(h)`.
 ///
 /// # Safety
 ///
@@ -160,6 +176,66 @@ pub unsafe extern "C" fn dmap_lookup(
     element: u16,
     creator: *const c_char,
     out: *mut DmapTag,
+) -> i32 {
+    let mut ex = DmapTagEx {
+        group: 0,
+        element: 0,
+        block_offset: false,
+        retired: false,
+        vr: [0; 16],
+        keyword: ptr::null(),
+        name: ptr::null(),
+        creator: ptr::null(),
+        description: ptr::null(),
+    };
+    if out.is_null() {
+        return -1;
+    }
+    let rc = dmap_lookup_ex(h, group, element, creator, &mut ex);
+    if rc != 1 {
+        return rc;
+    }
+    let mut vr = [0 as c_char; 4];
+    // 2 characters + NUL; anything longer would be truncated, so refuse.
+    if ex.vr[3] != 0 || ex.vr[2] != 0 {
+        let inner = &*(h as *const Inner);
+        set_err(
+            inner,
+            "VR does not fit DmapTag.vr (3 bytes); use dmap_lookup_ex",
+        );
+        let mut tmp = ex;
+        dmap_free_tag_ex(&mut tmp);
+        return -1;
+    }
+    vr[..3].copy_from_slice(&ex.vr[..3]);
+    *out = DmapTag {
+        group: ex.group,
+        element: ex.element,
+        block_offset: ex.block_offset,
+        retired: ex.retired,
+        vr,
+        keyword: ex.keyword,
+        name: ex.name,
+        creator: ex.creator,
+        description: ex.description,
+    };
+    1
+}
+
+/// Like `dmap_lookup` but fills a `DmapTagEx` whose `vr` holds any VR text.
+/// Release with `dmap_free_tag_ex`.
+///
+/// # Safety
+///
+/// Same requirements as `dmap_lookup`; `out` must point to a writable
+/// `DmapTagEx`.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_lookup_ex(
+    h: *const DmapHandle,
+    group: u16,
+    element: u16,
+    creator: *const c_char,
+    out: *mut DmapTagEx,
 ) -> i32 {
     if h.is_null() || out.is_null() {
         return -1;
@@ -179,45 +255,81 @@ pub unsafe extern "C" fn dmap_lookup(
 
     match inner.dict.lookup(group, element, creator_str) {
         Some(v) => {
-            // Strings in the dmap file are NOT NUL-terminated; we must copy
-            // them into a small buffer owned by the caller. Our contract says
-            // pointers borrow into the file, so instead we produce leaked
-            // CStrings attached to Inner's last-lookup buffer - but that
-            // breaks thread-safety. Simplest safe answer: return copies and
-            // document that `dmap_free_tag_strings` releases them.
-            //
-            // Since rkyv strings are already UTF-8 and we need NUL termination
-            // for C, we do a per-field copy. Callers call `dmap_free_tag`
-            // to release.
-            let mk = |s: &str| -> *const c_char {
-                match CString::new(s) {
-                    Ok(c) => c.into_raw() as *const c_char,
-                    Err(_) => ptr::null(),
-                }
-            };
-
-            let tag = DmapTag {
+            let mut tag = DmapTagEx {
                 group: v.group(),
                 element: v.element(),
                 block_offset: v.is_block_offset(),
                 retired: v.retired(),
-                vr: {
-                    let mut b = [0 as c_char; 4];
-                    let s = v.vr().as_bytes();
-                    for (i, &c) in s.iter().take(3).enumerate() {
-                        b[i] = c as c_char;
-                    }
-                    b
-                },
-                keyword: mk(v.keyword()),
-                name: mk(v.name()),
-                creator: mk(v.creator()),
-                description: mk(v.description()),
+                vr: [0 as c_char; 16],
+                keyword: ptr::null(),
+                name: ptr::null(),
+                creator: ptr::null(),
+                description: ptr::null(),
             };
+            let vr = v.vr().as_bytes();
+            if vr.len() >= tag.vr.len() {
+                set_err(inner, "VR text does not fit in DmapTagEx.vr");
+                return -1;
+            }
+            for (i, &c) in vr.iter().enumerate() {
+                tag.vr[i] = c as c_char;
+            }
+            // A string with an interior NUL cannot be handed to C intact.
+            // Report it; never return NULL where the header promises a string.
+            let fields = [
+                ("keyword", v.keyword()),
+                ("name", v.name()),
+                ("creator", v.creator()),
+                ("description", v.description()),
+            ];
+            let mut ptrs = [ptr::null::<c_char>(); 4];
+            for (i, (field, text)) in fields.iter().enumerate() {
+                match CString::new(*text) {
+                    Ok(c) => ptrs[i] = c.into_raw() as *const c_char,
+                    Err(_) => {
+                        set_err(inner, &format!("{field} contains a NUL byte"));
+                        for p in ptrs.iter().filter(|p| !p.is_null()) {
+                            // SAFETY: produced by CString::into_raw above.
+                            drop(CString::from_raw(*p as *mut c_char));
+                        }
+                        return -1;
+                    }
+                }
+            }
+            tag.keyword = ptrs[0];
+            tag.name = ptrs[1];
+            tag.creator = ptrs[2];
+            tag.description = ptrs[3];
             *out = tag;
             1
         }
         None => 0,
+    }
+}
+
+/// Release strings populated by `dmap_lookup_ex`. Safe on zeroed fields.
+///
+/// # Safety
+///
+/// `tag` must be null or point to a `DmapTagEx` filled by `dmap_lookup_ex`
+/// and not yet freed.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_free_tag_ex(tag: *mut DmapTagEx) {
+    if tag.is_null() {
+        return;
+    }
+    let t = &mut *tag;
+    for p in [
+        &mut t.keyword,
+        &mut t.name,
+        &mut t.creator,
+        &mut t.description,
+    ] {
+        if !p.is_null() {
+            // SAFETY: produced by CString::into_raw in dmap_lookup_ex.
+            let _ = CString::from_raw(*p as *mut c_char);
+            *p = ptr::null();
+        }
     }
 }
 
@@ -270,4 +382,129 @@ pub unsafe extern "C" fn dmap_last_error(h: *const DmapHandle) -> *const c_char 
 #[no_mangle]
 pub extern "C" fn dmap_abi_version() -> u32 {
     1
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use dicom_map::schema::{Dictionary, FileHeader, IndexEntry, TagRecord, VrCode};
+
+    /// Hand-built archive with one public record whose name is `name`.
+    fn archive_with_name(name: &str, vr: VrCode) -> Vec<u8> {
+        let name_bytes = name.as_bytes();
+        let dict = Dictionary {
+            index: vec![IndexEntry {
+                group: 0x0008,
+                element: 0x0005,
+                creator_hash: 0,
+                record_idx: 0,
+            }],
+            records: vec![TagRecord {
+                group: 0x0008,
+                element: 0x0005,
+                element_is_block_offset: false,
+                retired: false,
+                vr,
+                vm_min: 1,
+                vm_max: 1,
+                vm_step: 1,
+                keyword_off: 0,
+                keyword_len: 0,
+                name_off: 0,
+                name_len: name_bytes.len() as u16,
+                creator_off: 0,
+                creator_len: 0,
+                description_off: 0,
+                description_len: 0,
+                sources_off: 0,
+                sources_len: 0,
+            }],
+            strings: name_bytes.to_vec(),
+        };
+        let body = rkyv::to_bytes::<rkyv::rancor::Error>(&dict).unwrap();
+        let mut out = FileHeader::new(body.len() as u64).to_bytes().to_vec();
+        out.extend_from_slice(&body);
+        out
+    }
+
+    fn open(tag: &str, bytes: &[u8]) -> *mut DmapHandle {
+        let path = std::env::temp_dir().join(format!("dmap-ffi-{}-{tag}.dmap", std::process::id()));
+        std::fs::write(&path, bytes).unwrap();
+        let c = CString::new(path.to_str().unwrap()).unwrap();
+        let h = unsafe { dmap_open(c.as_ptr()) };
+        let _ = std::fs::remove_file(&path);
+        h
+    }
+
+    fn blank() -> DmapTagEx {
+        DmapTagEx {
+            group: 0,
+            element: 0,
+            block_offset: false,
+            retired: false,
+            vr: [0; 16],
+            keyword: ptr::null(),
+            name: ptr::null(),
+            creator: ptr::null(),
+            description: ptr::null(),
+        }
+    }
+
+    #[test]
+    fn interior_nul_is_reported_not_returned_as_null() {
+        let h = open("nul", &archive_with_name("a\0b", VrCode::CS));
+        assert!(!h.is_null());
+        let mut t = blank();
+        let rc = unsafe { dmap_lookup_ex(h, 0x0008, 0x0005, ptr::null(), &mut t) };
+        assert_eq!(rc, -1);
+        let msg = unsafe { CStr::from_ptr(dmap_last_error(h)) }
+            .to_str()
+            .unwrap();
+        assert!(msg.contains("name") && msg.contains("NUL"), "{msg}");
+        assert!(t.name.is_null(), "no partial output");
+        unsafe { dmap_close(h) };
+    }
+
+    #[test]
+    fn multi_vr_text_is_not_truncated() {
+        for (vr, text) in [
+            (VrCode::UsOrSs, "US or SS"),
+            (VrCode::ObOrOw, "OB or OW"),
+            (VrCode::UsOrSsOrOw, "US or SS or OW"),
+            (VrCode::Unknown, "??"),
+        ] {
+            let h = open("vr", &archive_with_name("ok", vr));
+            let mut t = blank();
+            let rc = unsafe { dmap_lookup_ex(h, 0x0008, 0x0005, ptr::null(), &mut t) };
+            assert_eq!(rc, 1);
+            let got = unsafe { CStr::from_ptr(t.vr.as_ptr()) }.to_str().unwrap();
+            assert_eq!(got, text);
+            unsafe { dmap_free_tag_ex(&mut t) };
+            // The 4-byte struct refuses VR text it cannot hold.
+            let mut old = DmapTag {
+                group: 0,
+                element: 0,
+                block_offset: false,
+                retired: false,
+                vr: [0; 4],
+                keyword: ptr::null(),
+                name: ptr::null(),
+                creator: ptr::null(),
+                description: ptr::null(),
+            };
+            let rc = unsafe { dmap_lookup(h, 0x0008, 0x0005, ptr::null(), &mut old) };
+            if text.len() > 2 {
+                assert_eq!(rc, -1);
+                assert!(old.name.is_null());
+                let msg = unsafe { CStr::from_ptr(dmap_last_error(h)) }
+                    .to_str()
+                    .unwrap();
+                assert!(msg.contains("dmap_lookup_ex"), "{msg}");
+            } else {
+                assert_eq!(rc, 1);
+                unsafe { dmap_free_tag(&mut old) };
+            }
+            unsafe { dmap_close(h) };
+        }
+    }
 }

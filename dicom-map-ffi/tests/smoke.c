@@ -30,6 +30,16 @@ int main(void) {
     dmap_free_tag(&t);
 
     memset(&t, 0, sizeof(t));
+    rc = dmap_lookup(h, 0x7FE0, 0x0010, NULL, &t);
+    CHECK(rc == -1, "multi-VR does not fit DmapTag.vr and is refused");
+    DmapTagEx x;
+    memset(&x, 0, sizeof(x));
+    rc = dmap_lookup_ex(h, 0x7FE0, 0x0010, NULL, &x);
+    CHECK(rc == 1, "pixel data rc");
+    CHECK(strcmp(x.vr, "OB or OW") == 0, "multi-VR is not truncated");
+    dmap_free_tag_ex(&x);
+
+    memset(&t, 0, sizeof(t));
     rc = dmap_lookup(h, 0xFFFF, 0xFFFE, NULL, &t);
     CHECK(rc == 0, "miss rc");
 
