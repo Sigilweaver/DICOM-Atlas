@@ -21,7 +21,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `VrCode` and `fnv1a32` are removed from `dicom-map`. `TagView::vr()` returns
   text; new accessors `vm()`, `flags()`; new `DmapDict::iter`, `nth`, `meta`,
   `meta_iter`, `from_vec`, `open_with(&OpenOptions)`. Archives are written
-  with `DmapBuilder` behind the `write` feature.
+  with `DmapBuilder` behind the `write` feature. `DmapBuilder::finish` refuses an
+  odd-group record whose element is above 0xFF (private elements are stored as
+  block offsets).
 - Rust: `DmapError` is `#[non_exhaustive]`; `TooSmall` and `UnsupportedVersion`
   carry named fields (`got_major`, `got_minor`, `supported_major`), and
   `BadArchive` is `{ check: ArchiveCheck, detail }` with a
@@ -30,7 +32,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   takes `DmapTag**`; `dmap_len` returns a status and writes the count;
   `DMAP_ABI_VERSION` is 2 and `DMAP_ABI_MINOR` is added. New
   `dmap_open_ex` returns the failure cause (`DMAP_ERR_*`, message, version
-  numbers); `dmap_open` remains.
+  numbers); `dmap_open` remains. `dmap_last_error` reports the
+  last lookup error of the calling thread (also for NULL arguments); its
+  handle argument is ignored and may be NULL.
 - Python: all errors derive from `dicom_map.DmapError` (a `ValueError`):
   `DmapIOError` (also an `OSError`), `DmapFormatError`,
   `UnsupportedVersionError`, `BadArchiveError`. A corrupt file used to raise
