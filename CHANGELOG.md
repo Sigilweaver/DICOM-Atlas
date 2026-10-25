@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-### Breaking
+### API breaks
 
 - `.dmap` format 4.0 with a hand-laid layout: a section directory, a header
   with `format_major` and `format_minor`, per-record flags, VR stored as ASCII

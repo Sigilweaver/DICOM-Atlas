@@ -8,13 +8,16 @@
 //! - DICOM PS3.6 2024b (Data Dictionary), Section 6 "Registry of DICOM Data
 //!   Elements", Table 6-1: tags are written `(GGGG,EEEE)`, and a repeating
 //!   group or element is written with `x` (or `X`) in the varying hex
-//!   nibbles, e.g. `(60xx,0010)`.
+//!   nibbles, e.g. `(60xx,0010)`. The same table lists the retired
+//!   `(50xx,....)`, `(7Fxx,....)` and `(1000,xxx.)` patterns and the VM
+//!   column forms `k`, `k-m`, `k-n` and `k-kn` (for example `2-2n`).
 //! - DICOM PS3.5 2024b (Data Structures and Encoding), Section 7.6 "Repeating
-//!   Groups": the `50xx`, `60xx` and `7Fxx` groups repeat.
+//!   Groups": the `60xx` overlay groups (6000-601E) repeat; the `50xx` curve
+//!   groups are retired.
 //! - DICOM PS3.5 2024b, Section 7.8.1 "Private Data Element Tags": private data
 //!   elements live in odd groups and are addressed through a private creator.
 //! - DICOM PS3.5 2024b, Section 6.4 "Value Multiplicity (VM) and Delimitation":
-//!   VM is written `k`, `k-m`, `k-n` or `k-kn`.
+//!   a VM written as two numbers separated by a dash is a range (`1-10`).
 
 use dicom_map::{Vm, VM_UNBOUNDED};
 
