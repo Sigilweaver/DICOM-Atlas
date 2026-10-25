@@ -11,10 +11,10 @@ to stay compatible.
 | FileHeader (32 bytes, little-endian)         |
 |   magic:        b"DMAP"                      |
 |   version:      u16  (currently 4)           |
-|   _reserved:    [u8; 2]                      |
+|   _reserved:    [u8; 2]  (must be 0)         |
 |   body_len:     u64                          |
-|   body_sha256_lo: u64  (integrity hint)      |
-|   _pad:         [u8; 8]                      |
+|   body_sha256_lo: u64  (reserved, must be 0) |
+|   _pad:         [u8; 8]  (must be 0)         |
 +----------------------------------------------+
 | rkyv-archived Dictionary                     |
 |   .index   : Vec<IndexEntry>  (sorted)       |
@@ -40,8 +40,6 @@ Changes that do NOT change the bit-level layout of `FileHeader`,
 Safe to do at any time:
 - Adding new tag entries (public or private).
 - Correcting existing entries (name, VR, description, keyword).
-- Changing the sort order of `.index` (readers don't rely on it - binary
-  search is performed on the key, not the physical order).
 - Changing the `.strings` encoding in an additive way that remains valid
   UTF-8 at the existing offsets (e.g. appending new strings).
 
@@ -71,10 +69,23 @@ Readers MUST:
 
 - Validate `magic == b"DMAP"`.
 - Validate `version == VERSION` (currently `4`).
+- Validate `body_len` equals the number of bytes after the header, and that
+  `_reserved`, `body_sha256_lo` and `_pad` are zero.
+- Validate the archive and its invariants before the first lookup:
+  - `.index` is strictly sorted by `(group, element, creator_hash)` with no
+    duplicate keys (lookup is a binary search on that order).
+  - Every `record_idx` is below `records.len()`.
+  - Every `(off, len)` string range lies inside `.strings` and is UTF-8.
+  - Each record's `(group, element)` and the hash of its stored creator equal
+    its index key (a creator hash of 0 means no creator).
+  - No odd-group record lacks a creator.
+- On a lookup hit with a creator, compare the canonicalised query with the
+  record's stored creator; the 32-bit hash alone does not identify a creator.
 - Fail loudly (don't silently continue) if either check fails.
 
-The provided `DmapDict::open` and `DmapDict::from_static` functions already
-enforce this and return `DmapError::UnsupportedVersion { got }` on mismatch.
+The provided `DmapDict::open` and `DmapDict::from_static` functions enforce
+this. They return `DmapError::UnsupportedVersion { got }` on a version
+mismatch and `DmapError::BadArchive` with the failed check otherwise.
 
 ## History
 

@@ -45,6 +45,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `VrCode::from_str2` is removed; use `VrCode::parse`. `VrCode` and
   `DmapError` are `#[non_exhaustive]`.
 
+- `DmapDict::open` and `from_static` verify the header (`body_len`, reserved
+  bytes zero) and the archive's invariants: sorted unique index, in-range
+  `record_idx`, in-range UTF-8 string ranges, index keys that match their
+  records, no creator-less odd-group records. Failures are
+  `DmapError::BadArchive`; unsorted or inconsistent archives were previously
+  accepted and gave misses, empty strings or panics.
+- A lookup with a private creator confirms the creator string, not only its
+  32-bit hash.
+- A lookup with a private creator and an odd group reduces the element to its
+  block offset, so `lookup(0x0029, 0x1008, Some(creator))` finds the tag that
+  `0x08` finds; it was a miss. `dicom-lookup` documents this.
+- `dicom-lookup` accepts `0x` and `xx` prefixes and 1 to 4 hex digits and
+  rejects anything else; `0x0028` was read as group 0002 and extra digits
+  were dropped.
+
 ### Added
 
 - `VrCode::parse`, which reports unrecognised VRs.

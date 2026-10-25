@@ -39,23 +39,37 @@ struct Args {
     /// 4-hex-digit group, e.g. `0021`.
     group: String,
 
-    /// 4-hex-digit element, e.g. `0008` or `xx08` (`xx` is stripped; only the low byte is used).
+    /// Element, e.g. `0008` or `xx08`. For a private creator the high byte is
+    /// the block and is ignored: `1008` and `xx08` both mean offset 0x08.
     element: String,
 
     /// Private creator string. Omit for public tags.
     creator: Option<String>,
 }
 
-fn parse_hex4(label: &str, s: &str) -> Result<u16> {
-    let clean: String = s
-        .chars()
-        .filter(|c| c.is_ascii_hexdigit())
-        .take(4)
-        .collect();
-    if clean.is_empty() {
-        return Err(anyhow!("{label} `{s}` contains no hex digits"));
+/// Parse a group or element argument: an optional `0x` prefix, an optional
+/// `xx` prefix (`allow_xx`, elements only), then 1 to 4 hex digits and nothing
+/// else.
+fn parse_hex4(label: &str, s: &str, allow_xx: bool) -> Result<u16> {
+    let mut rest = s;
+    if let Some(r) = rest.strip_prefix("0x").or_else(|| rest.strip_prefix("0X")) {
+        rest = r;
+    } else if allow_xx {
+        if let Some(r) = rest.strip_prefix("xx").or_else(|| rest.strip_prefix("XX")) {
+            rest = r;
+        }
     }
-    u16::from_str_radix(&clean, 16).with_context(|| format!("parsing {label} `{s}`"))
+    if rest.is_empty() || rest.len() > 4 || !rest.bytes().all(|b| b.is_ascii_hexdigit()) {
+        return Err(anyhow!(
+            "{label} `{s}` is not 1 to 4 hex digits{}",
+            if allow_xx {
+                " (optionally after `0x` or `xx`)"
+            } else {
+                " (optionally after `0x`)"
+            }
+        ));
+    }
+    u16::from_str_radix(rest, 16).with_context(|| format!("parsing {label} `{s}`"))
 }
 
 fn resolve_dmap_path(explicit: Option<PathBuf>) -> PathBuf {
@@ -160,14 +174,14 @@ fn load_dict(explicit: Option<PathBuf>) -> DmapDict {
 fn main() -> ExitCode {
     let args = Args::parse();
 
-    let group = match parse_hex4("group", &args.group) {
+    let group = match parse_hex4("group", &args.group, false) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("error: {e}");
             return ExitCode::from(2);
         }
     };
-    let element = match parse_hex4("element", &args.element) {
+    let element = match parse_hex4("element", &args.element, true) {
         Ok(v) => v,
         Err(e) => {
             eprintln!("error: {e}");
@@ -199,6 +213,41 @@ fn main() -> ExitCode {
                 );
             }
             ExitCode::from(3)
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_hex4;
+
+    #[test]
+    fn accepts_plain_prefixed_and_short_forms() {
+        assert_eq!(parse_hex4("g", "0028", false).unwrap(), 0x28);
+        assert_eq!(parse_hex4("g", "0x0028", false).unwrap(), 0x28);
+        assert_eq!(parse_hex4("g", "28", false).unwrap(), 0x28);
+        assert_eq!(parse_hex4("e", "xx08", true).unwrap(), 0x08);
+        assert_eq!(parse_hex4("e", "XX08", true).unwrap(), 0x08);
+        assert_eq!(parse_hex4("e", "0x1008", true).unwrap(), 0x1008);
+    }
+
+    #[test]
+    fn rejects_anything_else_instead_of_reinterpreting_it() {
+        for (s, xx) in [
+            ("", false),
+            ("0x", false),
+            ("00280010", false),
+            ("(0029,1010)", false),
+            ("10xx", true),
+            ("xx", true),
+            ("xx0x08", true),
+            ("xx08", false),
+            ("0028 ", false),
+            ("+28", false),
+            ("12345", false),
+            ("0xx08", true),
+        ] {
+            assert!(parse_hex4("x", s, xx).is_err(), "{s:?}");
         }
     }
 }
