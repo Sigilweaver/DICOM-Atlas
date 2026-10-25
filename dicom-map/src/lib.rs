@@ -7,5 +7,5 @@ pub mod embedded;
 pub use lookup::{DmapDict, DmapError, TagView};
 pub use schema::{
     canonicalize_creator, creator_hash, fnv1a32, Dictionary, FileHeader, IndexEntry, TagRecord,
-    VrCode, MAGIC, VERSION,
+    VrCode, MAGIC, VERSION, VM_UNBOUNDED,
 };

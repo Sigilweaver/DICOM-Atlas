@@ -20,8 +20,13 @@
 use rkyv::{Archive, Deserialize, Serialize};
 
 pub const MAGIC: &[u8; 4] = b"DMAP";
-// Version 3 uses rkyv 0.8; version 2 archives must be regenerated.
-pub const VERSION: u16 = 3;
+// Version 4: rkyv 0.8 layout, 16-bit VM bounds plus a VM step, and the
+// multi-VR codes ("US or SS", "OB or OW", ...) in `VrCode`. Older archives
+// must be regenerated.
+pub const VERSION: u16 = 4;
+
+/// `vm_max` value meaning "unbounded" (`n`).
+pub const VM_UNBOUNDED: u16 = 0xFFFF;
 
 /// 32-byte file prefix. Kept outside rkyv so we can sanity-check before
 /// attempting to deserialize the body.
@@ -99,8 +104,14 @@ pub struct TagRecord {
     pub element_is_block_offset: bool,
     pub retired: bool,
     pub vr: VrCode,
-    pub vm_min: u8,
-    pub vm_max: u8, // 0xFF == 'n' (unbounded)
+    /// Lower bound of the value multiplicity. `0` together with `vm_max == 0`
+    /// means the standard declares no VM for this (retired) tag.
+    pub vm_min: u16,
+    /// Upper bound of the value multiplicity, or [`VM_UNBOUNDED`] for `n`.
+    pub vm_max: u16,
+    /// Step for multiplicities written `k-kn` (VM is a multiple of `k`);
+    /// `1` for every other form.
+    pub vm_step: u16,
     pub keyword_off: u32,
     pub keyword_len: u16,
     pub name_off: u32,
@@ -154,13 +165,35 @@ pub enum VrCode {
     US,
     UT,
     UV,
-    /// For rows where the VR couldn't be determined.
+    /// PS3.6 "US or SS".
+    UsOrSs,
+    /// PS3.6 "OB or OW".
+    ObOrOw,
+    /// PS3.6 "US or OW".
+    UsOrOw,
+    /// PS3.6 "US or SS or OW".
+    UsOrSsOrOw,
+    /// The source declares no VR for this tag (PS3.6 leaves the VR column
+    /// empty or says "See Note 2" for a few retired tags and the Item,
+    /// Item Delimitation and Sequence Delimitation tags).
     Unknown = 0xFF,
 }
 
 impl VrCode {
+    /// Lossy parse kept for compatibility: anything that [`VrCode::parse`]
+    /// rejects becomes [`VrCode::Unknown`].
+    #[deprecated(note = "use VrCode::parse, which reports unrecognised VRs")]
     pub fn from_str2(s: &str) -> Self {
-        match s {
+        Self::parse(s).unwrap_or(Self::Unknown)
+    }
+
+    /// Parse an exact VR spelling. Returns `None` for anything that is not one
+    /// of the 34 two-letter VRs or one of the four PS3.6 multi-VR forms
+    /// (`"US or SS"`, `"OB or OW"`, `"US or OW"`, `"US or SS or OW"`). Case
+    /// and surrounding whitespace are significant. [`VrCode::Unknown`] is never
+    /// produced here; callers that accept a missing VR must say so.
+    pub fn parse(s: &str) -> Option<Self> {
+        Some(match s {
             "AE" => Self::AE,
             "AS" => Self::AS,
             "AT" => Self::AT,
@@ -195,8 +228,12 @@ impl VrCode {
             "US" => Self::US,
             "UT" => Self::UT,
             "UV" => Self::UV,
-            _ => Self::Unknown,
-        }
+            "US or SS" => Self::UsOrSs,
+            "OB or OW" => Self::ObOrOw,
+            "US or OW" => Self::UsOrOw,
+            "US or SS or OW" => Self::UsOrSsOrOw,
+            _ => return None,
+        })
     }
 
     pub fn as_str(&self) -> &'static str {
@@ -235,6 +272,10 @@ impl VrCode {
             Self::US => "US",
             Self::UT => "UT",
             Self::UV => "UV",
+            Self::UsOrSs => "US or SS",
+            Self::ObOrOw => "OB or OW",
+            Self::UsOrOw => "US or OW",
+            Self::UsOrSsOrOw => "US or SS or OW",
             Self::Unknown => "??",
         }
     }

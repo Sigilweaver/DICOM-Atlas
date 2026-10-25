@@ -248,6 +248,10 @@ fn archived_vr_as_str(v: &ArchivedVrCode) -> &'static str {
         ArchivedVrCode::US => "US",
         ArchivedVrCode::UT => "UT",
         ArchivedVrCode::UV => "UV",
+        ArchivedVrCode::UsOrSs => "US or SS",
+        ArchivedVrCode::ObOrOw => "OB or OW",
+        ArchivedVrCode::UsOrOw => "US or OW",
+        ArchivedVrCode::UsOrSsOrOw => "US or SS or OW",
         ArchivedVrCode::Unknown => "??",
     }
 }
