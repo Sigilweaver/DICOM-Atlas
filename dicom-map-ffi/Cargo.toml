@@ -21,4 +21,4 @@ crate-type = ["cdylib", "staticlib"]
 dicom-map = { path = "../dicom-map", version = "0.2.3" }
 
 [dev-dependencies]
-rkyv = { workspace = true }
+dicom-map = { path = "../dicom-map", version = "0.2.3", features = ["write"] }
