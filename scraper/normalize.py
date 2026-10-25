@@ -9,7 +9,6 @@ from scraper.models import VR_CODES, NormalizedTag, RawTag, is_private_group
 
 # Accept hex digits OR 'x'/'X' placeholders used by vendors.
 _TAG_RE = re.compile(r"^\(\s*([0-9A-Fa-f]{4})\s*,\s*([0-9A-Fa-fxX]{4})\s*\)$")
-_VR_RE = re.compile(r"[A-Z]{2}")
 _NAME_TO_KEYWORD = re.compile(r"[^A-Za-z0-9]+")
 
 # Trailing column-status suffixes produced by table extraction when the
@@ -88,10 +87,8 @@ def _clean_vr(vr: str | None) -> str | None:
     vr = vr.strip().upper()
     if vr in VR_CODES:
         return vr
-    # Occasionally two VRs separated by ' or ' - take the first.
-    m = _VR_RE.match(vr)
-    if m and m.group(0) in VR_CODES:
-        return m.group(0)
+    # Anything else ("USED", "FLOAT", "US or SS", ...) is not a VR we can
+    # confirm; the caller marks the row vr_inferred instead of guessing.
     return None
 
 

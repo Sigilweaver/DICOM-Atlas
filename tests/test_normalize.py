@@ -119,3 +119,22 @@ def test_siemens_fixture_harvest_end_to_end():
         "OD","OF","OL","OV","OW","PN","SH","SL","SQ","SS","ST","SV","TM",
         "UC","UI","UL","UN","UR","US","UT","UV",
     }
+
+
+def test_vr_must_be_exact_not_a_prefix():
+    for vr in ("USED", "FLOAT", "SLICE 3", "UNKNOWN", "US or SS", "US/SS"):
+        raw = RawTag(
+            source_pdf="x.pdf",
+            source_page=1,
+            tag_str="(0019,xx0C)",
+            private_creator="ACME DEVICE",
+            name="Foo",
+            vr=vr,
+        )
+        n = normalize(raw, vendor="siemens")
+        assert n is not None
+        assert (n.vr, n.vr_inferred) == ("UN", True), vr
+    raw = RawTag(source_pdf="x.pdf", source_page=1, tag_str="(0019,xx0C)",
+                 private_creator="ACME DEVICE", name="Foo", vr=" us ")
+    n = normalize(raw, vendor="siemens")
+    assert (n.vr, n.vr_inferred) == ("US", False)
