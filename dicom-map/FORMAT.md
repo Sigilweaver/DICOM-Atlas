@@ -10,7 +10,7 @@ to stay compatible.
 +----------------------------------------------+
 | FileHeader (32 bytes, little-endian)         |
 |   magic:        b"DMAP"                      |
-|   version:      u16  (currently 3)           |
+|   version:      u16  (currently 4)           |
 |   _reserved:    [u8; 2]                      |
 |   body_len:     u64                          |
 |   body_sha256_lo: u64  (integrity hint)      |
@@ -29,7 +29,7 @@ All integer fields in the header are little-endian. The body is produced by
 ## Version field
 
 `FileHeader::version` is the single source of truth. The current value is
-**`VERSION = 3`** (`dicom_map::schema::VERSION`).
+**`VERSION = 4`** (`dicom_map::schema::VERSION`).
 
 ## Compatibility contract
 
@@ -70,7 +70,7 @@ When `VERSION` bumps:
 Readers MUST:
 
 - Validate `magic == b"DMAP"`.
-- Validate `version == VERSION` (currently `3`).
+- Validate `version == VERSION` (currently `4`).
 - Fail loudly (don't silently continue) if either check fails.
 
 The provided `DmapDict::open` and `DmapDict::from_static` functions already
@@ -82,13 +82,14 @@ enforce this and return `DmapError::UnsupportedVersion { got }` on mismatch.
 |---------|------------|-------------------------------------------------------------|
 | 1       | 2026-04    | Initial format. 32-byte header, rkyv-archived Dictionary.   |
 | 2       | 2026-04    | Added `sources_off: u32` and `sources_len: u32` to `TagRecord`. Stores pipe-delimited source PDF filenames (with `#pN` page anchors) in the shared string pool. Empty for public PS3.6 tags. |
-| 3       | 2026-10    | rkyv 0.8 archive layout, little-endian, aligned primitives, 32-bit pointers. Requires regeneration of version 1 and 2 files. |
+| 3       | 2026-10    | rkyv 0.8 archive layout, little-endian, aligned primitives, 32-bit pointers. Requires regeneration of version 1 and 2 files. Never released. |
+| 4       | 2026-10    | `TagRecord.vm_min` and `vm_max` widen to `u16` (`0xFFFF` is `n`) and `vm_step: u16` is added; `VrCode` gains `UsOrSs`, `ObOrOw`, `UsOrOw`, `UsOrSsOrOw`. Version 3 was never released, so 0.3.0 ships version 4. |
 
-## Version 3 migration
+## Migration to version 3 and later
 
 The checked-in `tags.dmap` and external `.dmap` files are persisted data.
-Version 3 readers reject version 1 and 2 files before archive validation;
-older readers reject version 3. There is no backward-compatible reader.
+Current readers reject version 1, 2 and 3 files before archive validation;
+older readers reject newer files. There is no backward-compatible reader.
 Do not change only the header of an old archive: the body layout differs.
 
 Regenerate from the original inputs with the new compiler, for example:

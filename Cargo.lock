@@ -163,6 +163,7 @@ name = "dicom-map-ffi"
 version = "0.2.8"
 dependencies = [
  "dicom-map",
+ "rkyv",
 ]
 
 [[package]]

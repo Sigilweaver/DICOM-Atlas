@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from scraper.models import NormalizedTag, RawTag, parse_tag
-from scraper.normalize import normalize, _to_keyword  # noqa: PLC2701
+from scraper.normalize import normalize, normalize_all, _to_keyword  # noqa: PLC2701
 
 
 def test_parse_tag_variants():
@@ -48,12 +48,33 @@ def test_normalize_rejects_even_group_with_creator():
     assert normalize(raw, vendor="siemens") is None
 
 
+def test_normalize_skips_private_row_without_creator():
+    for creator in (None, "", "X", "  "):  # "X" is too short to be a creator
+        raw = RawTag(
+            source_pdf="x.pdf",
+            source_page=1,
+            tag_str="(0029,xx10)",
+            private_creator=creator,
+            name="Foo",
+            vr="LO",
+        )
+        assert normalize(raw, vendor="siemens") is None
+    out, skipped = normalize_all(
+        [
+            RawTag(source_pdf="x.pdf", source_page=1, tag_str="(0029,xx10)",
+                   private_creator=None, name="Foo", vr="LO"),
+        ],
+        vendor="siemens",
+    )
+    assert out == [] and skipped == 1
+
+
 def test_normalize_rejects_bad_vr():
     raw = RawTag(
         source_pdf="x.pdf",
         source_page=1,
         tag_str="(0019,xx0C)",
-        private_creator="X",
+        private_creator="ACME DEVICE",
         name="Foo",
         vr="ZZ",
     )

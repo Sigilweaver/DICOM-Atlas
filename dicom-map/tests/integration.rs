@@ -251,7 +251,7 @@ fn rejects_incompatible_format_before_archive_validation() {
     use dicom_map::schema::{FileHeader, VERSION};
     use dicom_map::DmapError;
 
-    for version in [1, 2, VERSION + 1] {
+    for version in [1, 2, 3, VERSION + 1] {
         // No body: the version error must take precedence over validation.
         let mut header = FileHeader::new(0);
         header.version = version;

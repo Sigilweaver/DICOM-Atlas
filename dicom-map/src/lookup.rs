@@ -12,6 +12,7 @@ use crate::schema::{
 };
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum DmapError {
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),
@@ -248,6 +249,10 @@ fn archived_vr_as_str(v: &ArchivedVrCode) -> &'static str {
         ArchivedVrCode::US => "US",
         ArchivedVrCode::UT => "UT",
         ArchivedVrCode::UV => "UV",
+        ArchivedVrCode::UsOrSs => "US or SS",
+        ArchivedVrCode::ObOrOw => "OB or OW",
+        ArchivedVrCode::UsOrOw => "US or OW",
+        ArchivedVrCode::UsOrSsOrOw => "US or SS or OW",
         ArchivedVrCode::Unknown => "??",
     }
 }

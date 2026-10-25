@@ -30,6 +30,12 @@ int main(void) {
     dmap_free_tag(&t);
 
     memset(&t, 0, sizeof(t));
+    rc = dmap_lookup(h, 0x7FE0, 0x0010, NULL, &t);
+    CHECK(rc == 1, "pixel data rc");
+    CHECK(strcmp(t.vr, "OB or OW") == 0, "multi-VR is not truncated");
+    dmap_free_tag(&t);
+
+    memset(&t, 0, sizeof(t));
     rc = dmap_lookup(h, 0xFFFF, 0xFFFE, NULL, &t);
     CHECK(rc == 0, "miss rc");
 

@@ -8,10 +8,46 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Breaking
 
-- `.dmap` format version 3; `tags.dmap` is regenerated. Version 1 and 2
+- `.dmap` format version 4; `tags.dmap` is regenerated. Version 1, 2 and 3
   archives are rejected with `unsupported version` and must be regenerated
   from source with the new compiler; see `dicom-map/FORMAT.md`. The next
   release is 0.3.0.
+- `TagRecord` stores `vm_min` and `vm_max` as `u16` and gains `vm_step`;
+  `VrCode` gains `UsOrSs`, `ObOrOw`, `UsOrOw` and `UsOrSsOrOw`.
+
+### Behavior changes
+
+- `dmap-compile` rejects input it cannot parse with confidence, naming the
+  file, row and column: malformed `(GGGG,EEEE)` tags, non-hex or wrong-length
+  group and element values in `tags.csv`, retired flags other than `Y` or `N`,
+  missing or unrecognised VR and VM values, text over the stored field widths
+  or containing NUL, and missing JSON-L keys (no serde defaults).
+- Odd-group (private) rows with no private creator are an error. They were
+  compiled as public entries, so `lookup(0x0029, 0x10, None)` returned an
+  arbitrary vendor's tag. 329 such rows are removed from
+  `data/resolved_pydicom_backfilled.jsonl`.
+- PS3.6 repeating-group patterns (`(60XX,0010)`, `(1000,XXX0)`, ...) are
+  skipped, counted and listed on stderr. They were stored at wrong addresses
+  (85 phantom entries such as (0060,0010) and (0002,8040)). Lookups of the
+  real repeating-group tags return no match.
+- Duplicate index keys that disagree on VR, or on name after case-folding,
+  fail the build; duplicates that agree are merged and counted. Two distinct
+  creators with the same 32-bit hash fail the build. 164 duplicate rows
+  were resolved in the data with the previous preference rule and removed.
+- Four rows with truncated VM values (`1-`, `0-`, `2-`) are removed from the
+  data. VM is parsed strictly: `k`, `k-m`, `k-n`, `k-kn`; bare `n` and
+  `1-n or 1` read as `1-n`.
+- VR spellings `US or SS`, `OB or OW`, `US or OW` and `US or SS or OW` are
+  kept instead of becoming `??`; `??` now means the source declares no VR.
+- `DmapTag.vr` (C) is 16 bytes and `DMAP_ABI_VERSION` is 2, so multi-VR text
+  is never truncated; `dmap_lookup` returns -1 with `dmap_last_error` set
+  instead of returning NULL strings for text containing NUL.
+- `VrCode::from_str2` is removed; use `VrCode::parse`. `VrCode` and
+  `DmapError` are `#[non_exhaustive]`.
+
+### Added
+
+- `VrCode::parse`, which reports unrecognised VRs.
 
 ### Security
 

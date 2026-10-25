@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#define DMAP_ABI_VERSION 1u
+#define DMAP_ABI_VERSION 2u
 
 typedef struct DmapHandle DmapHandle;
 
@@ -23,7 +23,9 @@ typedef struct DmapTag {
     uint16_t element;
     bool     block_offset;
     bool     retired;
-    char     vr[4];          /* 2 chars + NUL, zero-padded */
+    char     vr[16];         /* NUL-terminated, zero-padded: "US", ...,
+                                "US or SS", "OB or OW", "US or OW",
+                                "US or SS or OW", or "??" (source declares no VR) */
     const char* keyword;     /* owned by this struct; release with dmap_free_tag */
     const char* name;
     const char* creator;     /* empty string for public tags (never NULL) */
@@ -42,7 +44,8 @@ size_t dmap_len(const DmapHandle* h);
 /* Look up a tag. Returns:
  *   1  on hit - `*out` populated, caller must dmap_free_tag(out) when done.
  *   0  on miss - `*out` is untouched.
- *  -1  on error (NULL args, bad UTF-8 in creator, etc.).
+ *  -1  on error (NULL args, bad UTF-8 in creator, a record with an embedded
+ *      NUL in a string, etc.). dmap_last_error() describes it.
  *
  * `creator` may be NULL for public tags.
  */
