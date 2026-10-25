@@ -33,6 +33,8 @@ jobs:
           cargo run --release --bin dmap-compile -- \
             --standard data/standard/attributes.json \
             --resolved data/resolved_pydicom_backfilled.jsonl \
+            --meta standard_edition=2024b \
+            --meta standard_source=innolitics/dicom-standard@8670abdd \
             --out tags.dmap
 
       - name: Build CLI + FFI
@@ -157,7 +159,7 @@ jobs:
         with:
           working-directory: dicom-map-py
           target: ${{ matrix.target }}
-          args: --release --out dist --interpreter 3.8 3.9 3.10 3.11 3.12 3.13
+          args: --release --out dist --interpreter 3.10
           manylinux: ${{ matrix.manylinux }}
           sccache: "true"
       - uses: actions/upload-artifact@v7

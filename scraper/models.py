@@ -8,7 +8,7 @@ Three stages of tag representation:
                       Rust compiler consumes to build the .dmap file
 
 Public/standard DICOM tags are represented by StandardTag (mirrors the
-innolitics PS3.6 JSON schema, see scraper/bootstrap.py).
+innolitics PS3.6 2024b JSON schema, see scraper/bootstrap.py).
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator
 
 # ----------------------------------------------------------------------------
-# DICOM value-representation enumeration (PS3.5 § 6.2)
+# DICOM value-representation enumeration (PS3.5 2024b § 6.2)
 # ----------------------------------------------------------------------------
 
 VR_CODES: frozenset[str] = frozenset(
@@ -47,7 +47,7 @@ def parse_tag(raw: str) -> tuple[int, int]:
 
 
 def is_private_group(group: int) -> bool:
-    """Private DICOM groups are odd (PS3.5 § 7.8)."""
+    """Private DICOM groups are odd (PS3.5 2024b § 7.8)."""
     return (group & 1) == 1
 
 
@@ -141,7 +141,7 @@ class ResolvedTag(BaseModel):
 
 
 class StandardTag(BaseModel):
-    """Mirrors innolitics PS3.6 attributes.json entry."""
+    """Mirrors innolitics PS3.6 2024b attributes.json entry."""
 
     tag: str                   # "(0008,0005)"
     name: str

@@ -14,15 +14,18 @@ categories.workspace = true
 description = "Memory-mapped O(log n) DICOM tag dictionary"
 
 [dependencies]
-rkyv = { workspace = true }
 memmap2 = { workspace = true }
 thiserror = { workspace = true }
 
 [features]
-# Embed a compiled `tags.dmap` into the binary. The caller provides the
-# absolute path via DMAP_EMBED_PATH at build time, or defaults to the
-# workspace-root `tags.dmap`.
+# Embed the workspace-root `tags.dmap` into the binary.
 embedded = []
+# Archive writer (`DmapBuilder`).
+write = []
 
 [dev-dependencies]
 anyhow = { workspace = true }
+
+[[test]]
+name = "validation"
+required-features = ["write"]

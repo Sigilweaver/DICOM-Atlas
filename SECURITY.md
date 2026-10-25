@@ -28,8 +28,8 @@ In scope:
   Python bindings.
 - Arbitrary file read/write triggered by a malformed `.dmap`
   archive.
-- Crashes in the rkyv archive validator that can be triggered by a
-  third-party-supplied dictionary.
+- Crashes, out-of-range reads or hangs in the archive validator that can
+  be triggered by a third-party-supplied dictionary.
 - Supply-chain integrity issues affecting published crates,
   wheels, or release artifacts.
 

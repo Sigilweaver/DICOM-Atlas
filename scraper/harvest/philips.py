@@ -46,7 +46,7 @@ _CREATOR_TAG_RE = re.compile(
 _NAME_HEADERS = ("attribute name", "key attribute")
 _DESC_HEADERS = ("attribute description", "notes", "description", "value", "comments")
 
-# Valid DICOM VR codes (PS3.5 6.2).
+# Valid DICOM VR codes (PS3.5 2024b 6.2).
 _VR_ALTERNATION = (
     "AE|AS|AT|CS|DA|DS|DT|FL|FD|IS|LO|LT|OB|OD|OF|OL|OW|PN|"
     "SH|SL|SQ|SS|ST|TM|UC|UI|UL|UN|UR|US|UT"

@@ -3,19 +3,33 @@
 //! Consumers link against `libdicom_map_ffi` (shared or static) and include
 //! `dicom_map.h`.
 //!
-//! Lifetime rules:
-//!   * Handles returned by `dmap_open` are owned by the caller and must be
-//!     released with `dmap_close`.
-//!   * `DmapTag` string pointers borrow into the mmap'd file and are valid
-//!     until the corresponding handle is closed.
-//!   * All functions are thread-safe for reads on a single handle.
+//! Ownership:
+//!   * `DmapHandle` is released with `dmap_close`.
+//!   * `DmapTag` is allocated by `dmap_lookup`, read through `dmap_tag_*`
+//!     getters and released with `dmap_tag_free`. Strings it returns stay
+//!     valid until the tag is freed, even after the handle is closed.
+//!   * `DmapErr` is allocated by `dmap_open_ex` on failure and released with
+//!     `dmap_err_free`.
+//!   * A handle may be used for lookups from several threads at once.
+//!   * `dmap_last_error` reports the last lookup error on the calling thread
+//!     (like `errno`), not per handle. Its string is valid until the next
+//!     error on the same thread.
 
+use std::cell::RefCell;
 use std::ffi::{c_char, CStr, CString};
 use std::path::PathBuf;
 use std::ptr;
-use std::sync::atomic::{AtomicPtr, Ordering};
 
-use dicom_map::DmapDict;
+use dicom_map::{DmapDict, DmapError, TagView};
+
+pub const DMAP_OK: i32 = 0;
+pub const DMAP_ERR_IO: i32 = 1;
+pub const DMAP_ERR_BAD_MAGIC: i32 = 2;
+pub const DMAP_ERR_UNSUPPORTED_VERSION: i32 = 3;
+pub const DMAP_ERR_BAD_ARCHIVE: i32 = 4;
+pub const DMAP_ERR_TOO_SMALL: i32 = 5;
+pub const DMAP_ERR_INVALID_ARGUMENT: i32 = 6;
+pub const DMAP_ERR_OTHER: i32 = 255;
 
 /// Opaque handle.
 #[repr(C)]
@@ -23,146 +37,206 @@ pub struct DmapHandle {
     _opaque: [u8; 0],
 }
 
-/// Returned record. All string pointers are NUL-terminated UTF-8 and borrow
-/// into the mmap'd file; do NOT free them. They become invalid after
-/// `dmap_close`.
-///
-/// `creator` and `description` may be empty strings but are never NULL.
+/// Opaque tag record.
 #[repr(C)]
 pub struct DmapTag {
-    pub group: u16,
-    pub element: u16,
-    pub block_offset: bool,
-    pub retired: bool,
-    /// VR text, NUL-terminated and zero-padded: a two-letter VR, one of
-    /// `US or SS`, `OB or OW`, `US or OW`, `US or SS or OW`, or `??` when the
-    /// source declares no VR.
-    pub vr: [c_char; 16],
-    pub keyword: *const c_char,
-    pub name: *const c_char,
-    pub creator: *const c_char,
-    pub description: *const c_char,
+    _opaque: [u8; 0],
 }
 
-/// Internal wrapper that keeps both the dict and per-view CStrings alive.
+/// Opaque open error.
+#[repr(C)]
+pub struct DmapErr {
+    _opaque: [u8; 0],
+}
+
 struct Inner {
     dict: DmapDict,
-    // Leaked CStrings for each returned TagView, keyed by record pointer.
-    // Simplification: we just leak strings produced per lookup and store the
-    // last error message; callers that need stability can copy eagerly.
-    last_err: AtomicPtr<c_char>,
 }
 
-impl Drop for Inner {
-    fn drop(&mut self) {
-        let p = self.last_err.swap(ptr::null_mut(), Ordering::Relaxed);
-        if !p.is_null() {
-            // SAFETY: p was produced by CString::into_raw on this side only.
-            unsafe {
-                let _ = CString::from_raw(p);
-            }
-        }
+thread_local! {
+    static LAST_ERR: RefCell<Option<CString>> = const { RefCell::new(None) };
+}
+
+struct TagOwned {
+    group: u16,
+    element: u16,
+    flags: u32,
+    vm: (u16, u16, u16),
+    vr: CString,
+    keyword: CString,
+    name: CString,
+    creator: CString,
+    description: CString,
+    sources: CString,
+}
+
+struct ErrOwned {
+    kind: i32,
+    message: CString,
+    version: Option<(u16, u16, u16)>,
+}
+
+fn cstring(s: &str) -> CString {
+    // Interior NULs are replaced; used for messages only.
+    CString::new(s.replace('\0', "?")).unwrap_or_default()
+}
+
+fn set_err(msg: &str) {
+    LAST_ERR.with(|e| *e.borrow_mut() = Some(cstring(msg)));
+}
+
+fn classify(e: &DmapError) -> ErrOwned {
+    let (kind, version) = match e {
+        DmapError::Io(_) => (DMAP_ERR_IO, None),
+        DmapError::BadMagic { .. } => (DMAP_ERR_BAD_MAGIC, None),
+        DmapError::UnsupportedVersion {
+            got_major,
+            got_minor,
+            supported_major,
+        } => (
+            DMAP_ERR_UNSUPPORTED_VERSION,
+            Some((*got_major, *got_minor, *supported_major)),
+        ),
+        DmapError::BadArchive { .. } => (DMAP_ERR_BAD_ARCHIVE, None),
+        DmapError::TooSmall { .. } => (DMAP_ERR_TOO_SMALL, None),
+        _ => (DMAP_ERR_OTHER, None),
+    };
+    ErrOwned {
+        kind,
+        message: cstring(&e.to_string()),
+        version,
     }
 }
 
-fn set_err(inner: &Inner, msg: &str) {
-    let c = CString::new(msg.replace('\0', "?")).unwrap_or_else(|_| CString::new("error").unwrap());
-    let new_ptr = c.into_raw();
-    let old = inner.last_err.swap(new_ptr, Ordering::Relaxed);
-    if !old.is_null() {
-        // SAFETY: old was produced by CString::into_raw above.
-        unsafe {
-            let _ = CString::from_raw(old);
-        }
+unsafe fn open_inner(path: *const c_char) -> Result<Box<Inner>, ErrOwned> {
+    let invalid = |m: &str| ErrOwned {
+        kind: DMAP_ERR_INVALID_ARGUMENT,
+        message: cstring(m),
+        version: None,
+    };
+    if path.is_null() {
+        return Err(invalid("path is NULL"));
     }
+    let s = CStr::from_ptr(path)
+        .to_str()
+        .map_err(|_| invalid("path is not valid UTF-8"))?;
+    let dict = DmapDict::open(PathBuf::from(s)).map_err(|e| classify(&e))?;
+    Ok(Box::new(Inner { dict }))
 }
 
-/// Opens a `.dmap` file. Returns NULL on failure (use `dmap_last_error` with
-/// a non-null handle - for `dmap_open` itself, failure is only "bad path"
-/// and you get no error string).
-///
-/// `path` must be a NUL-terminated UTF-8 string.
+/// Opens a `.dmap` file. Returns `DMAP_OK` and sets `*out`, or a `DMAP_ERR_*`
+/// status. When `err` is not NULL a failure also sets `*err` to an error that
+/// the caller releases with `dmap_err_free`.
 ///
 /// # Safety
 ///
-/// `path` must be either null or a valid pointer to a NUL-terminated C
-/// string, valid for reads for the duration of this call.
+/// `path` must be NULL or a NUL-terminated string valid for reads. `out` must
+/// be a valid pointer to a `DmapHandle*`. `err` must be NULL or a valid
+/// pointer to a `DmapErr*`.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_open_ex(
+    path: *const c_char,
+    out: *mut *mut DmapHandle,
+    err: *mut *mut DmapErr,
+) -> i32 {
+    if !err.is_null() {
+        *err = ptr::null_mut();
+    }
+    if out.is_null() {
+        return DMAP_ERR_INVALID_ARGUMENT;
+    }
+    *out = ptr::null_mut();
+    match open_inner(path) {
+        Ok(inner) => {
+            *out = Box::into_raw(inner) as *mut DmapHandle;
+            DMAP_OK
+        }
+        Err(e) => {
+            let kind = e.kind;
+            if !err.is_null() {
+                *err = Box::into_raw(Box::new(e)) as *mut DmapErr;
+            }
+            kind
+        }
+    }
+}
+
+/// Opens a `.dmap` file; NULL on failure with no cause. Prefer `dmap_open_ex`.
+///
+/// # Safety
+///
+/// `path` must be NULL or a NUL-terminated string valid for reads.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_open(path: *const c_char) -> *mut DmapHandle {
-    if path.is_null() {
-        return ptr::null_mut();
-    }
-    let c = CStr::from_ptr(path);
-    let s = match c.to_str() {
-        Ok(s) => s,
-        Err(_) => return ptr::null_mut(),
-    };
-    let p = PathBuf::from(s);
-    match DmapDict::open(&p) {
-        Ok(d) => {
-            let inner = Box::new(Inner {
-                dict: d,
-                last_err: AtomicPtr::new(ptr::null_mut()),
-            });
-            Box::into_raw(inner) as *mut DmapHandle
-        }
-        Err(_) => ptr::null_mut(),
-    }
+    let mut h = ptr::null_mut();
+    dmap_open_ex(path, &mut h, ptr::null_mut());
+    h
 }
 
-/// Releases a handle returned by `dmap_open`. No-op on NULL.
+/// Releases a handle. NULL-safe.
 ///
 /// # Safety
 ///
-/// `h` must be either null or a handle previously returned by `dmap_open`
-/// that has not already been passed to `dmap_close`. After this call, `h`
-/// and any `DmapTag` string pointers borrowed from it are invalid.
+/// `h` must be NULL or a handle from `dmap_open*` not yet closed.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_close(h: *mut DmapHandle) {
-    if h.is_null() {
-        return;
+    if !h.is_null() {
+        drop(Box::from_raw(h as *mut Inner));
     }
-    // SAFETY: we only ever return handles produced by Box::into_raw above.
-    drop(Box::from_raw(h as *mut Inner));
 }
 
-/// Number of entries in the dictionary. Returns 0 for NULL handle.
+/// Number of entries. Returns a status; `*out` is set only on `DMAP_OK`.
 ///
 /// # Safety
 ///
-/// `h` must be either null or a handle returned by `dmap_open` that has not
-/// since been passed to `dmap_close`.
+/// `h` must be NULL or a live handle; `out` must be NULL or writable.
 #[no_mangle]
-pub unsafe extern "C" fn dmap_len(h: *const DmapHandle) -> usize {
-    if h.is_null() {
-        return 0;
+pub unsafe extern "C" fn dmap_len(h: *const DmapHandle, out: *mut usize) -> i32 {
+    if h.is_null() || out.is_null() {
+        return DMAP_ERR_INVALID_ARGUMENT;
     }
-    let inner = &*(h as *const Inner);
-    inner.dict.len()
+    *out = (*(h as *const Inner)).dict.len();
+    DMAP_OK
 }
 
-/// Look up a tag. Writes fields into `*out` and returns 1 on hit, 0 on miss,
-/// -1 on error (NULL args, a creator that is not UTF-8, or a record whose
-/// text contains a NUL byte; `dmap_last_error` says which).
+fn to_owned(v: &TagView<'_>) -> Result<TagOwned, &'static str> {
+    let c = |s: &str, what: &'static str| CString::new(s).map_err(|_| what);
+    let vm = v.vm();
+    Ok(TagOwned {
+        group: v.group(),
+        element: v.element(),
+        flags: v.flags().bits(),
+        vm: (vm.min, vm.max, vm.step),
+        vr: c(v.vr(), "vr contains a NUL byte")?,
+        keyword: c(v.keyword(), "keyword contains a NUL byte")?,
+        name: c(v.name(), "name contains a NUL byte")?,
+        creator: c(v.creator(), "creator contains a NUL byte")?,
+        description: c(v.description(), "description contains a NUL byte")?,
+        sources: c(v.sources_raw(), "sources contains a NUL byte")?,
+    })
+}
+
+/// Look up a tag. Returns 1 on hit (`*out` is a new `DmapTag`, release with
+/// `dmap_tag_free`), 0 on miss (`*out` untouched), -1 on error (NULL
+/// arguments, a creator that is not UTF-8, or a record whose text contains a
+/// NUL byte; `dmap_last_error` says which).
 ///
 /// `creator` may be NULL for public tags.
 ///
 /// # Safety
 ///
-/// `h` must be either null or a handle returned by `dmap_open` that has not
-/// since been passed to `dmap_close`. `creator` must be either null or a
-/// valid pointer to a NUL-terminated C string, valid for reads for the
-/// duration of this call. `out` must be either null or a valid pointer to
-/// a writable `DmapTag`.
+/// `h` must be NULL or a live handle. `creator` must be NULL or a
+/// NUL-terminated string valid for reads. `out` must be NULL or writable.
 #[no_mangle]
 pub unsafe extern "C" fn dmap_lookup(
     h: *const DmapHandle,
     group: u16,
     element: u16,
     creator: *const c_char,
-    out: *mut DmapTag,
+    out: *mut *mut DmapTag,
 ) -> i32 {
     if h.is_null() || out.is_null() {
+        set_err("dmap_lookup: NULL handle or output pointer");
         return -1;
     }
     let inner = &*(h as *const Inner);
@@ -172,216 +246,350 @@ pub unsafe extern "C" fn dmap_lookup(
         match CStr::from_ptr(creator).to_str() {
             Ok(s) => Some(s),
             Err(_) => {
-                set_err(inner, "creator is not valid UTF-8");
+                set_err("creator is not valid UTF-8");
                 return -1;
             }
         }
     };
-
     match inner.dict.lookup(group, element, creator_str) {
-        Some(v) => {
-            let mut tag = DmapTag {
-                group: v.group(),
-                element: v.element(),
-                block_offset: v.is_block_offset(),
-                retired: v.retired(),
-                vr: [0 as c_char; 16],
-                keyword: ptr::null(),
-                name: ptr::null(),
-                creator: ptr::null(),
-                description: ptr::null(),
-            };
-            let vr = v.vr().as_bytes();
-            if vr.len() >= tag.vr.len() {
-                set_err(inner, "VR text does not fit in DmapTag.vr");
-                return -1;
+        Some(v) => match to_owned(&v) {
+            Ok(t) => {
+                *out = Box::into_raw(Box::new(t)) as *mut DmapTag;
+                1
             }
-            for (i, &c) in vr.iter().enumerate() {
-                tag.vr[i] = c as c_char;
+            Err(m) => {
+                set_err(m);
+                -1
             }
-            // A string with an interior NUL cannot be handed to C intact.
-            // Report it; never return NULL where the header promises a string.
-            let fields = [
-                ("keyword", v.keyword()),
-                ("name", v.name()),
-                ("creator", v.creator()),
-                ("description", v.description()),
-            ];
-            let mut ptrs = [ptr::null::<c_char>(); 4];
-            for (i, (field, text)) in fields.iter().enumerate() {
-                match CString::new(*text) {
-                    Ok(c) => ptrs[i] = c.into_raw() as *const c_char,
-                    Err(_) => {
-                        set_err(inner, &format!("{field} contains a NUL byte"));
-                        for p in ptrs.iter().filter(|p| !p.is_null()) {
-                            // SAFETY: produced by CString::into_raw above.
-                            drop(CString::from_raw(*p as *mut c_char));
-                        }
-                        return -1;
-                    }
-                }
-            }
-            tag.keyword = ptrs[0];
-            tag.name = ptrs[1];
-            tag.creator = ptrs[2];
-            tag.description = ptrs[3];
-            *out = tag;
-            1
-        }
+        },
         None => 0,
     }
 }
 
-/// Release strings populated by `dmap_lookup`. Safe to call with zeroed
-/// fields. Does NOT touch `vr` (inline array).
+/// Releases a tag. NULL-safe.
 ///
 /// # Safety
 ///
-/// `tag` must be either null or a valid pointer to a `DmapTag` whose
-/// `keyword`/`name`/`creator`/`description` fields are each either null or
-/// were produced by `dmap_lookup` and not yet freed. Passing pointers from
-/// any other source is undefined behavior.
+/// `t` must be NULL or a tag from `dmap_lookup` not yet freed.
 #[no_mangle]
-pub unsafe extern "C" fn dmap_free_tag(tag: *mut DmapTag) {
-    if tag.is_null() {
-        return;
+pub unsafe extern "C" fn dmap_tag_free(t: *mut DmapTag) {
+    if !t.is_null() {
+        drop(Box::from_raw(t as *mut TagOwned));
     }
-    let t = &mut *tag;
-    for p in [
-        &mut t.keyword,
-        &mut t.name,
-        &mut t.creator,
-        &mut t.description,
-    ] {
-        if !p.is_null() {
-            // SAFETY: produced by CString::into_raw above.
-            let _ = CString::from_raw(*p as *mut c_char);
-            *p = ptr::null();
+}
+
+unsafe fn tag<'a>(t: *const DmapTag) -> Option<&'a TagOwned> {
+    (t as *const TagOwned).as_ref()
+}
+
+macro_rules! getter_num {
+    ($name:ident, $ty:ty, |$t:ident| $e:expr) => {
+        /// Field getter; returns 0 for a NULL tag.
+        ///
+        /// # Safety
+        ///
+        /// `t` must be NULL or a live tag.
+        #[no_mangle]
+        pub unsafe extern "C" fn $name(t: *const DmapTag) -> $ty {
+            match tag(t) {
+                Some($t) => $e,
+                None => 0 as $ty,
+            }
         }
-    }
+    };
+}
+macro_rules! getter_str {
+    ($name:ident, $field:ident) => {
+        /// String getter; NUL-terminated UTF-8, never NULL for a live tag
+        /// (empty when the field is empty), valid until `dmap_tag_free`.
+        /// Returns NULL for a NULL tag.
+        ///
+        /// # Safety
+        ///
+        /// `t` must be NULL or a live tag.
+        #[no_mangle]
+        pub unsafe extern "C" fn $name(t: *const DmapTag) -> *const c_char {
+            match tag(t) {
+                Some(t) => t.$field.as_ptr(),
+                None => ptr::null(),
+            }
+        }
+    };
 }
 
-/// Returns the last error string for this handle, or NULL if none. Valid
-/// until the next error-producing call on the same handle.
+getter_num!(dmap_tag_group, u16, |t| t.group);
+getter_num!(dmap_tag_element, u16, |t| t.element);
+getter_num!(dmap_tag_flags, u32, |t| t.flags);
+getter_num!(dmap_tag_vm_min, u16, |t| t.vm.0);
+getter_num!(dmap_tag_vm_max, u16, |t| t.vm.1);
+getter_num!(dmap_tag_vm_step, u16, |t| t.vm.2);
+getter_str!(dmap_tag_vr, vr);
+getter_str!(dmap_tag_keyword, keyword);
+getter_str!(dmap_tag_name, name);
+getter_str!(dmap_tag_creator, creator);
+getter_str!(dmap_tag_description, description);
+getter_str!(dmap_tag_sources, sources);
+
+/// Last lookup error on the calling thread, or NULL. `h` is accepted for
+/// ABI compatibility and may be NULL. Valid until the next error on the same
+/// thread.
 ///
 /// # Safety
 ///
-/// `h` must be either null or a handle returned by `dmap_open` that has not
-/// since been passed to `dmap_close`.
+/// `h` is not dereferenced.
 #[no_mangle]
-pub unsafe extern "C" fn dmap_last_error(h: *const DmapHandle) -> *const c_char {
-    if h.is_null() {
-        return ptr::null();
-    }
-    let inner = &*(h as *const Inner);
-    inner.last_err.load(Ordering::Relaxed) as *const c_char
+pub unsafe extern "C" fn dmap_last_error(_h: *const DmapHandle) -> *const c_char {
+    LAST_ERR.with(|e| e.borrow().as_ref().map_or(ptr::null(), |c| c.as_ptr()))
 }
 
-/// ABI version. Bump when the C struct layout changes.
+/// Status of an open error (a `DMAP_ERR_*` value). 0 for NULL.
+///
+/// # Safety
+///
+/// `e` must be NULL or a live error.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_err_kind(e: *const DmapErr) -> i32 {
+    (e as *const ErrOwned).as_ref().map_or(0, |e| e.kind)
+}
+
+/// Human-readable message, valid until `dmap_err_free`. NULL for NULL.
+///
+/// # Safety
+///
+/// `e` must be NULL or a live error.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_err_message(e: *const DmapErr) -> *const c_char {
+    (e as *const ErrOwned)
+        .as_ref()
+        .map_or(ptr::null(), |e| e.message.as_ptr())
+}
+
+/// For `DMAP_ERR_UNSUPPORTED_VERSION`: writes the file's major and minor and
+/// the major this library reads, and returns 1. Returns 0 for other errors.
+///
+/// # Safety
+///
+/// `e` must be NULL or a live error; the three pointers must be writable.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_err_version(
+    e: *const DmapErr,
+    got_major: *mut u16,
+    got_minor: *mut u16,
+    supported_major: *mut u16,
+) -> i32 {
+    match (e as *const ErrOwned).as_ref().and_then(|e| e.version) {
+        Some((a, b, c))
+            if !got_major.is_null() && !got_minor.is_null() && !supported_major.is_null() =>
+        {
+            *got_major = a;
+            *got_minor = b;
+            *supported_major = c;
+            1
+        }
+        _ => 0,
+    }
+}
+
+/// Releases an error. NULL-safe.
+///
+/// # Safety
+///
+/// `e` must be NULL or an error from `dmap_open_ex` not yet freed.
+#[no_mangle]
+pub unsafe extern "C" fn dmap_err_free(e: *mut DmapErr) {
+    if !e.is_null() {
+        drop(Box::from_raw(e as *mut ErrOwned));
+    }
+}
+
+/// ABI major. Changes only when an existing function is removed or its
+/// behavior changes incompatibly.
 #[no_mangle]
 pub extern "C" fn dmap_abi_version() -> u32 {
     2
 }
 
+/// ABI minor. Grows when functions or `DMAP_*` constants are added.
+#[no_mangle]
+pub extern "C" fn dmap_abi_minor() -> u32 {
+    0
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use dicom_map::schema::{Dictionary, FileHeader, IndexEntry, TagRecord, VrCode};
+    use dicom_map::{DmapBuilder, NewRecord, Vm};
 
-    /// Hand-built archive with one public record whose name is `name`.
-    fn archive_with_name(name: &str, vr: VrCode) -> Vec<u8> {
-        let name_bytes = name.as_bytes();
-        let dict = Dictionary {
-            index: vec![IndexEntry {
-                group: 0x0008,
-                element: 0x0005,
-                creator_hash: 0,
-                record_idx: 0,
-            }],
-            records: vec![TagRecord {
-                group: 0x0008,
-                element: 0x0005,
-                element_is_block_offset: false,
-                retired: false,
-                vr,
-                vm_min: 1,
-                vm_max: 1,
-                vm_step: 1,
-                keyword_off: 0,
-                keyword_len: 0,
-                name_off: 0,
-                name_len: name_bytes.len() as u16,
-                creator_off: 0,
-                creator_len: 0,
-                description_off: 0,
-                description_len: 0,
-                sources_off: 0,
-                sources_len: 0,
-            }],
-            strings: name_bytes.to_vec(),
-        };
-        let body = rkyv::to_bytes::<rkyv::rancor::Error>(&dict).unwrap();
-        let mut out = FileHeader::new(body.len() as u64).to_bytes().to_vec();
-        out.extend_from_slice(&body);
-        out
+    fn archive(name: &str, vr: &str) -> Vec<u8> {
+        let mut b = DmapBuilder::new();
+        // NUL in text is refused by the builder; patch it in afterwards.
+        b.push(
+            NewRecord::new(0x0008, 0x0005)
+                .vr(vr)
+                .name(name)
+                .vm(Vm::new(1, 1, 1)),
+        );
+        b.finish().unwrap()
     }
 
-    fn open(tag: &str, bytes: &[u8]) -> *mut DmapHandle {
+    fn open(tag: &str, bytes: &[u8]) -> (i32, *mut DmapHandle, *mut DmapErr) {
         let path = std::env::temp_dir().join(format!("dmap-ffi-{}-{tag}.dmap", std::process::id()));
         std::fs::write(&path, bytes).unwrap();
         let c = CString::new(path.to_str().unwrap()).unwrap();
-        let h = unsafe { dmap_open(c.as_ptr()) };
+        let (mut h, mut e) = (ptr::null_mut(), ptr::null_mut());
+        let rc = unsafe { dmap_open_ex(c.as_ptr(), &mut h, &mut e) };
         let _ = std::fs::remove_file(&path);
-        h
+        (rc, h, e)
     }
 
-    fn blank() -> DmapTag {
-        DmapTag {
-            group: 0,
-            element: 0,
-            block_offset: false,
-            retired: false,
-            vr: [0; 16],
-            keyword: ptr::null(),
-            name: ptr::null(),
-            creator: ptr::null(),
-            description: ptr::null(),
+    fn s(p: *const c_char) -> String {
+        unsafe { CStr::from_ptr(p) }.to_str().unwrap().to_owned()
+    }
+
+    #[test]
+    fn open_errors_carry_a_kind_and_message() {
+        let cases: [(&str, Vec<u8>, i32); 4] = [
+            ("magic", b"XXXX".repeat(16), DMAP_ERR_BAD_MAGIC),
+            ("small", b"DMAP".to_vec(), DMAP_ERR_TOO_SMALL),
+            (
+                "bad",
+                {
+                    let mut v = archive("n", "CS");
+                    v.truncate(v.len() - 3);
+                    v
+                },
+                DMAP_ERR_BAD_ARCHIVE,
+            ),
+            (
+                "ver",
+                {
+                    let mut v = archive("n", "CS");
+                    v[4] = 9;
+                    v
+                },
+                DMAP_ERR_UNSUPPORTED_VERSION,
+            ),
+        ];
+        for (tag, bytes, want) in cases {
+            let (rc, h, e) = open(tag, &bytes);
+            assert_eq!(rc, want, "{tag}");
+            assert!(h.is_null());
+            assert_eq!(unsafe { dmap_err_kind(e) }, want);
+            assert!(!s(unsafe { dmap_err_message(e) }).is_empty());
+            if want == DMAP_ERR_UNSUPPORTED_VERSION {
+                let (mut a, mut b, mut c) = (0u16, 0u16, 0u16);
+                assert_eq!(unsafe { dmap_err_version(e, &mut a, &mut b, &mut c) }, 1);
+                assert_eq!((a, c), (9, 4));
+            }
+            unsafe { dmap_err_free(e) };
+        }
+        let missing = CString::new("/nonexistent/x.dmap").unwrap();
+        let (mut h, mut e) = (ptr::null_mut(), ptr::null_mut());
+        assert_eq!(
+            unsafe { dmap_open_ex(missing.as_ptr(), &mut h, &mut e) },
+            DMAP_ERR_IO
+        );
+        unsafe { dmap_err_free(e) };
+        assert!(unsafe { dmap_open(missing.as_ptr()) }.is_null());
+        assert_eq!(
+            unsafe { dmap_open_ex(ptr::null(), &mut h, ptr::null_mut()) },
+            DMAP_ERR_INVALID_ARGUMENT
+        );
+    }
+
+    #[test]
+    fn len_reports_status_not_zero_for_null() {
+        let mut n = 99usize;
+        assert_eq!(
+            unsafe { dmap_len(ptr::null(), &mut n) },
+            DMAP_ERR_INVALID_ARGUMENT
+        );
+        assert_eq!(n, 99);
+        let (rc, h, _) = open("len", &archive("n", "CS"));
+        assert_eq!(rc, DMAP_OK);
+        assert_eq!(unsafe { dmap_len(h, &mut n) }, DMAP_OK);
+        assert_eq!(n, 1);
+        unsafe { dmap_close(h) };
+    }
+
+    #[test]
+    fn tag_is_read_through_getters_and_outlives_the_handle() {
+        for vr in ["CS", "US or SS", "US or SS or OW", "??"] {
+            let (rc, h, _) = open("vr", &archive("Name", vr));
+            assert_eq!(rc, DMAP_OK);
+            let mut t = ptr::null_mut();
+            assert_eq!(
+                unsafe { dmap_lookup(h, 0x0008, 0x0005, ptr::null(), &mut t) },
+                1
+            );
+            unsafe { dmap_close(h) };
+            unsafe {
+                assert_eq!(dmap_tag_group(t), 0x0008);
+                assert_eq!(dmap_tag_element(t), 0x0005);
+                assert_eq!(s(dmap_tag_vr(t)), vr);
+                assert_eq!(s(dmap_tag_name(t)), "Name");
+                assert_eq!(s(dmap_tag_creator(t)), "");
+                assert_eq!(
+                    (dmap_tag_vm_min(t), dmap_tag_vm_max(t), dmap_tag_vm_step(t)),
+                    (1, 1, 1)
+                );
+                dmap_tag_free(t);
+            }
+        }
+        // NULL-safety.
+        unsafe {
+            assert_eq!(dmap_tag_group(ptr::null()), 0);
+            assert!(dmap_tag_name(ptr::null()).is_null());
+            dmap_tag_free(ptr::null_mut());
         }
     }
 
     #[test]
     fn interior_nul_is_reported_not_returned_as_null() {
-        let h = open("nul", &archive_with_name("a\0b", VrCode::CS));
-        assert!(!h.is_null());
-        let mut t = blank();
-        let rc = unsafe { dmap_lookup(h, 0x0008, 0x0005, ptr::null(), &mut t) };
-        assert_eq!(rc, -1);
-        let msg = unsafe { CStr::from_ptr(dmap_last_error(h)) }
-            .to_str()
-            .unwrap();
+        let mut bytes = archive("abc", "CS");
+        // Overwrite one pooled name byte with NUL after building.
+        let pos = bytes.windows(3).position(|w| w == b"abc").unwrap();
+        bytes[pos + 1] = 0;
+        let (rc, h, _) = open("nul", &bytes);
+        assert_eq!(rc, DMAP_OK);
+        let mut t = ptr::null_mut();
+        assert_eq!(
+            unsafe { dmap_lookup(h, 0x0008, 0x0005, ptr::null(), &mut t) },
+            -1
+        );
+        assert!(t.is_null());
+        let msg = s(unsafe { dmap_last_error(h) });
         assert!(msg.contains("name") && msg.contains("NUL"), "{msg}");
-        assert!(t.name.is_null(), "no partial output");
         unsafe { dmap_close(h) };
     }
 
     #[test]
-    fn multi_vr_text_is_not_truncated() {
-        for (vr, text) in [
-            (VrCode::UsOrSs, "US or SS"),
-            (VrCode::ObOrOw, "OB or OW"),
-            (VrCode::UsOrSsOrOw, "US or SS or OW"),
-            (VrCode::Unknown, "??"),
-        ] {
-            let h = open("vr", &archive_with_name("ok", vr));
-            let mut t = blank();
-            let rc = unsafe { dmap_lookup(h, 0x0008, 0x0005, ptr::null(), &mut t) };
-            assert_eq!(rc, 1);
-            let got = unsafe { CStr::from_ptr(t.vr.as_ptr()) }.to_str().unwrap();
-            assert_eq!(got, text);
-            unsafe {
-                dmap_free_tag(&mut t);
-                dmap_close(h);
-            }
-        }
+    fn null_arguments_set_the_last_error() {
+        let mut t = ptr::null_mut();
+        let (rc, h, _) = open("nullargs", &archive("n", "CS"));
+        assert_eq!(rc, DMAP_OK);
+        assert_eq!(
+            unsafe { dmap_lookup(ptr::null(), 8, 5, ptr::null(), &mut t) },
+            -1
+        );
+        assert!(s(unsafe { dmap_last_error(h) }).contains("NULL"));
+        // A different thread does not see this thread's error, and an error
+        // on another thread does not replace ours.
+        let before = s(unsafe { dmap_last_error(ptr::null()) });
+        std::thread::spawn(|| {
+            assert!(unsafe { dmap_last_error(ptr::null()) }.is_null());
+            assert_eq!(
+                unsafe { dmap_lookup(ptr::null(), 8, 5, ptr::null(), ptr::null_mut()) },
+                -1
+            );
+        })
+        .join()
+        .unwrap();
+        assert_eq!(s(unsafe { dmap_last_error(ptr::null()) }), before);
+        assert_eq!(
+            unsafe { dmap_lookup(h, 8, 5, ptr::null(), ptr::null_mut()) },
+            -1
+        );
+        unsafe { dmap_close(h) };
     }
 }

@@ -50,6 +50,8 @@ pip install -e . maturin pydicom
 cargo run --release --bin dmap-compile -- \
   --standard data/standard/attributes.json \
   --resolved data/resolved_pydicom_backfilled.jsonl \
+  --meta standard_edition=2024b \
+  --meta standard_source=innolitics/dicom-standard@8670abdd \
   --out tags.dmap
 ```
 

@@ -21,7 +21,7 @@ private element it looks up ``(creator, group, element & 0xFF)`` in that
 dict and uses the result for ``DataElement.name`` and (in some code paths)
 ``DataElement.VR``.
 
-:func:`patch_pydicom` walks every record in a compiled ``.dmap`` dictionary
+patch_pydicom walks every record in a compiled ``.dmap`` dictionary
 and installs the private entries into pydicom's runtime dict. By default
 existing pydicom entries are kept (``mode="fill"``) so we only add
 coverage; pass ``mode="override"`` to make our data take precedence.
@@ -35,6 +35,7 @@ from typing import Iterable, Literal
 
 from ._dicom_map import Dict as _Dict
 from ._dicom_map import open as _open
+from .errors import DmapError
 
 PatchMode = Literal["fill", "override"]
 
@@ -51,88 +52,34 @@ def _format_pydicom_key(group: int, element: int, is_block_offset: bool) -> str:
     return f"{group:04X}{element:04X}"
 
 
-def _iter_dmap_private_records(d: _Dict) -> Iterable[tuple[str, int, int, bool, str, str, str, str]]:
+def _iter_private_records(d: _Dict) -> Iterable[tuple[str, int, int, bool, str, str, str, str]]:
     """Yield ``(creator, group, element, is_block_offset, vr, vm, name, keyword)``
-    for every private record in the dictionary.
-
-    The Rust ``Dict`` doesn't currently expose a full iterator (lookup-only),
-    so we rely on the CSV being co-located. If that's missing we fall back to
-    iterating via the lookup interface - but since lookup needs a key, the
-    practical fallback is "this won't work without the CSV". A future schema
-    revision will add a `Dict.iter_private()` method to remove this dependency.
-    """
-    raise NotImplementedError(
-        "Iteration over the binary dict is not yet exposed; use "
-        "iter_records_from_csv() for now."
-    )
-
-
-def _iter_records_from_csv(csv_path: str | os.PathLike[str]):
-    """Stream private records from the canonical ``tags.csv``.
-
-    Yields tuples ``(creator, group, element, is_block_offset, vr, vm,
-    name, keyword)``. Public (creator-less) tags are skipped. An empty VR or
-    VM is an error: nothing is substituted for it.
-    """
-    import csv as _csv
-
-    with open(csv_path, newline="", encoding="utf-8") as fh:
-        reader = _csv.DictReader(fh)
-        for row in reader:
-            creator = row.get("private_creator", "").strip()
-            if not creator:
-                continue
-            elem_str = row.get("element", "")
-            if elem_str.lower().startswith("xx"):
-                element = int(elem_str[2:], 16)
-                is_block = True
-            else:
-                element = int(elem_str, 16)
-                is_block = False
-            for col in ("vr", "vm"):
-                if not row.get(col, ""):
-                    raise ValueError(
-                        f"{csv_path}: private tag {row.get('group')},{elem_str} "
-                        f"under {creator!r} has an empty {col}"
-                    )
-            yield (
-                creator,
-                int(row["group"], 16),
-                element,
-                is_block,
-                row.get("vr", ""),
-                row.get("vm", ""),
-                row.get("name", "") or "",
-                row.get("keyword", "") or "",
+    for every private record in the dictionary. Public records are skipped by
+    design (they have no creator)."""
+    for rec in d:
+        creator = rec["creator"]
+        if not creator:
+            continue
+        if not rec["vr"] or rec["vr"] == "??" or not rec["vm"]:
+            raise DmapError(
+                f"private tag {rec['group']:04X},{rec['element']:02X} under {creator!r} "
+                f"has no usable VR/VM ({rec['vr']!r}, {rec['vm']!r})"
             )
-
-
-def _check_csv_matches_dmap(d: _Dict, records, csv_path, dmap_path) -> None:
-    """Raise ``ValueError`` unless every CSV private row is in ``d`` with the
-    same VR and name."""
-    problems: list[str] = []
-    for creator, group, element, _is_block, vr, _vm, name, _kw in records:
-        t = d.lookup(group, element & 0xFF, creator)
-        if t is None:
-            problems.append(f"{group:04X},{element:04X} {creator!r}: not in the dmap")
-        elif t["vr"] != vr or t["name"] != name:
-            problems.append(
-                f"{group:04X},{element:04X} {creator!r}: csv has {vr} {name!r}, "
-                f"dmap has {t['vr']} {t['name']!r}"
-            )
-    if problems:
-        shown = "; ".join(problems[:5])
-        raise ValueError(
-            f"{csv_path} does not match {dmap_path} ({len(problems)} of "
-            f"{len(records)} private rows differ, e.g. {shown}). Pass the "
-            "tags.csv that was exported with this dmap."
+        yield (
+            creator,
+            rec["group"],
+            rec["element"],
+            rec["block_offset"],
+            rec["vr"],
+            rec["vm"],
+            rec["name"],
+            rec["keyword"],
         )
 
 
 def patch_pydicom(
-    dmap_path: str | os.PathLike[str] | None = None,
+    dmap_path: str | os.PathLike[str],
     *,
-    csv_path: str | os.PathLike[str] | None = None,
     mode: PatchMode = "fill",
 ) -> int:
     """Register dicom-map's private tag entries into pydicom's runtime dict.
@@ -140,13 +87,7 @@ def patch_pydicom(
     Parameters
     ----------
     dmap_path
-        Path to ``tags.dmap``. The entry list is read from ``csv_path``
-        (the binary format does not yet expose iteration); every private row
-        of the CSV must match the dmap's VR and name or ``ValueError`` is
-        raised and pydicom is left untouched.
-    csv_path
-        Path to ``tags.csv``. If omitted, defaults to ``<dmap_path>.csv``-style
-        sibling lookup - i.e. ``tags.csv`` next to ``tags.dmap``.
+        Path to ``tags.dmap``. Every private record is read from it.
     mode
         ``"fill"`` (default): only add entries that pydicom doesn't already
         have for a given (creator, key). Existing pydicom data is preserved.
@@ -160,49 +101,37 @@ def patch_pydicom(
     Raises
     ------
     ImportError
-        If pydicom is not installed.
-    FileNotFoundError
-        If neither a discoverable CSV nor an explicit ``csv_path`` is found.
+        If pydicom (or its ``_private_dict`` module) is not available.
+    DmapError
+        If the file cannot be opened (see :mod:`dicom_map.errors`) or a
+        private record has no usable VR or VM. pydicom is left untouched.
     ValueError
-        If a CSV row has an empty VR or VM, or the CSV disagrees with the
-        dmap.
+        If ``mode`` is not ``"fill"`` or ``"override"``.
     """
+    if mode not in ("fill", "override"):
+        raise ValueError(f"mode must be 'fill' or 'override', not {mode!r}")
     try:
         import pydicom._private_dict as _pd
     except ImportError as exc:  # pragma: no cover
         raise ImportError(
-            "patch_pydicom() requires pydicom; install with `pip install pydicom`."
+            "patch_pydicom() requires pydicom; install with `pip install dicom-map[pydicom]`."
         ) from exc
+    pdd = getattr(_pd, "private_dictionaries", None)
+    if not isinstance(pdd, dict):
+        raise ImportError(
+            "pydicom._private_dict.private_dictionaries is missing; this pydicom "
+            "version is not supported by patch_pydicom()"
+        )
 
-    # Locate the CSV if not given.
-    if csv_path is None:
-        if dmap_path is not None:
-            sibling = os.path.join(os.path.dirname(os.fspath(dmap_path)), "tags.csv")
-            if os.path.exists(sibling):
-                csv_path = sibling
-        if csv_path is None:
-            raise FileNotFoundError(
-                "patch_pydicom() needs tags.csv to enumerate entries. Pass "
-                "csv_path=... explicitly or place tags.csv next to tags.dmap."
-            )
-
-    # Read the whole CSV before touching pydicom, and when a dmap is given
-    # require every CSV row to agree with it (the CSV is only a stand-in for
-    # iterating the dmap, so a stale or unrelated CSV must not be used).
-    records = list(_iter_records_from_csv(csv_path))
-    if dmap_path is not None:
-        _check_csv_matches_dmap(_open(os.fspath(dmap_path)), records, csv_path, dmap_path)
+    # Read everything before touching pydicom.
+    records = list(_iter_private_records(_open(os.fspath(dmap_path))))
 
     global _ORIGINAL_PYDICOM
     if _ORIGINAL_PYDICOM is None:
         # Snapshot once so unpatch can restore exactly.
-        _ORIGINAL_PYDICOM = {
-            creator: dict(tags) for creator, tags in _pd.private_dictionaries.items()
-        }
+        _ORIGINAL_PYDICOM = {creator: dict(tags) for creator, tags in pdd.items()}
 
-    pdd: dict[str, dict[str, tuple[str, str, str, str]]] = _pd.private_dictionaries
     added = 0
-
     for creator, group, element, is_block, vr, vm, name, keyword in records:
         key = _format_pydicom_key(group, element, is_block)
         bucket = pdd.setdefault(creator, {})

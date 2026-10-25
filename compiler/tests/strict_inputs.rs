@@ -287,7 +287,7 @@ fn duplicate_keys_that_disagree_are_errors_and_agreeing_ones_are_counted() {
 }
 
 #[test]
-fn overlong_or_nul_text_is_an_error() {
+fn long_text_is_kept_and_nul_text_is_an_error() {
     let s = Scratch::new("long");
     let long = "x".repeat(70_000);
     let o = run_std_res(
@@ -295,8 +295,13 @@ fn overlong_or_nul_text_is_an_error() {
         &std_json(&[]),
         &res_line(0x0029, 0x08, Some("ACME"), &long, "US", "1"),
     );
-    assert!(!o.status.success());
-    assert!(stderr(&o).contains("column `name`"), "{}", stderr(&o));
+    // The format stores 32-bit lengths, so a long name is kept whole.
+    assert!(o.status.success(), "{}", stderr(&o));
+    let d = DmapDict::open(s.path("out.dmap")).unwrap();
+    assert_eq!(
+        d.lookup(0x0029, 0x08, Some("ACME")).unwrap().name().len(),
+        70_000
+    );
 
     let o = run_std_res(
         &s,

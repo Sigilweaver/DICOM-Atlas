@@ -76,7 +76,7 @@ fn miss_returns_none() {
 /// Per-creator smoke tests: at least one hand-verified tag per major family.
 ///
 /// Each tuple is `(group, element_low, creator, expected_vr, expected_name_fragment)`.
-/// Elements use the low byte (private block offset form, PS3.5 §7.8.1).
+/// Elements use the low byte (private block offset form, PS3.5 2024b §7.8.1).
 fn known_tags() -> &'static [(u16, u16, &'static str, &'static str, &'static str)] {
     &[
         // GE imaging families
@@ -220,9 +220,7 @@ fn private_tag_has_creator_string() {
 // These migration checks require the tracked archive and must never skip it.
 fn static_archive() -> &'static [u8] {
     let bytes = std::fs::read(dmap_path()).expect("read tracked tags.dmap");
-    let mut aligned = rkyv::util::AlignedVec::<16>::new();
-    aligned.extend_from_slice(&bytes);
-    Box::leak(Box::new(aligned)).as_slice()
+    Box::leak(bytes.into_boxed_slice())
 }
 
 #[test]
@@ -247,18 +245,28 @@ fn static_archive_uses_the_same_format_as_mmap() {
 }
 
 #[test]
-fn rejects_incompatible_format_before_archive_validation() {
-    use dicom_map::schema::{FileHeader, VERSION};
+fn rejects_other_major_before_archive_validation_and_accepts_other_minor() {
     use dicom_map::DmapError;
 
-    for version in [1, 2, 3, VERSION + 1] {
-        // No body: the version error must take precedence over validation.
-        let mut header = FileHeader::new(0);
-        header.version = version;
-        let bytes = Box::leak(Box::new(header.to_bytes()));
-        assert!(matches!(DmapDict::from_static(bytes),
-            Err(DmapError::UnsupportedVersion { got }) if got == version));
+    let good = std::fs::read(dmap_path()).expect("read tracked tags.dmap");
+    // Old majors (1, 2, 3) and a future one fail on the version alone, with
+    // no valid body behind the header.
+    for major in [1u16, 2, 3, dicom_map::FORMAT_MAJOR + 1] {
+        let mut hdr = good[..32].to_vec();
+        hdr[4..6].copy_from_slice(&major.to_le_bytes());
+        let bytes: &'static [u8] = Box::leak(hdr.into_boxed_slice());
+        assert!(
+            matches!(DmapDict::from_static(bytes),
+                Err(DmapError::UnsupportedVersion { got_major, supported_major, .. })
+                    if got_major == major && supported_major == dicom_map::FORMAT_MAJOR),
+            "major {major}"
+        );
     }
+    // A later minor of the same major opens.
+    let mut b = good.clone();
+    b[6..8].copy_from_slice(&(dicom_map::FORMAT_MINOR + 7).to_le_bytes());
+    let d = DmapDict::from_vec(b).expect("later minor opens");
+    assert!(d.lookup(0x0008, 0x0005, None).is_some());
 }
 
 #[test]
@@ -266,8 +274,18 @@ fn rejects_truncated_current_archive() {
     let bytes = static_archive();
     assert!(matches!(
         DmapDict::from_static(&bytes[..36]),
-        Err(dicom_map::DmapError::BadArchive(_))
+        Err(dicom_map::DmapError::BadArchive { .. })
     ));
+}
+
+#[test]
+fn shipped_archive_records_its_standard_edition() {
+    // The CI job recompiles tags.dmap without --meta, so only check when the
+    // metadata is present.
+    let d = DmapDict::open(dmap_path()).unwrap();
+    if let Some(e) = d.meta("standard_edition") {
+        assert_eq!(e, "2024b");
+    }
 }
 
 #[cfg(feature = "embedded")]
