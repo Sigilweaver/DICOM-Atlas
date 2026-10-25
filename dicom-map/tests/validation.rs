@@ -152,6 +152,19 @@ fn bad_vr_and_vm_are_rejected() {
 }
 
 #[test]
+fn private_element_above_ff_is_rejected() {
+    // The builder refuses this record, so patch a valid archive by hand: the
+    // last index entry and last record are (0029,0009), ACME.
+    let mut b = base();
+    let (_, io, il) = section(&b, INDEX);
+    let (_, ro, rl) = section(&b, RECORDS);
+    let (ie, re) = (io + il - 12, ro + rl - 72);
+    b[ie + 2..ie + 4].copy_from_slice(&0x1009u16.to_le_bytes());
+    b[re + 2..re + 4].copy_from_slice(&0x1009u16.to_le_bytes());
+    expect_bad(DmapDict::from_vec(b), ArchiveCheck::PrivateElement);
+}
+
+#[test]
 fn builder_refuses_what_the_reader_would_refuse() {
     use dicom_map::BuildError;
     let mut b = DmapBuilder::new();

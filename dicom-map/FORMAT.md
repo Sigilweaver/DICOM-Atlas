@@ -113,6 +113,9 @@ Opening a file checks, and fails with `DmapError::BadArchive { check, .. }`:
   VR bytes are printable ASCII (`Text`).
 - Each record's group, element and creator hash equal its index key
   (`KeyMismatch`), and no odd-group record lacks a creator (`CreatorMissing`).
+- An odd-group record's element is at most 0xFF, since private elements are
+  stored as their block offset and lookup reduces the queried element to it
+  (`PrivateElement`).
 - VM bounds are consistent (`Vm`) and META lines contain `=` (`Meta`).
 
 Failures are errors at open time; lookups afterwards cannot panic on a file

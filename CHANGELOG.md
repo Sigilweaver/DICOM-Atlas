@@ -23,7 +23,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `meta_iter`, `from_vec`, `open_with(&OpenOptions)`. Archives are written
   with `DmapBuilder` behind the `write` feature. `DmapBuilder::finish` refuses an
   odd-group record whose element is above 0xFF (private elements are stored as
-  block offsets).
+  block offsets). `DmapDict::open` rejects such a record in an archive
+  (`ArchiveCheck::PrivateElement`).
 - Rust: `DmapError` is `#[non_exhaustive]`; `TooSmall` and `UnsupportedVersion`
   carry named fields (`got_major`, `got_minor`, `supported_major`), and
   `BadArchive` is `{ check: ArchiveCheck, detail }` with a

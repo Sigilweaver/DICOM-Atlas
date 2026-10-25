@@ -29,6 +29,9 @@ pub enum ArchiveCheck {
     KeyMismatch,
     /// An odd-group record has no private creator.
     CreatorMissing,
+    /// An odd-group record with a creator has an element above 0xFF. Private
+    /// elements are stored as their block offset, so lookup could not find it.
+    PrivateElement,
     /// A value multiplicity is inconsistent.
     Vm,
     /// The metadata section is malformed.
@@ -50,6 +53,7 @@ impl fmt::Display for ArchiveCheck {
             Self::Text => "text",
             Self::KeyMismatch => "key mismatch",
             Self::CreatorMissing => "creator missing",
+            Self::PrivateElement => "private element",
             Self::Vm => "value multiplicity",
             Self::Meta => "metadata",
         })

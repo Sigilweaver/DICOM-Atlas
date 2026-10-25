@@ -463,6 +463,15 @@ fn validate(bytes: &[u8]) -> Result<Layout, DmapError> {
                 ),
             ));
         }
+        if key.0 % 2 == 1 && key.1 > 0x00FF {
+            return Err(DmapError::bad(
+                C::PrivateElement,
+                format!(
+                    "record {ri}: private element {:04X},{:04X} is not a block offset (0x00 to 0xFF)",
+                    key.0, key.1
+                ),
+            ));
+        }
         for (what, w) in [
             ("keyword", STR_KEYWORD),
             ("name", STR_NAME),
