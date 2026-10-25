@@ -59,6 +59,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `dicom-lookup` accepts `0x` and `xx` prefixes and 1 to 4 hex digits and
   rejects anything else; `0x0028` was read as group 0002 and extra digits
   were dropped.
+- `patch_pydicom` raises `ValueError`, before touching pydicom, when a
+  `tags.csv` row disagrees with the given `.dmap` on VR or name, or has an
+  empty VR or VM (it used to install `UN` and `1`).
+- `scraper.normalize` accepts only an exact VR; prefix matches such as
+  `USED`, `FLOAT` or `US or SS` become `UN` with `vr_inferred=True` instead of
+  a wrong VR.
 
 ### Added
 

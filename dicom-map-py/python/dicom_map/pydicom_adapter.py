@@ -71,7 +71,8 @@ def _iter_records_from_csv(csv_path: str | os.PathLike[str]):
     """Stream private records from the canonical ``tags.csv``.
 
     Yields tuples ``(creator, group, element, is_block_offset, vr, vm,
-    name, keyword)``. Public (creator-less) tags are skipped.
+    name, keyword)``. Public (creator-less) tags are skipped. An empty VR or
+    VM is an error: nothing is substituted for it.
     """
     import csv as _csv
 
@@ -88,16 +89,44 @@ def _iter_records_from_csv(csv_path: str | os.PathLike[str]):
             else:
                 element = int(elem_str, 16)
                 is_block = False
+            for col in ("vr", "vm"):
+                if not row.get(col, ""):
+                    raise ValueError(
+                        f"{csv_path}: private tag {row.get('group')},{elem_str} "
+                        f"under {creator!r} has an empty {col}"
+                    )
             yield (
                 creator,
                 int(row["group"], 16),
                 element,
                 is_block,
-                row.get("vr", "") or "UN",
-                row.get("vm", "") or "1",
+                row.get("vr", ""),
+                row.get("vm", ""),
                 row.get("name", "") or "",
                 row.get("keyword", "") or "",
             )
+
+
+def _check_csv_matches_dmap(d: _Dict, records, csv_path, dmap_path) -> None:
+    """Raise ``ValueError`` unless every CSV private row is in ``d`` with the
+    same VR and name."""
+    problems: list[str] = []
+    for creator, group, element, _is_block, vr, _vm, name, _kw in records:
+        t = d.lookup(group, element & 0xFF, creator)
+        if t is None:
+            problems.append(f"{group:04X},{element:04X} {creator!r}: not in the dmap")
+        elif t["vr"] != vr or t["name"] != name:
+            problems.append(
+                f"{group:04X},{element:04X} {creator!r}: csv has {vr} {name!r}, "
+                f"dmap has {t['vr']} {t['name']!r}"
+            )
+    if problems:
+        shown = "; ".join(problems[:5])
+        raise ValueError(
+            f"{csv_path} does not match {dmap_path} ({len(problems)} of "
+            f"{len(records)} private rows differ, e.g. {shown}). Pass the "
+            "tags.csv that was exported with this dmap."
+        )
 
 
 def patch_pydicom(
@@ -111,9 +140,10 @@ def patch_pydicom(
     Parameters
     ----------
     dmap_path
-        Path to ``tags.dmap``. Used only to validate the dictionary opens
-        cleanly. The actual entry list is read from ``csv_path`` (because the
-        binary format does not yet expose iteration).
+        Path to ``tags.dmap``. The entry list is read from ``csv_path``
+        (the binary format does not yet expose iteration); every private row
+        of the CSV must match the dmap's VR and name or ``ValueError`` is
+        raised and pydicom is left untouched.
     csv_path
         Path to ``tags.csv``. If omitted, defaults to ``<dmap_path>.csv``-style
         sibling lookup - i.e. ``tags.csv`` next to ``tags.dmap``.
@@ -133,6 +163,9 @@ def patch_pydicom(
         If pydicom is not installed.
     FileNotFoundError
         If neither a discoverable CSV nor an explicit ``csv_path`` is found.
+    ValueError
+        If a CSV row has an empty VR or VM, or the CSV disagrees with the
+        dmap.
     """
     try:
         import pydicom._private_dict as _pd
@@ -153,10 +186,12 @@ def patch_pydicom(
                 "csv_path=... explicitly or place tags.csv next to tags.dmap."
             )
 
-    # Validate the dmap opens cleanly if provided (sanity check; we don't
-    # otherwise read from it yet).
+    # Read the whole CSV before touching pydicom, and when a dmap is given
+    # require every CSV row to agree with it (the CSV is only a stand-in for
+    # iterating the dmap, so a stale or unrelated CSV must not be used).
+    records = list(_iter_records_from_csv(csv_path))
     if dmap_path is not None:
-        _ = _open(os.fspath(dmap_path))
+        _check_csv_matches_dmap(_open(os.fspath(dmap_path)), records, csv_path, dmap_path)
 
     global _ORIGINAL_PYDICOM
     if _ORIGINAL_PYDICOM is None:
@@ -168,7 +203,7 @@ def patch_pydicom(
     pdd: dict[str, dict[str, tuple[str, str, str, str]]] = _pd.private_dictionaries
     added = 0
 
-    for creator, group, element, is_block, vr, vm, name, keyword in _iter_records_from_csv(csv_path):
+    for creator, group, element, is_block, vr, vm, name, keyword in records:
         key = _format_pydicom_key(group, element, is_block)
         bucket = pdd.setdefault(creator, {})
         if key in bucket and mode == "fill":

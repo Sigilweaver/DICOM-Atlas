@@ -67,3 +67,42 @@ def test_patch_resolves_a_known_dicom_map_only_creator():
         assert len(pdd[creator]) > 0
     finally:
         dicom_map.unpatch_pydicom()
+
+
+def test_stale_csv_is_rejected_and_pydicom_left_untouched(tmp_path):
+    import csv
+
+    pdd = _pdd()
+    before = sum(len(v) for v in pdd.values())
+    rows = list(csv.reader(open(CSV_PATH, newline="", encoding="utf-8")))
+    header = rows[0]
+    vr_col = header.index("vr")
+    # Change the VR of the first private row.
+    for r in rows[1:]:
+        if r[header.index("private_creator")]:
+            r[vr_col] = "UN" if r[vr_col] != "UN" else "OB"
+            break
+    bad = tmp_path / "tags.csv"
+    with open(bad, "w", newline="", encoding="utf-8") as fh:
+        csv.writer(fh).writerows(rows)
+    with pytest.raises(ValueError, match="does not match"):
+        dicom_map.patch_pydicom(DMAP_PATH, csv_path=bad)
+    assert sum(len(v) for v in pdd.values()) == before
+
+
+def test_empty_vr_or_vm_is_an_error_not_a_default(tmp_path):
+    import csv
+
+    rows = list(csv.reader(open(CSV_PATH, newline="", encoding="utf-8")))
+    header = rows[0]
+    for col in ("vr", "vm"):
+        mod = [list(r) for r in rows]
+        for r in mod[1:]:
+            if r[header.index("private_creator")]:
+                r[header.index(col)] = ""
+                break
+        bad = tmp_path / f"{col}.csv"
+        with open(bad, "w", newline="", encoding="utf-8") as fh:
+            csv.writer(fh).writerows(mod)
+        with pytest.raises(ValueError, match=f"empty {col}"):
+            dicom_map.patch_pydicom(csv_path=bad)
