@@ -7,8 +7,8 @@ use memmap2::Mmap;
 use rkyv::{access, access_unchecked, rancor::Error};
 
 use crate::schema::{
-    creator_hash as compute_creator_hash, ArchivedDictionary, ArchivedTagRecord, ArchivedVrCode,
-    FileHeader, MAGIC, VERSION,
+    canonicalize_creator, creator_hash as compute_creator_hash, ArchivedDictionary,
+    ArchivedTagRecord, ArchivedVrCode, FileHeader, MAGIC, VERSION,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -38,6 +38,128 @@ enum Backing {
     Static(&'static [u8]),
 }
 
+/// Check the header and the archive, then the invariants the reader relies on
+/// but rkyv's byte-level validation cannot know about.
+fn validate(bytes: &[u8]) -> Result<(), DmapError> {
+    if bytes.len() < FileHeader::SIZE {
+        return Err(DmapError::TooSmall(bytes.len()));
+    }
+    let hdr = FileHeader::from_bytes(&bytes[..FileHeader::SIZE])
+        .ok_or(DmapError::TooSmall(bytes.len()))?;
+    if &hdr.magic != MAGIC {
+        return Err(DmapError::BadMagic { got: hdr.magic });
+    }
+    if hdr.version != VERSION {
+        return Err(DmapError::UnsupportedVersion { got: hdr.version });
+    }
+    let bad = |m: String| DmapError::BadArchive(m);
+    let body = &bytes[FileHeader::SIZE..];
+    if hdr.body_len != body.len() as u64 {
+        return Err(bad(format!(
+            "header body_len {} does not match the {} body bytes present",
+            hdr.body_len,
+            body.len()
+        )));
+    }
+    if hdr._reserved != [0; 2]
+        || hdr.body_sha256_lo != 0
+        || bytes[24..FileHeader::SIZE].iter().any(|&b| b != 0)
+    {
+        return Err(bad(
+            "reserved header bytes are not zero (version 4 defines no use for them)".into(),
+        ));
+    }
+    let dict = access::<ArchivedDictionary, Error>(body).map_err(|e| bad(e.to_string()))?;
+
+    let strings = dict.strings.as_slice();
+    let text = |what: &str, i: usize, off: u32, len: u32| -> Result<&str, DmapError> {
+        let (s, l) = (off as usize, len as usize);
+        let end = s
+            .checked_add(l)
+            .filter(|&e| e <= strings.len())
+            .ok_or_else(|| {
+                bad(format!(
+                    "record {i}: {what} range {s}+{l} lies outside the {} byte string pool",
+                    strings.len()
+                ))
+            })?;
+        std::str::from_utf8(&strings[s..end])
+            .map_err(|e| bad(format!("record {i}: {what} is not valid UTF-8: {e}")))
+    };
+
+    let mut prev: Option<(u16, u16, u32)> = None;
+    for (n, e) in dict.index.iter().enumerate() {
+        let key = (
+            e.group.to_native(),
+            e.element.to_native(),
+            e.creator_hash.to_native(),
+        );
+        if let Some(p) = prev {
+            if p >= key {
+                return Err(bad(format!(
+                    "index entry {n} is not strictly after entry {}: keys must be sorted and unique",
+                    n - 1
+                )));
+            }
+        }
+        prev = Some(key);
+        let ri = e.record_idx.to_native() as usize;
+        let rec = dict.records.get(ri).ok_or_else(|| {
+            bad(format!(
+                "index entry {n}: record_idx {ri} is out of range ({} records)",
+                dict.records.len()
+            ))
+        })?;
+        let creator = text(
+            "creator",
+            ri,
+            rec.creator_off.to_native(),
+            rec.creator_len.to_native() as u32,
+        )?;
+        let rec_key = (
+            rec.group.to_native(),
+            rec.element.to_native(),
+            compute_creator_hash((!creator.is_empty()).then_some(creator)),
+        );
+        if rec_key != key {
+            return Err(bad(format!(
+                "index entry {n} key {key:04X?} does not match its record {ri} ({rec_key:04X?})"
+            )));
+        }
+        if key.0 % 2 == 1 && key.2 == 0 {
+            return Err(bad(format!(
+                "record {ri}: odd group {:04X} entry without a private creator",
+                key.0
+            )));
+        }
+        text(
+            "keyword",
+            ri,
+            rec.keyword_off.to_native(),
+            rec.keyword_len.to_native() as u32,
+        )?;
+        text(
+            "name",
+            ri,
+            rec.name_off.to_native(),
+            rec.name_len.to_native() as u32,
+        )?;
+        text(
+            "description",
+            ri,
+            rec.description_off.to_native(),
+            rec.description_len.to_native(),
+        )?;
+        text(
+            "sources",
+            ri,
+            rec.sources_off.to_native(),
+            rec.sources_len.to_native(),
+        )?;
+    }
+    Ok(())
+}
+
 impl Backing {
     fn bytes(&self) -> &[u8] {
         match self {
@@ -53,21 +175,7 @@ impl DmapDict {
         // SAFETY: file is held for the life of the mapping.
         let mmap = unsafe { Mmap::map(&file)? };
 
-        if mmap.len() < FileHeader::SIZE {
-            return Err(DmapError::TooSmall(mmap.len()));
-        }
-        let hdr = FileHeader::from_bytes(&mmap[..FileHeader::SIZE])
-            .ok_or(DmapError::TooSmall(mmap.len()))?;
-        if &hdr.magic != MAGIC {
-            return Err(DmapError::BadMagic { got: hdr.magic });
-        }
-        if hdr.version != VERSION {
-            return Err(DmapError::UnsupportedVersion { got: hdr.version });
-        }
-
-        let body = &mmap[FileHeader::SIZE..];
-        access::<ArchivedDictionary, Error>(body)
-            .map_err(|e| DmapError::BadArchive(e.to_string()))?;
+        validate(&mmap[..])?;
 
         Ok(Self {
             backing: Backing::Mmap { _file: file, mmap },
@@ -77,20 +185,7 @@ impl DmapDict {
 
     /// Construct from a `'static` byte slice, typically `include_bytes!`.
     pub fn from_static(bytes: &'static [u8]) -> Result<Self, DmapError> {
-        if bytes.len() < FileHeader::SIZE {
-            return Err(DmapError::TooSmall(bytes.len()));
-        }
-        let hdr = FileHeader::from_bytes(&bytes[..FileHeader::SIZE])
-            .ok_or(DmapError::TooSmall(bytes.len()))?;
-        if &hdr.magic != MAGIC {
-            return Err(DmapError::BadMagic { got: hdr.magic });
-        }
-        if hdr.version != VERSION {
-            return Err(DmapError::UnsupportedVersion { got: hdr.version });
-        }
-        let body = &bytes[FileHeader::SIZE..];
-        access::<ArchivedDictionary, Error>(body)
-            .map_err(|e| DmapError::BadArchive(e.to_string()))?;
+        validate(bytes)?;
         Ok(Self {
             backing: Backing::Static(bytes),
             body_off: FileHeader::SIZE,
@@ -111,6 +206,15 @@ impl DmapDict {
     }
 
     pub fn lookup(&self, group: u16, element: u16, creator: Option<&str>) -> Option<TagView<'_>> {
+        // A private element is addressed by its block offset (the low byte);
+        // callers often hold the element as it appears in a file (0x1008 for
+        // offset 0x08 in block 0x10), and any block belongs to the creator
+        // (PS3.5 7.8.1), so reduce it rather than report a miss.
+        let element = if creator.is_some() && group % 2 == 1 {
+            element & 0x00FF
+        } else {
+            element
+        };
         let ch = compute_creator_hash(creator);
         let dict = self.archived();
         let index = &dict.index;
@@ -129,10 +233,18 @@ impl DmapDict {
 
         let rec_idx = index[idx].record_idx.to_native() as usize;
         let rec = &dict.records[rec_idx];
-        Some(TagView {
+        let view = TagView {
             rec,
             strings: dict.strings.as_slice(),
-        })
+        };
+        // The index key holds only a 32-bit hash of the creator. Confirm the
+        // match against the stored canonical creator string.
+        if let Some(c) = creator {
+            if view.creator() != canonicalize_creator(c) {
+                return None;
+            }
+        }
+        Some(view)
     }
 }
 
@@ -145,7 +257,9 @@ impl<'a> TagView<'a> {
     fn slice(&self, off: u32, len: u32) -> &'a str {
         let s = off as usize;
         let e = s + len as usize;
-        std::str::from_utf8(&self.strings[s..e]).unwrap_or("")
+        // Every range and its UTF-8 validity is checked by `validate` when
+        // the archive is opened, so this cannot fail on an accepted archive.
+        std::str::from_utf8(&self.strings[s..e]).expect("string range validated at open")
     }
 
     pub fn group(&self) -> u16 {
