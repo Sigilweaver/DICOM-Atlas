@@ -21,8 +21,8 @@ abstract: >
   CSV (tags.csv), a memory-mapped binary (tags.dmap), and queryable via
   a Rust library, Python bindings, and C FFI.
 license: "Apache-2.0"
-date-released: "2026-05-31"
-version: "0.2.6"
+date-released: "2026-08-12"
+version: "0.2.8"
 keywords:
   - DICOM
   - medical imaging
