@@ -98,6 +98,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   little-endian, aligned, 32-bit-pointer settings. Fixes RUSTSEC-2026-0235
   (#22). The `cargo audit` waiver for it is removed.
 
+### Changed
+
+- `CITATION.cff` identifies the Zenodo concept DOI (10.5281/zenodo.20470740),
+  which resolves to the latest archived version, instead of the DOI of the
+  0.2.6 version record.
+
 ## [0.2.8] - 2026-08-12
 
 ### Added
